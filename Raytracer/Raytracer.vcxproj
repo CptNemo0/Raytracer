@@ -131,7 +131,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="math\vec.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\vec.h" />
