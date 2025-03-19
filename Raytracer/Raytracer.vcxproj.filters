@@ -26,5 +26,8 @@
     <ClInclude Include="math\mat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="math\mat_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

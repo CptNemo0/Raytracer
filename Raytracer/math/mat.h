@@ -22,18 +22,24 @@ namespace math
 	{
 	private:
 		std::array<T, rows* columns> data_;
-		std::uint32_t xy_to_index(const std::uint32_t x, const std::uint32_t y) const
-		{
-			return rows_ * y + x;
-		}
-
+		
 	public:
 		const std::uint32_t rows_ = rows;
 		const std::uint32_t columns_ = columns;
 		const std::uint32_t length_ = rows * columns;
 		const mat_size size_ = { rows, columns };
 
+		std::uint32_t xy_to_index(const std::uint32_t x, const std::uint32_t y) const
+		{
+			return columns_ * y + x;
+		}
+
 		T& get(const std::uint32_t x, const std::uint32_t y)
+		{
+			return data_[xy_to_index(x, y)];
+		}
+
+		const T& get(const std::uint32_t x, const std::uint32_t y) const
 		{
 			return data_[xy_to_index(x, y)];
 		}
@@ -68,7 +74,7 @@ namespace math
 		template<typename... Args>
 		mat(Args... args) : data_{ static_cast<T>(args)... } {};
 
-		void log()
+		void log() const
 		{
 			std::stringstream ss;
 			for (std::uint32_t y = 0; y < rows_; y++)
@@ -84,7 +90,7 @@ namespace math
 			std::cout << ss.str();
 		}
 	
-		mat operator+(const mat<rows, columns, T>& other)
+		mat operator+(const mat<rows, columns, T>& other) const
 		{
 			mat<rows, columns, T> result;
 			for (std::uint32_t i = 0; i < length_; ++i)
@@ -102,7 +108,7 @@ namespace math
 			}
 		}
 
-		mat operator-(const mat<rows, columns, T>& other)
+		mat operator-(const mat<rows, columns, T>& other) const
 		{
 			mat<rows, columns, T> result;
 			for (std::uint32_t i = 0; i < length_; ++i)
@@ -120,7 +126,7 @@ namespace math
 			}
 		}
 
-		mat operator*(const T& other)
+		mat operator*(const T& other) const
 		{
 			mat<rows, columns, T> result;
 			for (std::uint32_t i = 0; i < length_; ++i)
@@ -138,7 +144,7 @@ namespace math
 			}
 		}
 	
-		mat operator/(const T& other)
+		mat operator/(const T& other) const
 		{
 			mat<rows, columns, T> result;
 			T inverse = 1.0f / other;
@@ -158,12 +164,13 @@ namespace math
 			}
 		}
 	
-		mat& operator=(const mat<rows, columns, T>& other)
+		mat& operator=(const mat<rows, columns, T>& other) 
 		{
 			std::cout << "Matrix copy assignement operator\n";
 			std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 			return *this;
 		}	
+
 	};
 
 	using mat4x4 = mat<4, 4, float>;
