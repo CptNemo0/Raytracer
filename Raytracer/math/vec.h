@@ -95,6 +95,17 @@ namespace math
 				data_[i] *= init;
 			}
 		}
+
+		vec operator*(float init) const
+		{
+			vec<length, T> result;
+			for (std::uint32_t i = 0; i < size_; ++i)
+			{
+				result.data_[i] = data_[i] * init;
+			}
+			return result;
+		}
+
 		
 		vec operator/(const float init)
 		{
