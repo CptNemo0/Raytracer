@@ -8,7 +8,7 @@
 
 #include "math/vec.h"
 
-namespace itersections 
+namespace intersections 
 {
 	class Ray
 	{
@@ -25,6 +25,11 @@ namespace itersections
 			: origin_(origin), direction_(direction), destination_(origin + direction * distance), distance_(distance) {}
 		~Ray() {};
 
+		math::vec3 solveParametricEquation(float t) const 
+		{
+		     return origin_ + direction_ * t;
+		}
+
 		const math::vec3& getOrigin() const { return origin_; }
 		const math::vec3& getDirection() const { return direction_; }
 		const math::vec3& getDestination() const { return destination_; }
@@ -34,11 +39,6 @@ namespace itersections
 		void setDirection(const math::vec3& direction) { direction_ = direction; }
 		void setDestination(const math::vec3& destination) { destination_ = destination; }
 		void setDistance(float distance) { distance_ = distance; }
-
-		math::vec3 solveParametricEquation(float t) const 
-		{
-		     return origin_ + direction_ * t;
-		}
 		
         friend std::ostream& operator<<(std::ostream& os, const Ray& ray) 
 		{
@@ -57,4 +57,6 @@ namespace itersections
 		math::vec3 destination_;
 		float distance_;
 	};
+
+
 }

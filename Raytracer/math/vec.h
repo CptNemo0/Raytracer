@@ -98,6 +98,16 @@ namespace math
 			return result;
 		}
 
+		vec operator-(const vec<length, T>& other) const
+		{
+			vec<size, T> result;
+			for (std::uint32_t i = 0; i < size_; ++i)
+			{
+				result.data_[i] = data_[i] - other.data_[i];
+			}
+			return result;
+		}
+
 		vec operator*(const float init)
 		{
 			for (std::uint32_t i = 0; i < size_; ++i)
@@ -142,6 +152,16 @@ namespace math
 				data_[i] -= other.data_[i];
 			}
 		}
+
+        T dot(const vec<length, T>& other) const
+        {
+            T result = 0;
+            for (std::uint32_t i = 0; i < length; ++i)
+            {
+                result += data_[i] * other.data_[i];
+            }
+            return result;
+        }
 
         friend std::ostream& operator<<(std::ostream& os, const vec<length, T>& v)
         {
