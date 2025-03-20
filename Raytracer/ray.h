@@ -1,4 +1,11 @@
 #pragma once
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+
 #include "math/vec.h"
 
 namespace itersections 
@@ -9,16 +16,13 @@ namespace itersections
 		Ray() : origin_(), direction_(), destination_(), distance_(0.0f) {}
 
 		Ray(const math::vec3& origin, const math::vec3& direction)
-			: origin_(origin), direction_(direction), destination_(), distance_(0.0f) {
-		}
+			: origin_(origin), direction_(direction), destination_(), distance_(0.0f) {}
 
 		
         Ray(const math::vec3& origin, float distance)
-           : origin_(origin), direction_(), destination_(origin), distance_(distance) {
-        }
+           : origin_(origin), direction_(), destination_(origin), distance_(distance) {}
 		Ray(const math::vec3& origin, const math::vec3& direction, float distance)
-			: origin_(origin), direction_(direction), destination_(origin + direction * distance), distance_(distance) {
-		}
+			: origin_(origin), direction_(direction), destination_(origin + direction * distance), distance_(distance) {}
 		~Ray() {};
 
 		const math::vec3& getOrigin() const { return origin_; }
@@ -31,6 +35,21 @@ namespace itersections
 		void setDestination(const math::vec3& destination) { destination_ = destination; }
 		void setDistance(float distance) { distance_ = distance; }
 
+		math::vec3 solveParametricEquation(float t) const 
+		{
+		     return origin_ + direction_ * t;
+		}
+		
+        friend std::ostream& operator<<(std::ostream& os, const Ray& ray) 
+		{
+            os << "Ray(" 
+               << "Origin: " << ray.origin_ 
+               << ", Direction: " << ray.direction_ 
+               << ", Destination: " << ray.destination_ 
+               << ", Distance: " << ray.distance_ 
+               << ")";
+            return os;
+        }        
 
 	private:
 		math::vec3 origin_;

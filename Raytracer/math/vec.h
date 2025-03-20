@@ -78,6 +78,16 @@ namespace math
 			return result;
 		}
 
+		vec operator+(const vec<length, T>& other) const
+		{
+			vec<length, T> result;
+			for (std::uint32_t i = 0; i < size_; ++i)
+			{
+				result.data_[i] = data_[i] + other.data_[i];
+			}
+			return result;
+		}
+
 		vec operator-(const vec<length, T>& other)
 		{
 			vec<size, T> result;
@@ -132,6 +142,21 @@ namespace math
 				data_[i] -= other.data_[i];
 			}
 		}
+
+        friend std::ostream& operator<<(std::ostream& os, const vec<length, T>& v)
+        {
+            os << "[";
+            for (std::uint32_t i = 0; i < length; ++i)
+            {
+                os << v.data_[i];
+                if (i < length - 1)
+                {
+                    os << ", ";
+                }
+            }
+            os << "]";
+            return os;
+        }
 	};
 
 	using vec2 = vec<2, float>;
