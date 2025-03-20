@@ -54,11 +54,8 @@ namespace math
 			return data_[index];
 		}
 
-		const T& operator[](const std::uint32_t index)
+		const T& get(std::uint32_t index) const
 		{
-#ifdef _DEBUG
-			assert(index < size_);
-#endif
 			return data_[index];
 		}
 
@@ -76,7 +73,7 @@ namespace math
 			return *this;
 		}
 
-		vec operator+(const vec<length, T>& other)
+		vec operator+(const vec<length, T>& other) const
 		{
 			vec<length, T> result;
 			for (std::uint32_t i = 0; i < size_; ++i)
@@ -86,7 +83,7 @@ namespace math
 			return result;
 		}
 
-		vec operator+(const vec<length, T>& other) const
+		void operator+=(const vec<length, T>& other)
 		{
 			vec<length, T> result;
 			for (std::uint32_t i = 0; i < size_; ++i)
@@ -106,21 +103,11 @@ namespace math
 			return result;
 		}
 
-		vec operator-(const vec<length, T>& other) const
-		{
-			vec<size, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
-			{
-				result.data_[i] = data_[i] - other.data_[i];
-			}
-			return result;
-		}
-
-		vec operator*(const float init)
+		void operator-=(const vec<length, T>& other)
 		{
 			for (std::uint32_t i = 0; i < size_; ++i)
 			{
-				data_[i] *= init;
+				data_[i] -= other.data_[i];
 			}
 		}
 
@@ -134,8 +121,15 @@ namespace math
 			return result;
 		}
 
-		
-		vec operator/(const float init)
+		void operator*=(const float init) 
+		{
+			for (std::uint32_t i = 0; i < size_; ++i)
+			{
+				data_[i] *= init;
+			}
+		}
+
+		void operator/=(const float init)
 		{
 			float inverse = 1.0f / init;
 
@@ -145,22 +139,6 @@ namespace math
 			}
 		}
 	
-		void operator+=(const vec<length, T>& other)
-		{
-			for (std::uint32_t i = 0; i < size_; ++i)
-			{
-				data_[i] += other.data_[i];
-			}
-		}
-
-		void operator-=(const vec<length, T>& other)
-		{
-			for (std::uint32_t i = 0; i < size_; ++i)
-			{
-				data_[i] -= other.data_[i];
-			}
-		}
-
         T dot(const vec<length, T>& other) const
         {
             T result = 0;

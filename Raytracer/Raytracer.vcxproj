@@ -132,9 +132,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="math\angles.cpp" />
+    <ClCompile Include="math\transformations.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\angles.h" />
+    <ClInclude Include="math\transformations.h" />
     <ClInclude Include="math\vec_operations.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="ray.h" />

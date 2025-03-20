@@ -11,15 +11,9 @@ namespace math
 	constexpr float pid6 = 3.14159265359f / 6.0f;
 	constexpr float pid8 = 3.14159265359f / 8.0f;
 
-	float to_radians(float degrees)
-	{
-		degrees *= 0.0174532925f;
-	}
+	float to_radians(float degrees);
 
-	float to_degrees(float radians)
-	{
-		radians *= 57.2957795f;
-	}
+	float to_degrees(float radians);
 }
 
 #endif // !MATH_ANGLES_H
