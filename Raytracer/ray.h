@@ -6,7 +6,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "math/vec.h"
+#include "vec.h"
 
 namespace intersections 
 {

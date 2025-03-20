@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/vec.h"
+#include "vec.h"
 #include "ray.h"
 
 namespace primitives

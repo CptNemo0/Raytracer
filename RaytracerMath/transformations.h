@@ -45,11 +45,21 @@ namespace math
 		vector = result;
 	}
 
-	mat4x4 rotation_matrix_x(float angle, bool radians = true);
-	mat4x4 rotation_matrix_y(float angle, bool radians = true);
-	mat4x4 rotation_matrix_z(float angle, bool radians = true);
+	mat4x4 rotation_matrix_x_rad(float angle);
+	mat4x4 rotation_matrix_y_rad(float angle);
+	mat4x4 rotation_matrix_z_rad(float angle);
+
+	mat4x4 rotation_matrix_x_deg(float angle);
+	mat4x4 rotation_matrix_y_deg(float angle);
+	mat4x4 rotation_matrix_z_deg(float angle);
+
 	mat4x4 translation_matrix(float x, float y, float z);
 	mat4x4 scale_matrix(float x, float y, float z);
+
+	void translate(const vec3& translation, vec4& vector);
+	void rotate_rad(const vec3& rotation, vec4& vector);
+	void rotate_deg(const vec3& rotation, vec4& vector);
+	void scale(const vec3& scale, vec4& vector);
 }
 
 #endif // !MATH_TRANSFORMATIONS_H
