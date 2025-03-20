@@ -176,6 +176,8 @@ namespace math
 	using uvec2 = vec<2, uint32_t>;
 	using uvec3 = vec<3, uint32_t>;
 	using uvec4 = vec<4, uint32_t>;
+
+	using Point = vec<3, float>;
 }
 
 #endif // !MATH_VEC

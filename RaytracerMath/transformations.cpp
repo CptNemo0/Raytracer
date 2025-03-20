@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "transformations.h"
 
 namespace math
 {
@@ -115,9 +114,9 @@ namespace math
 	}
 	void rotate_deg(const vec3& rotation, vec4& vector)
 	{
-		auto X = rotation_matrix_x_deg(to_radians(rotation.get(0)));
-		auto Y = rotation_matrix_y_deg(to_radians(rotation.get(1)));
-		auto Z = rotation_matrix_z_deg(to_radians(rotation.get(2)));
+		auto X = rotation_matrix_x_rad(to_radians(rotation.get(0)));
+		auto Y = rotation_matrix_y_rad(to_radians(rotation.get(1)));
+		auto Z = rotation_matrix_z_rad(to_radians(rotation.get(2)));
 		auto rotation_matrix = matmul(X, Y);
 		rotation_matrix = matmul(rotation_matrix, Z);
 		transform(rotation_matrix, vector);
