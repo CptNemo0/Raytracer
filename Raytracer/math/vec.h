@@ -54,6 +54,14 @@ namespace math
 			return data_[index];
 		}
 
+		const T& operator[](const std::uint32_t index)
+		{
+#ifdef _DEBUG
+			assert(index < size_);
+#endif
+			return data_[index];
+		}
+
 		std::uint32_t size() const
 		{
 			return size_;

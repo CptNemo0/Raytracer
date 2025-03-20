@@ -134,10 +134,15 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="math\angles.h" />
+    <ClInclude Include="math\vec_operations.h" />
+    <ClInclude Include="plane.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="math\mat.h" />
     <ClInclude Include="math\mat_operations.h" />
     <ClInclude Include="math\vec.h" />
+    <ClInclude Include="sphere.h" />
+    <ClInclude Include="triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
