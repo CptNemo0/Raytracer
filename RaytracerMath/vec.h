@@ -93,9 +93,9 @@ namespace math
 			return result;
 		}
 
-		vec operator-(const vec<length, T>& other)
+		vec operator-(const vec<length, T>& other) const
 		{
-			vec<size, T> result;
+			vec<length, T> result;
 			for (std::uint32_t i = 0; i < size_; ++i)
 			{
 				result.data_[i] = data_[i] - other.data_[i];
@@ -117,6 +117,17 @@ namespace math
 			for (std::uint32_t i = 0; i < size_; ++i)
 			{
 				result.data_[i] = data_[i] * init;
+			}
+			return result;
+		}
+
+		vec operator/(float num) const
+		{
+			vec<length, T> result;
+			float inverse = 1.0f / num;
+			for (std::uint32_t i = 0; i < size_; ++i)
+			{
+				result.data_[i] = data_[i] * inverse;
 			}
 			return result;
 		}

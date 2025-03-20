@@ -146,6 +146,7 @@
     <ClInclude Include="mat.h" />
     <ClInclude Include="mat_operations.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="raytracer_math.h" />
     <ClInclude Include="transformations.h" />
     <ClInclude Include="vec.h" />
     <ClInclude Include="vec_operations.h" />

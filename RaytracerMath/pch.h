@@ -15,4 +15,5 @@
 #include "vec_operations.h"
 #include "mat_operations.h"
 #include "transformations.h"
+#include "raytracer_math.h"
 #endif //PCH_H

@@ -39,6 +39,9 @@
     <ClInclude Include="vec_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="raytracer_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
