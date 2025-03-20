@@ -111,7 +111,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/x64/Release;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/x64/Debug;</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);RaytracerMath.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

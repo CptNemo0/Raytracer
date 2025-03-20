@@ -20,16 +20,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="math\vec.h">
+    <ClInclude Include="plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\mat.h">
+    <ClInclude Include="ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math\mat_operations.h">
+    <ClInclude Include="sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="intersections.h">
+    <ClInclude Include="triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

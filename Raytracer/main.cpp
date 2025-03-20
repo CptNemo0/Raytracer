@@ -1,5 +1,5 @@
 #include <iostream>
-#include "raytracer_math.h";
+#include "raytracer_math.h"
 
 void Photorealistic1stLab()
 {
