@@ -100,10 +100,20 @@ void Photorealistic1stLab()
 
 	{
 		std::cout << "\n5. Quaternion basic operations\n";
-		math::vec3 a(1.0f, 0.0f, 0.0f);
-		a = math::quat_rotate_deg(a, 90.0f, math::vec3(0.0f, 1.0f, 1.0f));
-		std::cout << a << std::endl;
-
+		math::quat a(1.0f, 2.0f, 3.0f, 4.0f);
+		math::quat b(1.0f, 2.0f, 3.0f, 4.0f);
+		math::quat c = a + b;
+		math::quat d = c - a;
+		std::cout << "a: " << a << std::endl;
+		std::cout << "b: " << b << std::endl;
+		std::cout << "a + b = c: " << c << std::endl;
+		std::cout << "c - a = d: " << d << std::endl;
+		math::quat e(1.0f, 1.0f, 1.0f, 0.0f);
+		math::quat f(1.0f, 0.0f, 1.0f, 0.0f);
+		auto g = e * f;
+		std::cout << "e: " << e << std::endl;
+		std::cout << "f: " << f << std::endl;
+		std::cout << "e * f = g: " << g << std::endl;
 	}
 }
 
