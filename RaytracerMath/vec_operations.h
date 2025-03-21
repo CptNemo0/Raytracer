@@ -9,7 +9,7 @@ namespace math
 {
 	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
-	T dot(const vec<l, T>& a, const vec<l, T>& b)
+	inline T dot(const vec<l, T>& a, const vec<l, T>& b)
 	{
 		T result = static_cast<T>(0);
 		for (std::uint32_t i = 0; i < l; ++i)
@@ -21,7 +21,7 @@ namespace math
 
     template <typename T>
     requires std::is_arithmetic_v<T>
-    vec<3, T> cross(const vec<3, T>& a, const vec<3, T>& b)
+	inline vec<3, T> cross(const vec<3, T>& a, const vec<3, T>& b)
     {
         vec<3, T> result;
         result[0] = a.get(1) * b.get(2) - a.get(2) * b.get(1);
@@ -32,7 +32,7 @@ namespace math
 
 	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
-	T length(const vec<l, T>& a)
+	inline T length(const vec<l, T>& a)
 	{
 		T result = static_cast<T>(0);
 
@@ -46,7 +46,7 @@ namespace math
 
 	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
-	T distance(const vec<l, T>& a, const vec<l, T>& b)
+	inline T distance(const vec<l, T>& a, const vec<l, T>& b)
 	{
 		auto c = b - a;
 		return length(c);
@@ -54,7 +54,7 @@ namespace math
 
 	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
-	void normalize(vec<l, T>& v)
+	inline void normalize(vec<l, T>& v)
 	{
 		auto len = length(v);
 		v /= len;
@@ -62,7 +62,7 @@ namespace math
 
 	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
-	vec<l, T> normalized(const vec<l, T>& v)
+	inline vec<l, T> normalized(const vec<l, T>& v)
 	{
 		auto len = length(v);
 		auto inv_len = 1.0f / len;
@@ -71,7 +71,7 @@ namespace math
 
 	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
-	float angle_rad(const vec<l, T>& a, const vec<l, T>& b)
+	inline float angle_rad(const vec<l, T>& a, const vec<l, T>& b)
 	{
 		T dot_product = dot(a, b);
 		T len_a = length(a);
@@ -82,7 +82,7 @@ namespace math
 
 	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
-	float angle_deg(const vec<l, T>& a, const vec<l, T>& b)
+	inline float angle_deg(const vec<l, T>& a, const vec<l, T>& b)
 	{
 		return to_degrees(angle_rad(a, b));
 	}

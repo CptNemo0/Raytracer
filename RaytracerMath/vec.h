@@ -168,7 +168,7 @@ namespace math
             return result;
         }
 
-        friend std::ostream& operator<<(std::ostream& os, const vec<length, T>& v)
+		friend std::ostream& operator<<(std::ostream& os, const vec<length, T>& v)
         {
             os << "[";
             for (std::uint32_t i = 0; i < length; ++i)

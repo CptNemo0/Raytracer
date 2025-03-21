@@ -8,7 +8,7 @@ namespace math
 {
 	template <std::uint32_t m, std::uint32_t n, std::uint32_t p, typename T>
 	requires std::is_arithmetic_v<T>
-	mat<m, p, T> matmul(const mat<m, n, T>& a, const mat<n, p, T>& b)
+	inline mat<m, p, T> matmul(const mat<m, n, T>& a, const mat<n, p, T>& b)
 	{
 		auto _ = a.get(0, 0) + b.get(0, 0);
 
@@ -32,7 +32,7 @@ namespace math
 
 	template <std::uint32_t S, typename T>
 	requires std::is_arithmetic_v<T>
-	void transpose(mat<S, S, T>& matrix)
+	inline void transpose(mat<S, S, T>& matrix)
 	{
 		for (std::uint32_t y = 0; y < S; y++)
 		{
@@ -45,7 +45,7 @@ namespace math
 
 	template <std::uint32_t rows, std::uint32_t columns, typename T>
 	requires std::is_arithmetic_v<T>
-	mat<columns, rows, T> transpose(const mat<rows, columns, T>& matrix)
+	inline mat<columns, rows, T> transpose(const mat<rows, columns, T>& matrix)
 	{
 		mat<columns, rows, T> return_value;
 		for (std::uint32_t y = 0; y < rows; y++)

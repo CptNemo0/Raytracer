@@ -13,7 +13,7 @@ namespace math
 {
 	template <std::uint32_t m, std::uint32_t n, typename T>
 	requires std::is_arithmetic_v<T>
-	vec<n, T> transformed(const mat<m, n, T>& matrix, const vec<n, T>& vector)
+	inline vec<n, T> transformed(const mat<m, n, T>& matrix, const vec<n, T>& vector)
 	{
 		vec<n, T> result;
 		for (std::uint32_t i = 0; i < n; i++)
@@ -30,7 +30,7 @@ namespace math
 
 	template <std::uint32_t m, std::uint32_t n, typename T>
 	requires std::is_arithmetic_v<T>
-	void transform(const mat<m, n, T>& matrix, vec<n, T>& vector)
+	inline void transform(const mat<m, n, T>& matrix, vec<n, T>& vector)
 	{
 		vec<n, T> result;
 		for (std::uint32_t i = 0; i < n; i++)
