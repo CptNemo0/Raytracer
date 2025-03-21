@@ -146,6 +146,8 @@
     <ClInclude Include="mat.h" />
     <ClInclude Include="mat_operations.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="quat.h" />
+    <ClInclude Include="quat_operations.h" />
     <ClInclude Include="raytracer_math.h" />
     <ClInclude Include="transformations.h" />
     <ClInclude Include="vec.h" />
@@ -159,6 +161,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="quat.cpp" />
+    <ClCompile Include="quat_operations.cpp" />
     <ClCompile Include="transformations.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

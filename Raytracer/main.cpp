@@ -4,7 +4,7 @@
 void Photorealistic1stLab()
 {
 	{
-		std::cout << "1 - 2. Basic operations\n";
+		std::cout << "1 - 2. Vectors basic operations\n";
 		math::vec4 a(1, 2, 3, 4);
 		math::vec4 b(5, 6, 7, 8);
 
@@ -40,7 +40,7 @@ void Photorealistic1stLab()
 	std::cout << "\n\nAdditional\n";
 
 	{
-		std::cout << "1 - 2. Basic operations\n";
+		std::cout << "1 - 2. Matrices basic operations\n";
 		math::mat4x4 a(2.0f, true);
 		math::mat4x4 b(8.0f, true);
 
@@ -96,6 +96,14 @@ void Photorealistic1stLab()
 		C.log();
 		std::cout << "B * A = D:\n";
 		D.log();
+	}
+
+	{
+		std::cout << "\n5. Quaternion basic operations\n";
+		math::vec3 a(1.0f, 0.0f, 0.0f);
+		a = math::quat_rotate_deg(a, 90.0f, math::vec3(0.0f, 1.0f, 1.0f));
+		std::cout << a << std::endl;
+
 	}
 }
 

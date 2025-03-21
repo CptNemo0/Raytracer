@@ -16,4 +16,6 @@
 #include "mat_operations.h"
 #include "transformations.h"
 #include "raytracer_math.h"
+#include "quat.h"
+#include "quat_operations.h"
 #endif //PCH_H

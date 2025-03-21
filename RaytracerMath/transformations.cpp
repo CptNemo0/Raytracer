@@ -98,6 +98,28 @@ namespace math
 		);
 	}
 	
+	vec3 quat_rotate_rad(vec3& vect, float angle, const vec3& axis)
+	{
+		quat p (0.0f, vect);
+		auto axis_n = normalized(axis);
+		quat q(angle, axis_n);
+		to_unit_norm_rad(q);
+		quat q_inv = inversed(q);
+		quat rotated = q * p * q_inv;
+		return rotated.v_;
+	}
+	
+	vec3 quat_rotate_deg(vec3& vect, float angle, const vec3& axis)
+	{
+		quat p(0.0f, vect);
+		auto axis_n = normalized(axis);
+		quat q(angle, axis_n);
+		to_unit_norm_deg(q);
+		quat q_inv = inversed(q);
+		quat rotated = q * p * q_inv;
+		return rotated.v_;
+	}
+
 	void translate(const vec3& translation, vec4& vector)
 	{
 		auto M = translation_matrix(translation.get(0), translation.get(1), translation.get(2));

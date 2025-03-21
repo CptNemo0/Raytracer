@@ -56,6 +56,9 @@ namespace math
 	mat4x4 translation_matrix(float x, float y, float z);
 	mat4x4 scale_matrix(float x, float y, float z);
 
+	vec3 quat_rotate_rad(vec3& vect, float angle, const vec3& axis);
+	vec3 quat_rotate_deg(vec3& vect, float angle, const vec3& axis);
+
 	void translate(const vec3& translation, vec4& vector);
 	void rotate_rad(const vec3& rotation, vec4& vector);
 	void rotate_deg(const vec3& rotation, vec4& vector);

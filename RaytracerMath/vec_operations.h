@@ -62,6 +62,15 @@ namespace math
 
 	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
+	vec<l, T> normalized(const vec<l, T>& v)
+	{
+		auto len = length(v);
+		auto inv_len = 1.0f / len;
+		return v * inv_len;
+	}
+
+	template <std::uint32_t l, typename T>
+	requires std::is_arithmetic_v<T>
 	float angle_rad(const vec<l, T>& a, const vec<l, T>& b)
 	{
 		T dot_product = dot(a, b);

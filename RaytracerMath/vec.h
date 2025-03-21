@@ -23,7 +23,7 @@ namespace math
 		{
 			for (std::uint32_t i = 0; i < size_; ++i)
 			{
-				data_[i] = 0;
+				data_[i] = static_cast<T>(0);
 			}
 		}
 
@@ -90,7 +90,6 @@ namespace math
 			{
 				result.data_[i] = data_[i] + other.data_[i];
 			}
-			return result;
 		}
 
 		vec operator-(const vec<length, T>& other) const
@@ -150,6 +149,15 @@ namespace math
 			}
 		}
 	
+		bool operator==(const vec<length, T>& other)
+		{
+			for (std::uint32_t i = 0; i < length; i++)
+			{
+				if (data_[i] != other.data_[i]) return false;
+			}
+			return true;
+		}
+
         T dot(const vec<length, T>& other) const
         {
             T result = 0;
