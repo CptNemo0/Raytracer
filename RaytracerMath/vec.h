@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <iostream>
 #include <type_traits>
+#include <numeric>
 
 namespace math
 {
@@ -14,14 +15,12 @@ namespace math
 	requires std::is_arithmetic_v<T>
 	class vec
 	{
-	private:
-		std::uint32_t size_ = length;
 	public:
 		std::array<T, length> data_;
 		
 		vec()
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] = static_cast<T>(0);
 			}
@@ -29,7 +28,7 @@ namespace math
 
 		vec(const T init)
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] = init;
 			}
@@ -40,7 +39,7 @@ namespace math
 
 		vec(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 			}
@@ -49,7 +48,7 @@ namespace math
 		T& operator[](const std::uint32_t index)
 		{
 #ifdef _DEBUG
-			assert(index < size_);
+			assert(index < length);
 #endif
 			return data_[index];
 		}
@@ -61,12 +60,12 @@ namespace math
 
 		std::uint32_t size() const
 		{
-			return size_;
+			return data_.size();
 		}
 
 		vec& operator=(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 			}
@@ -76,7 +75,7 @@ namespace math
 		vec operator+(const vec<length, T>& other) const
 		{
 			vec<length, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] + other.data_[i];
 			}
@@ -85,17 +84,16 @@ namespace math
 
 		void operator+=(const vec<length, T>& other)
 		{
-			vec<length, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
-				result.data_[i] = data_[i] + other.data_[i];
+				data_[i] += other.data_[i];
 			}
 		}
 
 		vec operator-(const vec<length, T>& other) const
 		{
 			vec<length, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] - other.data_[i];
 			}
@@ -104,7 +102,7 @@ namespace math
 
 		void operator-=(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] -= other.data_[i];
 			}
@@ -113,7 +111,7 @@ namespace math
 		vec operator*(float init) const
 		{
 			vec<length, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] * init;
 			}
@@ -124,7 +122,7 @@ namespace math
 		{
 			vec<length, T> result;
 			float inverse = 1.0f / num;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] * inverse;
 			}
@@ -133,7 +131,7 @@ namespace math
 
 		void operator*=(const float init) 
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] *= init;
 			}
@@ -143,7 +141,7 @@ namespace math
 		{
 			float inverse = 1.0f / init;
 
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] *= inverse;
 			}
@@ -151,9 +149,30 @@ namespace math
 	
 		bool operator==(const vec<length, T>& other)
 		{
+			auto eps = std::numeric_limits<float>::epsilon();
+			const auto eq = [&](float a, float b)
+			{
+				return fabs(a - b) < eps;
+			};
+
 			for (std::uint32_t i = 0; i < length; i++)
 			{
-				if (data_[i] != other.data_[i]) return false;
+				if (!eq(data_[i], other.data_[i])) return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const vec<length, T>& other)
+		{
+			auto eps = std::numeric_limits<float>::epsilon();
+			const auto eq = [&](float a, float b)
+			{
+				return fabs(a - b) < eps;
+			};
+
+			for (std::uint32_t i = 0; i < length; i++)
+			{
+				if (eq(data_[i], other.data_[i])) return false;
 			}
 			return true;
 		}

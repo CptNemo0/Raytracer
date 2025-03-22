@@ -36,7 +36,7 @@ namespace math
 	{
 		T result = static_cast<T>(0);
 
-		for (std::uint32_t i = 0; i < l; ++i)
+		for (std::uint32_t i = 0; i < l; i++)
 		{
 			result += a.get(i) * a.get(i);
 		}

@@ -45,9 +45,9 @@ namespace math
 
 	quat quat::operator*(const quat& other)
 	{
-		float s = s_ * other.s_ - dot(v_, other.v_);
-		vec3  v = other.v_ * s_ + v_ * other.s_ + cross(v_, other.v_);
-		return quat(s, v);
+		float scalar = s_ * other.s_ - dot(v_, other.v_);
+		vec3 imaginary = (other.v_ * s_) + (v_ * other.s_) + cross(v_, other.v_);
+		return quat(scalar, imaginary);
 	}
 
 	quat quat::operator*(const float other)
