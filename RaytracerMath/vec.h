@@ -15,13 +15,13 @@ namespace math
 	class vec
 	{
 	private:
-		std::uint32_t size_ = length;
+		//std::uint32_t size_ = length;
 	public:
 		std::array<T, length> data_;
 		
 		vec()
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] = static_cast<T>(0);
 			}
@@ -29,7 +29,7 @@ namespace math
 
 		vec(const T init)
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] = init;
 			}
@@ -40,7 +40,7 @@ namespace math
 
 		vec(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 			}
@@ -48,9 +48,6 @@ namespace math
 
 		T& operator[](const std::uint32_t index)
 		{
-#ifdef _DEBUG
-			assert(index < size_);
-#endif
 			return data_[index];
 		}
 
@@ -59,14 +56,9 @@ namespace math
 			return data_[index];
 		}
 
-		std::uint32_t size() const
-		{
-			return size_;
-		}
-
 		vec& operator=(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 			}
@@ -76,7 +68,7 @@ namespace math
 		vec operator+(const vec<length, T>& other) const
 		{
 			vec<length, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] + other.data_[i];
 			}
@@ -86,7 +78,7 @@ namespace math
 		void operator+=(const vec<length, T>& other)
 		{
 			vec<length, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] + other.data_[i];
 			}
@@ -95,7 +87,7 @@ namespace math
 		vec operator-(const vec<length, T>& other) const
 		{
 			vec<length, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] - other.data_[i];
 			}
@@ -104,7 +96,7 @@ namespace math
 
 		void operator-=(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] -= other.data_[i];
 			}
@@ -113,7 +105,7 @@ namespace math
 		vec operator*(float init) const
 		{
 			vec<length, T> result;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] * init;
 			}
@@ -124,7 +116,7 @@ namespace math
 		{
 			vec<length, T> result;
 			float inverse = 1.0f / num;
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				result.data_[i] = data_[i] * inverse;
 			}
@@ -133,7 +125,7 @@ namespace math
 
 		void operator*=(const float init) 
 		{
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] *= init;
 			}
@@ -143,7 +135,7 @@ namespace math
 		{
 			float inverse = 1.0f / init;
 
-			for (std::uint32_t i = 0; i < size_; ++i)
+			for (std::uint32_t i = 0; i < length; ++i)
 			{
 				data_[i] *= inverse;
 			}
