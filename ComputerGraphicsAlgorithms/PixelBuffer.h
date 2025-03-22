@@ -37,7 +37,7 @@ public:
 	color4* ColorBuffer();
 	float* DepthBuffer();
 
-	void SaveColorToFile(const char* filename);
+	void SaveColorToFile(const char* filename) const;
 };
 
 #endif // !PIXEL_BUFFER

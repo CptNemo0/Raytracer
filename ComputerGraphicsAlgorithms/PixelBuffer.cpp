@@ -73,7 +73,7 @@ float* PixelBuffer::DepthBuffer()
 	return depth_buffer_;
 }
 
-void PixelBuffer::SaveColorToFile(const char* filename)
+void PixelBuffer::SaveColorToFile(const char* filename) const
 {
 	stbi_write_bmp
 	(
