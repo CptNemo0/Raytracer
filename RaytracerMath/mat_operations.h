@@ -45,7 +45,7 @@ namespace math
 
 	template <std::uint32_t rows, std::uint32_t columns, typename T>
 	requires std::is_arithmetic_v<T>
-	inline mat<columns, rows, T> transpose(const mat<rows, columns, T>& matrix)
+	inline mat<columns, rows, T> transposed(const mat<rows, columns, T>& matrix)
 	{
 		mat<columns, rows, T> return_value;
 		for (std::uint32_t y = 0; y < rows; y++)

@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <numeric>
 
 namespace math
 {
@@ -171,6 +172,35 @@ namespace math
 			return *this;
 		}	
 
+		bool operator==(const mat<rows, columns, T>& other)
+		{
+			const auto eq = [](float a, float b)
+			{
+				constexpr auto eps = 2.0f * std::numeric_limits<float>::epsilon();
+				return fabs(a - b) < eps;
+			};
+
+			for (std::uint32_t i = 0; i < length_; i++)
+			{
+				if (!eq(data_[i], other.data_[i])) return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const mat<rows, columns, T>& other)
+		{
+			const auto eq = [](float a, float b)
+			{
+				constexpr auto eps = 2.0f * std::numeric_limits<float>::epsilon();
+				return fabs(a - b) < eps;
+			};
+
+			for (std::uint32_t i = 0; i < length_; i++)
+			{
+				if (!eq(data_[i], other.data_[i])) return true;
+			}
+			return false;
+		}
 	};
 
 	using mat4x4 = mat<4, 4, float>;

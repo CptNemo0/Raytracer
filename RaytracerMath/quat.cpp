@@ -40,7 +40,15 @@ namespace math
 
 	bool quat::operator==(const quat& other)
 	{
-		return (v_ == other.v_) && (s_ == other.s_);
+		constexpr auto eps = 2.0f * std::numeric_limits<float>::epsilon();
+		return (v_ == other.v_) && (fabs(s_ - other.s_) < eps);
+	}
+
+	bool quat::operator!=(const quat& other)
+	{
+		constexpr auto eps = std::numeric_limits<float>::epsilon();
+		const bool r = (v_ == other.v_) && (fabs(s_ - other.s_) < eps);
+		return !r;
 	}
 
 	quat quat::operator*(const quat& other)

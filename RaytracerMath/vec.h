@@ -149,9 +149,9 @@ namespace math
 	
 		bool operator==(const vec<length, T>& other)
 		{
-			auto eps = std::numeric_limits<float>::epsilon();
-			const auto eq = [&](float a, float b)
+			const auto eq = [](float a, float b)
 			{
+				constexpr auto eps = 2.0f * std::numeric_limits<float>::epsilon();
 				return fabs(a - b) < eps;
 			};
 
@@ -164,17 +164,17 @@ namespace math
 
 		bool operator!=(const vec<length, T>& other)
 		{
-			auto eps = std::numeric_limits<float>::epsilon();
-			const auto eq = [&](float a, float b)
+			const auto eq = [](float a, float b)
 			{
+				constexpr auto eps = 2.0f * std::numeric_limits<float>::epsilon();
 				return fabs(a - b) < eps;
 			};
 
 			for (std::uint32_t i = 0; i < length; i++)
 			{
-				if (eq(data_[i], other.data_[i])) return false;
+				if (!eq(data_[i], other.data_[i])) return true;
 			}
-			return true;
+			return false;
 		}
 
         T dot(const vec<length, T>& other) const

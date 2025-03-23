@@ -107,6 +107,11 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="mat_operations_test.cpp" />
+    <ClCompile Include="mat_test.cpp" />
+    <ClCompile Include="quat_operations_test.cpp" />
+    <ClCompile Include="quat_test.cpp" />
+    <ClCompile Include="transformations_test.cpp" />
     <ClCompile Include="vec_operations_test.cpp" />
     <ClCompile Include="vec_test.cpp" />
     <ClCompile Include="pch.cpp">
