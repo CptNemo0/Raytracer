@@ -1,5 +1,7 @@
 #include <iostream>
 #include "raytracer_math.h"
+#include "ray.h"
+#include "sphere.h"
 
 void Photorealistic1stLab()
 {
@@ -35,8 +37,61 @@ void Photorealistic1stLab()
 		std::cout << "\n5. Normalize this vector\n";
 		math::normalize(c);
 		std::cout << "c: " << c << std::endl;
-	}
 
+		
+	}
+	{
+		std::cout << "\n7. Define a sphere S with center at (0,0,0) and radius 10\n";
+		primitives::Sphere S(math::vec3(0, 0, 0), 10);
+		std::cout << "S: " << S << std::endl;
+
+		std::cout << "\n8. Define a ray R1 starting at (0,0,-20), directed towards the center of the sphere S\n";
+		intersections::Ray R1(math::vec3(0, 0, -20), math::vec3(0, 0, 1));
+		std::cout << "R1: " << R1 << std::endl;
+
+		std::cout << "\n9. Define a ray R2 with the same starting point as R1, but directed parallel to the Y-axis\n";
+		intersections::Ray R2(math::vec3(0, 0, -20), math::vec3(0, 1, 0));
+		std::cout << "R2: " << R2 << std::endl;
+
+		std::cout << "\n10 - 11. Check if the sphere S intersects with rays R1 and R2\n";
+		math::vec3 hitPoint1, hitPoint2;
+			//if (S.Hit(R1, 0, 100, hitPoint1)) {//sprawdza tylko pierwszy punkt przeciecia
+			//	std::cout << "S intersects with R1 at: " << hitPoint1 << std::endl;
+			//}
+			//else {
+			//	std::cout << "S does not intersect with R1" << std::endl;
+			//}
+			//if (S.Hit(R2, 0, 100, hitPoint1)) {
+			//	std::cout << "S intersects with R2 at: " << hitPoint1 << std::endl;
+			//}
+			//else {
+			//	std::cout << "S does not intersect with R2" << std::endl;
+			//}
+
+			if (S.Hit(R1, 0, 100, hitPoint1, hitPoint2)) {//sprawdza oba punkty przeciecia
+				std::cout << "S intersects with R1 at: " << hitPoint1 << "and" << hitPoint2 << std::endl;
+			}
+			else {
+				std::cout << "S does not intersect with R1" << std::endl;
+			}
+			if (S.Hit(R2, 0, 100, hitPoint1, hitPoint2)) {
+				std::cout << "S intersects with R2 at: " << hitPoint1 << "and" << hitPoint2 << std::endl;
+			}
+			else {
+				std::cout << "S does not intersect with R2" << std::endl;
+			}
+
+		std::cout << "\n12. Define any ray R3 such that it intersects the sphere S at exactly one point. Provide the coordinates of the intersection point.\n";
+        intersections::Ray R3(math::vec3(10, -10, 0), math::vec3(0, 1, 0));
+        std::cout << "R3: " << R3 << std::endl;
+
+            if (S.Hit(R3, 0, 100, hitPoint1)) {
+                std::cout << "S intersects with R3 at: " << hitPoint1 << std::endl;
+            } else {
+                std::cout << "S does not intersect with R3" << std::endl;
+            }
+	}
+		
 	std::cout << "\n\nAdditional\n";
 
 	{
