@@ -176,7 +176,7 @@ namespace math
 		{
 			const auto eq = [](float a, float b)
 			{
-				constexpr auto eps = 2.0f * std::numeric_limits<float>::epsilon();
+				constexpr auto eps = std::numeric_limits<float>::epsilon();
 				return fabs(a - b) < eps;
 			};
 
@@ -191,7 +191,7 @@ namespace math
 		{
 			const auto eq = [](float a, float b)
 			{
-				constexpr auto eps = 2.0f * std::numeric_limits<float>::epsilon();
+				constexpr auto eps = std::numeric_limits<float>::epsilon();
 				return fabs(a - b) < eps;
 			};
 
