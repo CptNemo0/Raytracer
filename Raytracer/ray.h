@@ -10,6 +10,22 @@
 
 namespace intersections 
 {
+
+	struct IntersectionResult {
+		enum Type {
+			MISS,              
+			HIT,               
+			INSIDE_PRIMITIVE   
+		};
+
+		Type type;                  
+		math::vec3 LPOINT;          
+		float distance;             
+		math::vec3 intersectionNormal;
+	};
+
+
+
 	class Ray
 	{
 	public:
