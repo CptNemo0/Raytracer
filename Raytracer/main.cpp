@@ -3,6 +3,7 @@
 #include "ray.h"
 #include "sphere.h"
 #include "plane.h"
+#include "triangle.h"
 
 void Photorealistic1stLab()
 {
@@ -108,6 +109,58 @@ void Photorealistic1stLab()
 
 	}
 
+
+	{
+		std::cout << "\n15. We have a triangle defined by the points A(0, 0, 0), B(1, 0, 0), and C(0, 1, 0). Check if a line defined by points P1 and P2 intersects this triangle.\n";
+		primitives::Triangle T(math::vec3(0, 0, 0), math::vec3(1, 0, 0), math::vec3(0, 1, 0));
+		std::cout << "T: " << T << std::endl;
+		std::cout << "\n1) \n" << std::endl;
+		math::vec3 P1(-1, 0.5, 0);
+		math::vec3 P2(1, 0.5, 0);
+		math::vec3 direction = P2 - P1;
+		math::normalize(direction);
+		intersections::Ray R(P1, direction);
+		math::vec3 result;
+		if (T.IntersectTriangle(R, T.vertices[0], T.vertices[1], T.vertices[2], result))
+		{
+			std::cout << "true" << ", result:" << result << std::endl;
+		}
+		else
+		{
+			std::cout << "false" << std::endl;
+		}
+
+		std::cout << "\n2) \n" << std::endl;
+		P1 = math::vec3(2, -1, 0);
+		P2 = math::vec3(2, 2, 0);
+		direction = P2 - P1;
+		math::normalize(direction);
+		R = intersections::Ray(P1, direction);
+		if (T.IntersectTriangle(R, T.vertices[0], T.vertices[1], T.vertices[2], result))
+		{
+			std::cout << "true" << ", result:" << result << std::endl;
+		}
+		else
+		{
+			std::cout << "false" << std::endl;
+		}
+
+		std::cout << "\n3) \n" << std::endl;
+		P1 = math::vec3(0, 0, -1);
+		P2 = math::vec3(0, 0, 1);
+		direction = P2 - P1;
+		math::normalize(direction);
+		R = intersections::Ray(P1, direction);
+
+		if (T.IntersectTriangle(R, T.vertices[0], T.vertices[1], T.vertices[2], result))
+		{
+			std::cout << "true" << ", result:" << result << std::endl;
+		}
+		else
+		{
+			std::cout << "false" << std::endl;
+		}
+	}
 		
 	std::cout << "\n\nAdditional\n";
 
