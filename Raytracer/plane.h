@@ -11,10 +11,9 @@ namespace primitives
 	{
 	public:
 		Plane() {};
-		Plane(const math::vec3& normal, const math::vec3& point0) 
-			: normal_(normal), point0_(point0) {}
-		Plane(const math::vec3& normal, const math::vec3& point0, float distance)
-			: normal_(normal), point0_(point0), distance_(distance) {}
+		Plane(const math::vec3& normal, const math::vec3& point0)
+			: normal_(normal), point0_(point0) 
+	{}
 
 
 		bool Intersect3(const Plane& p2, const Plane& p3, math::vec3& result) const
@@ -48,7 +47,7 @@ namespace primitives
 			{
 				return result;
 			}
-			float t = (- distance_ - normal_.dot(ray.getOrigin())/denom);
+			float t = (point0_ - ray.getOrigin()).dot(normal_)/ denom;
 
 			if (t > 0)
 			{
@@ -70,6 +69,14 @@ namespace primitives
 			return result;
 		}
 
+
+		friend std::ostream& operator<<(std::ostream& os, const Plane& p)
+		{
+			os << "Plane\n(" 
+				<< "Normal: " << p.normal_ 
+				<< "\nPoint0: " << p.point0_ << ")\n";
+			return os;
+		}
 		const math::vec3& getNormal() const { return normal_; }
 		const math::vec3& getPoint0() const { return point0_; }
 

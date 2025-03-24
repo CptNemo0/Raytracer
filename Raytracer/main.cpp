@@ -2,6 +2,7 @@
 #include "raytracer_math.h"
 #include "ray.h"
 #include "sphere.h"
+#include "plane.h"
 
 void Photorealistic1stLab()
 {
@@ -90,7 +91,23 @@ void Photorealistic1stLab()
             } else {
                 std::cout << "S does not intersect with R3" << std::endl;
             }
+	
+		std::cout << "\n13 - 14. Define a plane P passing through (0,0,0), with a normal vector forming a 45° angle with both the Y- and Z-axes. Find the intersection point of plane P with ray R2\n";
+		math::vec3 normal(0, sqrt(2) / 2, sqrt(2) / 2);
+		math::normalize(normal);
+		primitives::Plane P(normal, math::vec3(0, 0, 0));
+		std::cout << "P: " << P << std::endl;
+
+		intersections::IntersectionResult result = P.Intersects(R2, 0);
+		if (result.type == intersections::IntersectionResult::HIT || result.type == intersections::IntersectionResult::INSIDE_PRIMITIVE) {
+			std::cout << "P intersects with R2 at: " << result.LPOINT << std::endl;
+		}
+		else {
+			std::cout << "P does not intersect with R2" << std::endl;
+		}
+
 	}
+
 		
 	std::cout << "\n\nAdditional\n";
 
