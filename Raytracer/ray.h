@@ -18,6 +18,7 @@ namespace intersections
 			INSIDE_PRIMITIVE   
 		};
 
+
 		Type type;                  
 		math::vec3 LPOINT;          
 		float distance;             

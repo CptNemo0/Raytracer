@@ -12,8 +12,7 @@ namespace primitives
 	public:
 		Plane() {};
 		Plane(const math::vec3& normal, const math::vec3& point0)
-			: normal_(normal), point0_(point0) 
-	{}
+			: normal_(normal), point0_(point0) {}
 
 
 		bool Intersect3(const Plane& p2, const Plane& p3, math::vec3& result) const
@@ -29,9 +28,9 @@ namespace primitives
 			if (denom == 0) return false;
 
 			math::vec3 temp1, temp2, temp3;
-			temp1 = n2n3 * distance_;
-			temp2 = n3n1 * p2.distance_;
-			temp3 = n1n2 * p3.distance_;
+			temp1 = n2n3 * normal_.dot(point0_);
+			temp2 = n3n1 * p2.normal_.dot(p2.point0_);
+			temp3 = n1n2 * p3.normal_.dot(p3.point0_);
 
 			result = (temp1 + temp2 + temp3) / denom;
 			return true;
@@ -86,6 +85,5 @@ namespace primitives
 	private:
 		math::vec3 normal_;
 		math::vec3 point0_;
-		float distance_;
 	};
 }
