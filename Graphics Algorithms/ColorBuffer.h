@@ -4,6 +4,8 @@
 #include "third_party/stb_image_write.h"
 
 
+
+
 using Color4 = math::vec<4, uint8_t>;
 using Color3 = math::vec<3, uint8_t>;
 
@@ -13,13 +15,24 @@ namespace buffer
 	{
 	public:
 		ColorBuffer(int width, int height)
-			: width_(width), height_(height) {};
+			: width_(width), height_(height) 
+		{
+			colorBuffer_ = new Color4[width * height];
+			colorDepth_ = new float[width * height];
+		};
 		ColorBuffer(int width, int height, Color4* color)
-			: width_(width), height_(height), colorBuffer_(color) {};
+			: width_(width), height_(height), colorBuffer_(color) 
+		{
+			colorDepth_ = new float[width * height];
+		};
 		ColorBuffer(int width, int height, Color4* color, float* colorDepth)
 			: width_(width), height_(height), colorBuffer_(color), colorDepth_(colorDepth) {};
 
-		~ColorBuffer();
+		~ColorBuffer()
+		{
+			delete[] colorBuffer_;
+			delete[] colorDepth_;
+		};
 
         void generateBMP(const char* filename) const 
         {
