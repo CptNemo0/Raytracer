@@ -4,7 +4,7 @@ class Triangle
 public:
     Triangle(const math::vec<2, float>& v0, const math::vec<2, float>& v1, const math::vec<2, float>& v2)
     {
-        auto isClockwise = [](const math::vec<2, float>& a, const math::vec<2, float>& b, const math::vec<2, float>& c) {
+        auto isClockwise = [](const math::vec<2, float> a, const math::vec<2, float> b, const math::vec<2, float> c) {
             return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]) > 0;
         };
 
@@ -16,12 +16,12 @@ public:
             v0_ = v0;
             v1_ = v2;
             v2_ = v1;
-        }
+		}
     }
 	
-	bool isLeft(const math::vec<2, float>& x1, const math::vec<2, float>& y1, const math::vec<2, float>& x2, const math::vec<2, float>& y2) const
+	bool isLeft(const math::vec<2, float>& v1, const math::vec<2, float>& v2, const math::vec<2, float>& p) const
 	{
-		return (y1[1] - y2[1]) * x1[0] + (x2[0] - x1[0]) * y1[1] + (x1[1] - y1[1]) * x2[0] > 0;
+		return (v1[0] - v2[0]) * (p[1] - v1[1]) - (v1[1] - v2[1]) * (p[0] - v1[0]) < 0;
 	}
 
     void drawTriangle(buffer::ColorBuffer& buffer, const Color4 color) 
@@ -31,7 +31,7 @@ public:
 			for (int j = 0; j < buffer.GetHeight(); j++)
 			{
 				math::vec<2, float> p = { i, j };
-				if (isLeft(v0_, v1_, v2_, p) && isLeft(v1_, v2_, v0_, p) && isLeft(v2_, v0_, v1_, p))
+				if (isLeft(v0_, v1_, p) && isLeft(v1_, v2_, p) && isLeft(v2_, v0_, p))
 				{
 					buffer.SetColor(i, j, color);
 				}
