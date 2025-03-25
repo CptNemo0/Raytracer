@@ -2,11 +2,12 @@
 #include "vec.h"
 #include "ray.h"
 #include "plane.h"
+#include "geometry.h"
 #include "raytracer_math.h"
 
 namespace primitives
 {
-	class Triangle
+	class Triangle : public Geometry
 	{
 	public:
 		Triangle(const math::vec3& a, const math::vec3& b, const math::vec3& c)

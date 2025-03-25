@@ -2,12 +2,13 @@
 
 #include "vec.h"
 #include "ray.h"
+#include "geometry.h"
 #include "raytracer_math.h"
 
 
 namespace primitives
 {
-	class Plane
+	class Plane : public Geometry
 	{
 	public:
 		Plane() {};
