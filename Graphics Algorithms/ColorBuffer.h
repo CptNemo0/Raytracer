@@ -21,15 +21,37 @@ namespace buffer
 
 		~ColorBuffer();
 
+        void generateBMP(const char* filename) const 
+        {
+            stbi_write_bmp(filename, width_, height_, 4, colorBuffer_);
+        }
 
         void SetWidth(int width) { width_ = width; }
         void SetHeight(int height) { height_ = height; }
         void Resize(int width, int height) { width_ = width; height_ = height; }
 
-        void SetColorDepth(int x, int y, float depth) { colorDepth_[y * width_ + x] = depth; }
-        void SetColor(int x, int y, const Color4& color) { colorBuffer_[y * width_ + x] = color; }
+        void SetColorDepth(int x, int y, float depth) 
+		{ 
+			colorDepth_[y * width_ + x] = depth; 
+		}
+        void SetColor(int x, int y, const Color4& color) 
+		{
+			colorBuffer_[y * width_ + x] = color; 
+		}
 		void SetColorBuffer(Color4* color) { colorBuffer_ = color; }
 		void SetColorBufferDepth(float* colorDepth) { colorDepth_ = colorDepth; }
+
+		void fillColorBuffer(const Color4& color) 
+		{ 
+			for (int i = 0; i < width_ * height_; i++) 
+				colorBuffer_[i] = color; 
+		}
+
+		void fillDepthBuffer(const float& depth) 
+		{
+			for (int i = 0; i < width_ * height_; i++) 
+				colorDepth_[i] = depth;
+		}
 
         int GetWidth() const { return width_; }
         int GetHeight() const { return height_; }
