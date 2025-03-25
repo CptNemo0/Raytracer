@@ -14,6 +14,9 @@ namespace buffer
 	class ColorBuffer
 	{
 	public:
+		int width_;
+		int height_;
+
 		ColorBuffer(int width, int height)
 			: width_(width), height_(height) 
 		{
@@ -76,8 +79,7 @@ namespace buffer
 		float* GetColorBufferDepth() const { return colorDepth_; }
 
 	private:
-		int width_;
-		int height_;
+		
 		float* colorDepth_;
 		Color4* colorBuffer_;
 	};

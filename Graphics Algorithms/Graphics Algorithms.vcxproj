@@ -140,6 +140,7 @@
     <ClInclude Include="third_party\stb_image.h" />
     <ClInclude Include="third_party\stb_image_resize2.h" />
     <ClInclude Include="third_party\stb_image_write.h" />
+    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
