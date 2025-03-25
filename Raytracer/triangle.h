@@ -67,7 +67,7 @@ namespace primitives
 			return false;
 		}
 
-		intersections::IntersectionResult Intersects(const intersections::Ray& ray, float range)
+		intersections::IntersectionResult Intersects(const intersections::Ray& ray, float range) const
 		{
 			intersections::IntersectionResult result;
 			result.type = intersections::IntersectionResult::MISS;

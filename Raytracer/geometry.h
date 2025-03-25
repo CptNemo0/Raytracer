@@ -9,7 +9,7 @@ namespace primitives
 	{
 	public:
 		Material material;
-		virtual intersections::IntersectionResult Intersects(const intersections::Ray& ray, float range) = 0;
+		virtual intersections::IntersectionResult Intersects(const intersections::Ray& ray, float range = 0.0f) const = 0;
 
 	};
 }

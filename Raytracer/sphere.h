@@ -2,10 +2,11 @@
 #include "raytracer_math.h"
 #include "vec.h"
 #include "ray.h"
+#include "geometry.h"
 
 
 namespace primitives {
-    class Sphere  
+	class Sphere : public Geometry
     {  
     public:
        Sphere() {};
@@ -80,7 +81,10 @@ namespace primitives {
            return false;
        }
 
-
+       intersections::IntersectionResult Intersects(const intersections::Ray& ray, float range) const
+       {
+           return intersections::IntersectionResult();
+       }
 
        const math::vec3& getCenter() const { return center_; }
        float getRadius() const { return radius_; }
@@ -100,6 +104,7 @@ namespace primitives {
     private:  
        math::vec3 center_;
        float radius_;  
+
     };
 
 }
