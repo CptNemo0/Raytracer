@@ -10,6 +10,22 @@
 
 namespace intersections 
 {
+
+	struct IntersectionResult {
+		enum Type {
+			MISS,              
+			HIT,               
+			INSIDE_PRIMITIVE   
+		};
+
+		Type type;                  
+		math::vec3 LPOINT;          
+		float distance;             
+		math::vec3 intersectionNormal;
+	};
+
+
+
 	class Ray
 	{
 	public:
@@ -42,11 +58,11 @@ namespace intersections
 		
         friend std::ostream& operator<<(std::ostream& os, const Ray& ray) 
 		{
-            os << "Ray(" 
+            os << "Ray\n(" 
                << "Origin: " << ray.origin_ 
-               << ", Direction: " << ray.direction_ 
-               << ", Destination: " << ray.destination_ 
-               << ", Distance: " << ray.distance_ 
+               << ",\nDirection: " << ray.direction_ 
+               << ",\nDestination: " << ray.destination_ 
+               << ",\nDistance: " << ray.distance_ 
                << ")";
             return os;
         }        

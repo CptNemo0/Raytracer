@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <iostream>
 #include <type_traits>
+#include <numeric>
 
 namespace math
 {
@@ -80,7 +81,7 @@ namespace math
 			vec<length, T> result;
 			for (std::uint32_t i = 0; i < length; ++i)
 			{
-				result.data_[i] = data_[i] + other.data_[i];
+				data_[i] += other.data_[i];
 			}
 		}
 
@@ -143,11 +144,32 @@ namespace math
 	
 		bool operator==(const vec<length, T>& other)
 		{
+			const auto eq = [](float a, float b)
+			{
+				constexpr auto eps = std::numeric_limits<float>::epsilon();
+				return fabs(a - b) < eps;
+			};
+
 			for (std::uint32_t i = 0; i < length; i++)
 			{
-				if (data_[i] != other.data_[i]) return false;
+				if (!eq(data_[i], other.data_[i])) return false;
 			}
 			return true;
+		}
+
+		bool operator!=(const vec<length, T>& other)
+		{
+			const auto eq = [](float a, float b)
+			{
+				constexpr auto eps = std::numeric_limits<float>::epsilon();
+				return fabs(a - b) < eps;
+			};
+
+			for (std::uint32_t i = 0; i < length; i++)
+			{
+				if (!eq(data_[i], other.data_[i])) return true;
+			}
+			return false;
 		}
 
         T dot(const vec<length, T>& other) const

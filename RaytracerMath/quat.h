@@ -24,6 +24,7 @@ namespace math
 		void operator+=(const quat& other);
 		void operator-=(const quat& other);
 		bool operator==(const quat& other);
+		bool operator!=(const quat& other);
 		quat operator*(const quat& other);
 		quat operator*(const float other);
 		void operator*=(const quat& other);

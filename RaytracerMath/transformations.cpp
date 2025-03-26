@@ -109,7 +109,7 @@ namespace math
 		return rotated.v_;
 	}
 	
-	vec3 quat_rotate_deg(vec3& vect, float angle, const vec3& axis)
+	vec3 quat_rotate_deg(const vec3& vect, float angle, const vec3& axis)
 	{
 		quat p(0.0f, vect);
 		auto axis_n = normalized(axis);
