@@ -84,3 +84,14 @@ void PixelBuffer::SaveColorToFile(const char* filename) const
 		static_cast<void*>(color_buffer_)
 	);
 }
+
+
+std::uint32_t PixelBuffer::xy_to_index(const std::uint32_t x, const std::uint32_t y) const
+{
+	return width_ * y + x;
+}
+
+color4& PixelBuffer::GetPixel(const std::uint32_t x, const std::uint32_t y)
+{
+	return color_buffer_[xy_to_index(x, y)];
+}

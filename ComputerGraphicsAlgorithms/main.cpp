@@ -7,11 +7,18 @@
 #endif // !STB_IMAGE_WRITE_IMPLEMENTATION
 
 #include "PixelBuffer.h"
-
+#include "Rasterizer.h"
 int main(int argv, char** argc)
 {
-    PixelBuffer buffers(1920, 1080);
-    buffers.ColorClear(color4(222, 121, 255, 255));
-    buffers.SaveColorToFile("image.bmp");
+    Rasterizer rasterizer(512, 512);
+    rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
+
+    triangle tri;
+    tri.vertices[0] = math::vec3(-1.0f, -1.0f, 0.0f);
+    tri.vertices[1] = math::vec3(-1.0f, 1.0f, 0.0f);
+    tri.vertices[2] = math::vec3(1.0f, 1.0f, 0.0f);
+    rasterizer.DrawTriangle(tri);
+
+    rasterizer.framebuffer_->SaveColorToFile("image.bmp");
     return 0;
 }

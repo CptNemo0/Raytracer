@@ -38,6 +38,8 @@ public:
 	float* DepthBuffer();
 
 	void SaveColorToFile(const char* filename) const;
+	std::uint32_t xy_to_index(const std::uint32_t x, const std::uint32_t y) const;
+	color4& GetPixel(const std::uint32_t x, const std::uint32_t y);
 };
 
 #endif // !PIXEL_BUFFER_H
