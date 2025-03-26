@@ -1,5 +1,5 @@
-#ifndef PIXEL_BUFFER
-#define PIXEL_BUFFER
+#ifndef PIXEL_BUFFER_H
+#define PIXEL_BUFFER_H
 
 #include "stb_image_write.h"
 
@@ -40,4 +40,4 @@ public:
 	void SaveColorToFile(const char* filename) const;
 };
 
-#endif // !PIXEL_BUFFER
+#endif // !PIXEL_BUFFER_H
