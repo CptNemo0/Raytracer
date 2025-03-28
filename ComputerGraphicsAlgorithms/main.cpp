@@ -10,7 +10,7 @@
 #include "Rasterizer.h"
 int main(int argv, char** argc)
 {
-    Rasterizer rasterizer(512, 512);
+    Rasterizer rasterizer(400, 300);
     rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
 
     triangle tri;
