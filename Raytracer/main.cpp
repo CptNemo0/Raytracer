@@ -1,10 +1,23 @@
+#ifndef STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#endif // !STB_IMAGE_WRITE_IMPLEMENTATION
+
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif // !_CRT_SECURE_NO_WARNINGS
+
+#include "rendering/stb_image_write.h"
+#include "rendering/PixelBuffer.h"
+
 #include <iostream>
 #include "raytracer_math.h"
 #include "ray.h"
 #include "sphere.h"
 #include "plane.h"
 #include "triangle.h"
-
+#include <vector>
+#include <memory>
+#include <variant>
 void Photorealistic1stLab()
 {
 	{
@@ -242,8 +255,97 @@ void Photorealistic1stLab()
 	}
 }
 
+class Camera
+{
+public:
+	math::Point position = math::vec3(0.0f, 0.0f, 0.0f);
+	math::vec3 forward = math::vec3(0.0f, 0.0f, 1.0f);
+	math::vec3 up = math::vec3(0.0f, 1.0f, 0.0f);
+	math::vec3 right = math::vec3(1.0f, 0.0f, 0.0f);
+
+	float near = 1.0f;
+	float far = 1000.0f;
+	float scale = 0.01f;
+
+	math::vec3 GetPixelPos(float x, float y)
+	{
+		math::vec3 return_value = position;
+
+		return_value += right * x;
+		return_value += up * y;
+		return_value += forward * near;
+
+		return return_value;
+	}
+};
+
+void render(Camera* camera, rendering::PixelBuffer* buffer, primitives::Triangle* triangle)
+{
+	std::uint32_t h = buffer->Height();
+	std::uint32_t w = buffer->Width();
+	for (std::uint32_t y = 0; y < buffer->Height(); y++)
+	{
+		for (std::uint32_t x = 0; x < buffer->Width(); x++)
+		{
+			auto localx = x - (w / 2);
+			auto localy = y - (h / 2);
+			float fx = static_cast<float>(localx) * camera->scale;
+			float fy = static_cast<float>(localy) * camera->scale;
+
+			math::Point pixel_position = camera->GetPixelPos(fx, fy);
+
+			//math::vec3 ray_dir = camera->forward;
+			math::vec3 ray_dir = pixel_position - camera->position;
+			//intersections::Ray ray(pixel_position, ray_dir);
+			intersections::Ray ray(camera->position, ray_dir);
+			math::vec3 hitpoint;
+			auto result = triangle->Intersects(ray, 1000.0f);
+
+			if (result.type == intersections::IntersectionResult::HIT)
+			{
+				std::cout << "Hit\n";
+				auto& pixel = buffer->GetPixel(x, y);
+				math::vec3 light_pos (-1.0f, -1.0f, -1.0f);
+				auto normal = triangle->normals[0];
+				auto light_dir = light_pos - result.LPOINT;
+				math::normalize(light_dir);
+				math::normalize(normal);
+				float d = math::dot(light_dir, normal);
+
+				if(d > 0)
+				{
+					auto dist = math::distance(light_pos, result.LPOINT);
+					auto distinv = 5.0f / dist;	
+					auto diffuse = d;
+
+					pixel = rendering::color4(255 * d, 0, 0, 255);
+				}
+				else
+				{
+					pixel = rendering::color4(10, 0, 0, 255);
+				}
+			}
+		}
+	}
+}
+
+
 int main(int argc, char** argv)
 {
-	Photorealistic1stLab();
+	//Photorealistic1stLab();
+
+	primitives::Triangle triangle(
+		math::vec3(-10.0f,  20.0f, 6.0f),
+		math::vec3(10.0f,  20, 6.0f),
+		math::vec3(-10.0f, -20.0f, 6.0f)
+	);
+	
+	
+	rendering::PixelBuffer buffer(512, 512);
+	buffer.ColorClear(rendering::color4(0, 0, 0, 255));
+	Camera cam;
+	render(&cam, &buffer, &triangle);
+	
+	buffer.SaveColorToFile("test.bmp");
 	return 0;
 }

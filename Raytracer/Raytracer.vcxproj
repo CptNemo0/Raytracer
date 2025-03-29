@@ -124,7 +124,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp23</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -138,12 +138,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rendering\PixelBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="geometry.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="ray.h" />
+    <ClInclude Include="rendering\PixelBuffer.h" />
+    <ClInclude Include="rendering\stb_image_write.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="triangle.h" />
   </ItemGroup>
