@@ -22,6 +22,7 @@
 #include "intersections/IntersectionType.h"
 
 #include "primitives/primitives.h"
+#include "rendering/Renderer.h"
 
 //void Photorealistic1stLab()
 //{
@@ -270,7 +271,16 @@ void render(rendering::Camera* camera, rendering::PixelBuffer* buffer, const pri
 	const std::int32_t width  = static_cast<std::int32_t>(buffer->Width());
 	const std::int32_t height = static_cast<std::int32_t>(buffer->Height());
 
-	const rendering::color4 color(255, 0, 0, 255);
+	rendering::color4 color;
+
+	std::visit
+	(
+		[&](auto& primitive)
+		{
+			color = primitive.GetMaterial().ambient;
+		},
+		geometry
+	);
 
 	for (std::int32_t y = 0; y < height; y++)
 	{
@@ -311,15 +321,26 @@ int main(int argc, char** argv)
 {
 	//Photorealistic1stLab();
 	
-	rendering::Camera cam;
+	rendering::PerspectiveCamera cam;
 
 	primitives::Sphere sphere(math::vec3(0.0f, 0.0f, 11.0f), 2.0f);
+	primitives::Triangle triangle(math::vec3(0.0f, 0.0f, 15.0f), math::vec3(0.0f, 5.0f, 15.0f), math::vec3(5.0f, 1.5f, 15.0f));
+
+	rendering::Material material1(rendering::color4(255, 0, 0, 255));
+	rendering::Material material2(rendering::color4(0, 255, 0, 255));
+
+	sphere.SetMaterial(material1);
+	triangle.SetMaterial(material2);
 
 	rendering::PixelBuffer buffer(1920, 1080);
-	buffer.ColorClear(rendering::color4(0, 0, 0, 255));
+
+	rendering::Renderer renderer(&cam, &buffer);
+	renderer.AddGeometry(triangle);
+	renderer.AddGeometry(sphere);
+	renderer.RenderScene();
+
+	/*render(&cam, &buffer, sphere);
+	render(&cam, &buffer, triangle);*/
 	
-	render(&cam, &buffer, sphere);
-	
-	buffer.SaveColorToFile("test.bmp");
 	return 0;
 }
