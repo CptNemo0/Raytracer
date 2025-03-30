@@ -8,6 +8,7 @@
 
 #include "rendering/stb_image_write.h"
 #include "rendering/PixelBuffer.h"
+#include "rendering/Camera.h"
 
 #include <iostream>
 #include "raytracer_math.h"
@@ -259,49 +260,31 @@
 //	}
 //}
 
-class Camera
+void render(rendering::Camera* camera, rendering::PixelBuffer* buffer, const primitives::geometry& geometry)
 {
-public:
-	math::Point position = math::vec3(0.0f, 0.0f, 0.0f);
-	math::vec3 forward = math::vec3(0.0f, 0.0f, 1.0f);
-	math::vec3 up = math::vec3(0.0f, 1.0f, 0.0f);
-	math::vec3 right = math::vec3(1.0f, 0.0f, 0.0f);
+	const auto [w, h] = camera->GetDimensions();
+	const auto pixel_width = w / static_cast<float>(buffer->Width());
+	const auto pixel_height = h / static_cast<float>(buffer->Height());
+	const auto start_x = -w * 0.5f + pixel_width * 0.5f;
+	const auto start_y = h * 0.5f - pixel_height * 0.5f;
+	const std::int32_t width  = static_cast<std::int32_t>(buffer->Width());
+	const std::int32_t height = static_cast<std::int32_t>(buffer->Height());
 
-	float near = 1.0f;
-	float far = 1000.0f;
-	float scale = 0.01f;
+	const rendering::color4 color(255, 0, 0, 255);
 
-	math::vec3 GetPixelPos(float x, float y)
+	for (std::int32_t y = 0; y < height; y++)
 	{
-		math::vec3 return_value = position;
-
-		return_value += right * x;
-		return_value += up * y;
-		return_value += forward * near;
-
-		return return_value;
-	}
-};
-
-void render(Camera* camera, rendering::PixelBuffer* buffer, const primitives::geometry& geometry)
-{
-	std::uint32_t h = buffer->Height();
-	std::uint32_t w = buffer->Width();
-	for (std::uint32_t y = 0; y < buffer->Height(); y++)
-	{
-		for (std::uint32_t x = 0; x < buffer->Width(); x++)
+		for (std::int32_t x = 0; x < width; x++)
 		{
 			auto& pixel = buffer->GetPixel(x, y);
 
-			const std::int32_t localx = x - (w / 2);
-			const std::int32_t localy = (h / 2) - y;
-			float fx = static_cast<float>(localx) * camera->scale;
-			float fy = static_cast<float>(localy) * camera->scale;
+			const float fx = start_x + static_cast<float>(x) * pixel_width;
+			const float fy = start_y - static_cast<float>(y) * pixel_height;
 
-			math::Point pixel_position = camera->GetPixelPos(fx, fy);
+			math::Point pixel_position = camera->GetPixelPosition(fx, fy);
 
-			math::vec3 ray_dir = pixel_position - camera->position;
-			intersections::Ray ray(camera->position, ray_dir);
+			math::vec3 ray_dir = (pixel_position - camera->position_);
+			intersections::Ray ray(camera->position_, ray_dir);
 
 			intersections::IntersectionResult result;
 
@@ -318,8 +301,7 @@ void render(Camera* camera, rendering::PixelBuffer* buffer, const primitives::ge
 			{
 				continue;
 			}
-		
-			const rendering::color4 color (255, 0, 0, 255);
+
 			pixel = color;
 		}
 	}
@@ -329,16 +311,14 @@ int main(int argc, char** argv)
 {
 	//Photorealistic1stLab();
 	
-	primitives::Plane plane
-	(
-		math::vec3(-1.0f, -1.0f, -1.0f),
-		math::vec3(0.0f, 0.0f, 5.0f)
-	);
+	rendering::Camera cam;
+
+	primitives::Sphere sphere(math::vec3(0.0f, 0.0f, 11.0f), 2.0f);
 
 	rendering::PixelBuffer buffer(1920, 1080);
 	buffer.ColorClear(rendering::color4(0, 0, 0, 255));
-	Camera cam;
-	render(&cam, &buffer, plane);
+	
+	render(&cam, &buffer, sphere);
 	
 	buffer.SaveColorToFile("test.bmp");
 	return 0;

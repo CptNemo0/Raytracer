@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="rendering\Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="primitives\Plane.cpp" />
     <ClCompile Include="primitives\Sphere.cpp" />
@@ -144,6 +145,7 @@
     <ClCompile Include="rendering\PixelBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="rendering\Camera.h" />
     <ClInclude Include="intersections\IntersectionResult.h" />
     <ClInclude Include="intersections\IntersectionType.h" />
     <ClInclude Include="intersections\Ray.h" />

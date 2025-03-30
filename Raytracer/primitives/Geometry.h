@@ -13,9 +13,10 @@ namespace primitives
 	class Geometry
 	{
 	public:
-		Geometry() = default;
 		//virtual intersections::IntersectionResult Intersects(const intersections::Ray& ray, float range = 0.0f) const = 0;
 		intersections::IntersectionResult Intersect(const intersections::Ray& ray, float range = 0.0f) const;
+	protected:
+		Geometry() = default;
 	};
 
 	template<typename T>

@@ -9,6 +9,8 @@ namespace primitives
 	class Sphere : public Geometry<Sphere>
     {  
     public:
+        friend Geometry;
+
         math::vec3 center_ = math::vec3(0.0f);
         float radius_ = 1.0f;
 
@@ -90,8 +92,6 @@ namespace primitives
         //    return false;
         //}
 
-        intersections::IntersectionResult IntersectImpl(const intersections::Ray& ray, float range) const;
-
         friend std::ostream& operator<<(std::ostream& os, const Sphere& sphere)
         {
 		    os << "Sphere:\n"
@@ -101,5 +101,8 @@ namespace primitives
 			   << "\n}";
             return os;
         }
+
+    private:
+        intersections::IntersectionResult IntersectImpl(const intersections::Ray& ray, float range) const;
     };
 }

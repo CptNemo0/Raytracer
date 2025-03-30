@@ -10,6 +10,7 @@ namespace primitives
 	class Triangle : public Geometry<Triangle>
 	{
 	public:
+		friend Geometry;
 		math::vec3 vertices[3];
 		math::vec3 normals[3];
 
@@ -110,8 +111,6 @@ namespace primitives
 		//	return result;
 		//}
 
-		intersections::IntersectionResult IntersectImpl(const intersections::Ray& ray, float range) const;
-
 		friend std::ostream& operator<<(std::ostream& os, const Triangle& triangle)
 		{
 			os << "Triangle:\n"
@@ -127,6 +126,9 @@ namespace primitives
 				<< "}";
 			return os;
 		}
+
+		private:
+			intersections::IntersectionResult IntersectImpl(const intersections::Ray& ray, float range) const;
 	};
 }
 

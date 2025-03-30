@@ -84,7 +84,6 @@ namespace rendering
 			4,
 			static_cast<void*>(color_buffer_)
 		);
-		std::cout << "result: " << result << std::endl;
 	}
 
 

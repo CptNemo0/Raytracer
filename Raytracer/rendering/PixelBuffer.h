@@ -24,7 +24,6 @@ namespace rendering
 		float* depth_buffer_;
 
 	public:
-
 		PixelBuffer(std::uint32_t width, std::uint32_t height);
 		~PixelBuffer();
 		void Resize(std::uint32_t height, std::uint32_t width);
