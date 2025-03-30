@@ -143,6 +143,7 @@
     <ClCompile Include="primitives\Sphere.cpp" />
     <ClCompile Include="primitives\Triangle.cpp" />
     <ClCompile Include="rendering\PixelBuffer.cpp" />
+    <ClCompile Include="rendering\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rendering\Camera.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="primitives\Sphere.h" />
     <ClInclude Include="primitives\Triangle.h" />
     <ClInclude Include="rendering\PixelBuffer.h" />
+    <ClInclude Include="rendering\Renderer.h" />
     <ClInclude Include="rendering\stb_image_write.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
