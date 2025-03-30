@@ -31,7 +31,7 @@ namespace rendering
 		void ColorClear(const color4& c);
 		void DepthClear(const float d);
 		void ClearBuffers(const color4& c, const float d);
-
+ 
 		std::uint32_t Height() const;
 		std::uint32_t Width() const;
 		color4* ColorBuffer();

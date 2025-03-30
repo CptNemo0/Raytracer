@@ -21,23 +21,17 @@
     <ClCompile Include="rendering\PixelBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="primitives\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\Sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\Triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="plane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="triangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,6 +39,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rendering\stb_image_write.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\Triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\Geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\Sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intersections\Ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intersections\IntersectionType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intersections\IntersectionResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\primitives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,5 +9,5 @@
 #include "mat_operations.h"
 #include "quat_operations.h"
 #include "transformations.h"
-
+#include "float_eq.h"
 #endif // !RAYTRACER_MATH

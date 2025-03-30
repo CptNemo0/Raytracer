@@ -138,17 +138,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="primitives\Plane.cpp" />
+    <ClCompile Include="primitives\Sphere.cpp" />
+    <ClCompile Include="primitives\Triangle.cpp" />
     <ClCompile Include="rendering\PixelBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="geometry.h" />
+    <ClInclude Include="intersections\IntersectionResult.h" />
+    <ClInclude Include="intersections\IntersectionType.h" />
+    <ClInclude Include="intersections\Ray.h" />
     <ClInclude Include="material.h" />
-    <ClInclude Include="plane.h" />
-    <ClInclude Include="ray.h" />
+    <ClInclude Include="primitives\Geometry.h" />
+    <ClInclude Include="primitives\Plane.h" />
+    <ClInclude Include="primitives\primitives.h" />
+    <ClInclude Include="primitives\Sphere.h" />
+    <ClInclude Include="primitives\Triangle.h" />
     <ClInclude Include="rendering\PixelBuffer.h" />
     <ClInclude Include="rendering\stb_image_write.h" />
-    <ClInclude Include="sphere.h" />
-    <ClInclude Include="triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

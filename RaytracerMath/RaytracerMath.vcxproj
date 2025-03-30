@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="angles.h" />
+    <ClInclude Include="float_eq.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="mat.h" />
     <ClInclude Include="mat_operations.h" />
