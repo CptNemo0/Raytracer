@@ -67,6 +67,5 @@ namespace primitives
 
 		return result;
 	}
-
 }
 

@@ -1,14 +1,10 @@
-#pragma once
-#include <algorithm>
-#include <array>
-#include <cstdint>
-#include <iomanip>
+#ifndef INTERSECTIONS_RAY_H
+#define INTERSECTIONS_RAY_H
+
 #include <iostream>
-#include <sstream>
+#include "raytracer_math.h"
 
-#include "vec.h"
-
-namespace intersections 
+namespace intersections
 {
 	class Ray
 	{
@@ -20,24 +16,26 @@ namespace intersections
 
 		Ray() : origin_(), direction_(), destination_() {}
 		Ray(const math::vec3& origin, const math::vec3& direction) : origin_(origin), direction_(direction), destination_() {}
-        Ray(const math::vec3& origin, float distance) : origin_(origin), direction_(), destination_(origin), distance_(distance) {}
+		Ray(const math::vec3& origin, float distance) : origin_(origin), direction_(), destination_(origin), distance_(distance) {}
 		Ray(const math::vec3& origin, const math::vec3& direction, float distance) : origin_(origin), direction_(direction), destination_(origin + direction * distance), distance_(distance) {}
 		~Ray() {};
 
-		math::vec3 SolveParametricEquation(float t) const 
+		inline math::vec3 SolveParametricEquation(float t) const
 		{
-		     return origin_ + direction_ * t;
+			return origin_ + direction_ * t;
 		}
-		
-        friend std::ostream& operator<<(std::ostream& os, const Ray& ray) 
+
+		friend std::ostream& operator<<(std::ostream& os, const Ray& ray)
 		{
-            os << "Ray\n(" 
-               << "Origin: " << ray.origin_ 
-               << ",\nDirection: " << ray.direction_ 
-               << ",\nDestination: " << ray.destination_ 
-               << ",\nDistance: " << ray.distance_ 
-               << ")";
-            return os;
-        }        
+			os << "Ray\n("
+				<< "Origin: " << ray.origin_
+				<< ",\nDirection: " << ray.direction_
+				<< ",\nDestination: " << ray.destination_
+				<< ",\nDistance: " << ray.distance_
+				<< ")";
+			return os;
+		}
 	};
 }
+
+#endif // !INTERSECTIONS_RAY_H

@@ -101,7 +101,5 @@ namespace primitives
 			   << "\n}";
             return os;
         }
-
     };
-
 }

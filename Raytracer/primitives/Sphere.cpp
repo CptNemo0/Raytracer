@@ -12,13 +12,10 @@ namespace primitives
         const auto t_ca = ray_direction.dot(center_origin);
         if (t_ca < 0) return result;
 
-       // std::cout << "AA\n";
-
         const auto d2 = math::dot(center_origin, center_origin) - t_ca * t_ca;
         const auto radius2 = radius_ * radius_;
         if (d2 > radius2) return result;
 
-        //std::cout << "BB\n";
         const auto t_hc = sqrtf(radius2 - d2);
 
         auto t0 = t_ca - t_hc;
@@ -31,8 +28,6 @@ namespace primitives
             t0 = t1;
             if (t0 < 0) return result;
         }
-
-        //std::cout << "CC\n";
 
         const float t = t0;
 

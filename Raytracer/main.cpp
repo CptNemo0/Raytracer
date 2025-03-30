@@ -325,7 +325,6 @@ void render(Camera* camera, rendering::PixelBuffer* buffer, const primitives::ge
 	}
 }
 
-
 int main(int argc, char** argv)
 {
 	//Photorealistic1stLab();

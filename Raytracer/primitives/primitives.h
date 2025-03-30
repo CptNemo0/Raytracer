@@ -14,4 +14,3 @@ namespace primitives
 }
 
 #endif // !PRIMITIVES_PRIMITIVES_H
-
