@@ -2,6 +2,7 @@
 #define PRIMITIVES_GEOMETRY_H
 
 #include <optional>
+#include <memory>
 
 #include "../intersections/Ray.h"
 #include "../intersections/IntersectionResult.h"

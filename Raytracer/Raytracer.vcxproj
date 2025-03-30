@@ -149,7 +149,7 @@
     <ClInclude Include="intersections\IntersectionResult.h" />
     <ClInclude Include="intersections\IntersectionType.h" />
     <ClInclude Include="intersections\Ray.h" />
-    <ClInclude Include="material.h" />
+    <ClInclude Include="rendering\Material.h" />
     <ClInclude Include="primitives\Geometry.h" />
     <ClInclude Include="primitives\Plane.h" />
     <ClInclude Include="primitives\primitives.h" />
