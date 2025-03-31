@@ -57,9 +57,7 @@ std::shared_ptr<primitives::Triangle> rendering::Renderer::AddTriangle(const mat
 
 void rendering::Renderer::RenderAA() const
 {
-	buffer_->ClearBuffers(color4(0, 0, 0, 255), FLT_MAX);
-
-	std::vector<math::vec3> offsets
+	static const std::vector<math::vec3> offsets
 	{
 		math::vec3(-0.5f, -0.5f, 0.07059f),
 		math::vec3(0.5f, -0.5f, 0.07059f),
