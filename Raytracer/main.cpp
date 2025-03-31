@@ -323,20 +323,21 @@ int main(int argc, char** argv)
 	
 	rendering::PerspectiveCamera cam;
 
-	primitives::Sphere sphere(math::vec3(0.0f, 0.0f, 11.0f), 2.0f);
-	primitives::Triangle triangle(math::vec3(0.0f, 0.0f, 15.0f), math::vec3(0.0f, 5.0f, 15.0f), math::vec3(5.0f, 1.5f, 15.0f));
+	primitives::Sphere sphere1(math::vec3(3.0f, 0.0f, 12.0f), 2.0f);
+	primitives::Sphere sphere2(math::vec3(0.0f, 0.0f, 9.0f), 2.0f);
+
 
 	rendering::Material material1(rendering::color4(255, 0, 0, 255));
-	rendering::Material material2(rendering::color4(0, 255, 0, 255));
+	rendering::Material material2(rendering::color4(0, 0, 255, 255));
 
-	sphere.SetMaterial(material1);
-	triangle.SetMaterial(material2);
+	sphere1.SetMaterial(material1);
+	sphere2.SetMaterial(material2);
 
 	rendering::PixelBuffer buffer(1920, 1080);
 
 	rendering::Renderer renderer(&cam, &buffer);
-	renderer.AddGeometry(triangle);
-	renderer.AddGeometry(sphere);
+	renderer.AddGeometry(sphere2);
+	renderer.AddGeometry(sphere1);
 	renderer.RenderScene();
 
 	/*render(&cam, &buffer, sphere);

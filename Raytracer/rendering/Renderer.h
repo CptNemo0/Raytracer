@@ -6,6 +6,9 @@
 #include "../primitives/primitives.h"
 namespace rendering
 {
+#define MAX_RECURSION 8
+#define ADAPTIVE_THRESHOLD 0.001f
+
 	class Renderer
 	{
 	public:
@@ -22,12 +25,14 @@ namespace rendering
 		PixelBuffer* buffer_;
 		std::vector<primitives::geometry> scene_;
 
-		inline void RenderGeometry(
+		void RenderGeometry(
 			const primitives::geometry& geometry,
 			std::int32_t width, std::int32_t height,
 			float pixel_width, float pixel_height,
 			float start_x, float start_y);
 
+		void FillBackground();
+		
 	};
 }
 
