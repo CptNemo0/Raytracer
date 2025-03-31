@@ -33,7 +33,7 @@ namespace primitives
 
         result.type = intersections::IntersectionType::HIT;
         result.intersection_point = ray.origin_ + ray_direction * t;
-        result.distance = t;
+        result.distance = math::distance(ray.origin_, result.intersection_point);
         result.intersection_normal = math::normalized(result.intersection_point - center_);
         return result;
     }

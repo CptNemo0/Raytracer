@@ -61,7 +61,7 @@ namespace primitives
 			}
 
 			result.intersection_point = ray.SolveParametricEquation(t);
-			result.distance = t;
+			result.distance = math::distance(result.intersection_point, ray.origin_);
 			result.intersection_normal = normal_;
 		}
 

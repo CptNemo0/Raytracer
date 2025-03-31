@@ -30,8 +30,8 @@ namespace primitives
 
         if (t <= epsilon) return result;
 
-        result.distance = t;
         result.intersection_point = ray.SolveParametricEquation(t);
+        result.distance = math::distance(result.intersection_point, ray.origin_);
         result.type = intersections::IntersectionType::HIT;
         result.intersection_normal = normals[0]; 
 
