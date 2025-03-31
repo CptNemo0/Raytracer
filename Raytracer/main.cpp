@@ -261,86 +261,31 @@
 //	}
 //}
 
-void render(rendering::Camera* camera, rendering::PixelBuffer* buffer, const primitives::geometry& geometry)
-{
-	const auto [w, h] = camera->GetDimensions();
-	const auto pixel_width = w / static_cast<float>(buffer->Width());
-	const auto pixel_height = h / static_cast<float>(buffer->Height());
-	const auto start_x = -w * 0.5f + pixel_width * 0.5f;
-	const auto start_y = h * 0.5f - pixel_height * 0.5f;
-	const std::int32_t width  = static_cast<std::int32_t>(buffer->Width());
-	const std::int32_t height = static_cast<std::int32_t>(buffer->Height());
-
-	rendering::color4 color;
-
-	std::visit
-	(
-		[&](auto& primitive)
-		{
-			color = primitive.GetMaterial().ambient;
-		},
-		geometry
-	);
-
-	for (std::int32_t y = 0; y < height; y++)
-	{
-		for (std::int32_t x = 0; x < width; x++)
-		{
-			auto& pixel = buffer->GetPixel(x, y);
-
-			const float fx = start_x + static_cast<float>(x) * pixel_width;
-			const float fy = start_y - static_cast<float>(y) * pixel_height;
-
-			math::Point pixel_position = camera->GetPixelPosition(fx, fy);
-
-			math::vec3 ray_dir = (pixel_position - camera->position_);
-			intersections::Ray ray(camera->position_, ray_dir);
-
-			intersections::IntersectionResult result;
-
-			std::visit
-			(
-				[&result, &ray](auto& primitive)
-				{
-					result = primitive.Intersect(ray, 1000);
-				},
-				geometry
-			);
-
-			if (result.type == intersections::IntersectionType::MISS)
-			{
-				continue;
-			}
-
-			pixel = color;
-		}
-	}
-}
-
 int main(int argc, char** argv)
 {
 	//Photorealistic1stLab();
 	
 	rendering::PerspectiveCamera cam;
 
-	primitives::Sphere sphere(math::vec3(0.0f, 0.0f, 11.0f), 2.0f);
-	primitives::Triangle triangle(math::vec3(0.0f, 0.0f, 15.0f), math::vec3(0.0f, 5.0f, 15.0f), math::vec3(5.0f, 1.5f, 15.0f));
-
 	rendering::Material material1(rendering::color4(255, 0, 0, 255));
 	rendering::Material material2(rendering::color4(0, 255, 0, 255));
-
-	sphere.SetMaterial(material1);
-	triangle.SetMaterial(material2);
+	rendering::Material material3(rendering::color4(0, 0, 255, 255));
 
 	rendering::PixelBuffer buffer(1920, 1080);
 
 	rendering::Renderer renderer(&cam, &buffer);
-	renderer.AddGeometry(triangle);
-	renderer.AddGeometry(sphere);
-	renderer.RenderScene();
+	auto sphere = renderer.AddSphere(math::vec3(0.0f, 0.0f, 11.0f), 2.0f);
+	auto sphere2 = renderer.AddSphere(math::vec3(-4.0f, -3.0f, 20.0f), 5.0f);
+	auto triangle = renderer.AddTriangle(math::vec3(0.0f, 0.0f, 15.0f), math::vec3(0.0f, 5.0f, 15.0f), math::vec3(5.0f, 1.5f, 15.0f));
 
-	/*render(&cam, &buffer, sphere);
-	render(&cam, &buffer, triangle);*/
+	sphere->SetMaterial(material1);
+	triangle->SetMaterial(material2);
+	sphere2->SetMaterial(material3);
+	renderer.RenderAA();
+
+	//renderer.AddGeometry(triangle);
+	//renderer.AddGeometry(sphere);
+	//renderer.RenderScene();
 	
 	return 0;
 }
