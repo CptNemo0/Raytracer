@@ -37,12 +37,18 @@ namespace math
 		template<typename... Args>
 		vec(Args... args) : data_{ static_cast<T>(args)... } {};
 
+		template <typename K>
+		vec(const vec<length, K>& other)
+		{
+			for (int i = 0; i < length; i++)
+			{
+				data_[i] = static_cast<T>(other.data_[i]);
+			}
+		}
+
 		vec(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < length; ++i)
-			{
-				std::copy(other.data_.begin(), other.data_.end(), data_.begin());
-			}
+			std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 		}
 
 		T& operator[](const std::uint32_t index)
@@ -67,7 +73,7 @@ namespace math
 		{
 			for (std::uint32_t i = 0; i < length; ++i)
 			{
-				std::copy(other.data_.begin(), other.data_.end(), data_.begin());
+				data_[i] = static_cast<T>(other.data_[i]);
 			}
 			return *this;
 		}

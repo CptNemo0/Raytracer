@@ -265,23 +265,24 @@ int main(int argc, char** argv)
 {
 	//Photorealistic1stLab();
 	
-	rendering::PerspectiveCamera cam;
+	rendering::OrthographicCamera cam;
+	cam.scale_ = 0.001f;
 
 	rendering::Material material1(rendering::color4(255, 0, 0, 255));
 	rendering::Material material2(rendering::color4(0, 0, 255, 255));
 	
 
-	rendering::PixelBuffer buffer(1920, 1080);
+	rendering::PixelBuffer buffer(1600, 900);
 
 	rendering::Renderer renderer(&cam, &buffer);
-	auto sphere1 = renderer.AddSphere(math::vec3(3.0f, 0.0f, 12.0f), 2.0f);
-	auto sphere2 = renderer.AddSphere(math::vec3(0.0f, 0.0f, 9.0f), 2.0f);
+	auto sphere1 = renderer.AddSphere(math::vec3(1.0f, 0.0f, 10.0f), 2.0f);
+	auto sphere2 = renderer.AddSphere(math::vec3(-1.0f, 0.0f, 15.0f), 2.0f);
 	
 	sphere1->SetMaterial(material1);
 	sphere2->SetMaterial(material2);
 
 	renderer.FillBackground();
-	renderer.RenderAA();
+	renderer.RenderAAOrto();
 
 	//renderer.AddGeometry(triangle);
 	//renderer.AddGeometry(sphere);

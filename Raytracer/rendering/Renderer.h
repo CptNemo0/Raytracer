@@ -27,7 +27,8 @@ namespace rendering
 		std::shared_ptr<primitives::Triangle> AddTriangle(const math::vec3& a, const math::vec3& b, const math::vec3& c);
 		std::shared_ptr<primitives::Triangle> AddTriangle(const math::vec3& a, const math::vec3& b, const math::vec3& c, const math::vec3& na, const math::vec3& nb, const math::vec3& nc);
 
-		void RenderAA() const;
+		void RenderAA();
+		void RenderAAOrto();
 		void FillBackground();
 	private:
 		Camera* camera_;
