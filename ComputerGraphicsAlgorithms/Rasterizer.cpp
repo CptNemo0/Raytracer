@@ -10,7 +10,14 @@ Rasterizer::Rasterizer(const std::uint32_t width, const std::uint32_t height)
 
 void Rasterizer::DrawTriangle(const triangle& input)
 {
-	
+	for (const auto& vertex : input.vertices)
+	{
+		const auto& x = vertex.data_[0];
+		const auto& y = vertex.data_[1];
+
+		if (x > 1.0f || x < -1.0f || y > 1.0f || y < -1.0f) return;
+	}
+
 	triangle tri([&]()
 	{
 		triangle transformed = input;
