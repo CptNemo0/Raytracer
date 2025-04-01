@@ -8,6 +8,7 @@
 
 #include "PixelBuffer.h"
 #include "Rasterizer.h"
+
 int main(int argv, char** argc)
 {
     Rasterizer rasterizer(400, 300);
