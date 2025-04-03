@@ -104,3 +104,17 @@ void PixelBuffer::SetPixelf(const std::uint32_t x, const std::uint32_t y, const 
 	colori[2] = static_cast<byte>(colorf.get(2));
 	colori[3] = static_cast<byte>(colorf.get(3));
 }
+
+bool PixelBuffer::DepthCheck(const std::uint32_t x, const std::uint32_t y, float depth) const
+{
+	return depth_buffer_[xy_to_index(x, y)] > depth;
+}
+bool PixelBuffer::DepthCheckExchange(const std::uint32_t x, const std::uint32_t y, float depth)
+{
+	if (depth_buffer_[xy_to_index(x, y)] > depth)
+	{
+		depth_buffer_[xy_to_index(x, y)] = depth;
+		return true;
+	}
+	return false;
+}

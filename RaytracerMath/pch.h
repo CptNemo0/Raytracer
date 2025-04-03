@@ -18,4 +18,5 @@
 #include "raytracer_math.h"
 #include "quat.h"
 #include "quat_operations.h"
+#include "flt_cmp.h"
 #endif //PCH_H

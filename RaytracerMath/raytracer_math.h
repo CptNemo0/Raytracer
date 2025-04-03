@@ -9,5 +9,6 @@
 #include "mat_operations.h"
 #include "quat_operations.h"
 #include "transformations.h"
+#include "flt_cmp.h"
 
 #endif // !RAYTRACER_MATH

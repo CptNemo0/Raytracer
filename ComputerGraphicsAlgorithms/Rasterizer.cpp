@@ -13,6 +13,7 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 	const auto width = static_cast<float>(framebuffer_->Width());
 	const auto height = static_cast<float>(framebuffer_->Height());
 	auto color_buffer = framebuffer_->ColorBuffer();
+	
 	Triangle transformed = input;
 
 	auto cull_bleeding = [&](Triangle& tri)
@@ -67,7 +68,7 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 		return std::make_tuple(lefti, righti, topi, boti);
 	};
 
-	auto pixel_inside = [](const std::uint32_t x, const std::uint32_t y, const Triangle& tri)
+	auto pixel_inside = [](const float x, const float y, const Triangle& tri)
 	{
 		const auto x1 = tri.vertices[0].position.get(0);
 		const auto y1 = tri.vertices[0].position.get(1);
@@ -75,12 +76,29 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 		const auto y2 = tri.vertices[1].position.get(1);
 		const auto x3 = tri.vertices[2].position.get(0);
 		const auto y3 = tri.vertices[2].position.get(1);
-		return (x1 - x2) * (y - y1) - (y1 - y2) * (x - x1) > 0 &&
-			(x2 - x3) * (y - y2) - (y2 - y3) * (x - x2) > 0 &&
-			(x3 - x1) * (y - y3) - (y3 - y1) * (x - x3) > 0;
+
+		const auto dx12 = x1 - x2;
+		const auto dx23 = x2 - x3;
+		const auto dx31 = x3 - x1;
+
+		const auto dy12 = y1 - y2;
+		const auto dy23 = y2 - y3;
+		const auto dy31 = y3 - y1;
+
+		const auto tl1 = dy12 < 0.0f || (math::eq(dy12, 0.0f) && dx12 > 0.0f);
+		const auto tl2 = dy23 < 0.0f || (math::eq(dy23, 0.0f) && dx23 > 0.0f);
+		const auto tl3 = dy31 < 0.0f || (math::eq(dy31, 0.0f) && dx31 > 0.0f);
+
+		bool inside = true;
+
+		inside &= tl1 ? (x1 - x2) * (y - y1) - (y1 - y2) * (x - x1) >= 0 : (x1 - x2) * (y - y1) - (y1 - y2) * (x - x1) > 0;
+		inside &= tl2 ? (x2 - x3) * (y - y2) - (y2 - y3) * (x - x2) >= 0 : (x2 - x3) * (y - y2) - (y2 - y3) * (x - x2) > 0;
+		inside &= tl3 ? (x3 - x1) * (y - y3) - (y3 - y1) * (x - x3) >= 0 : (x3 - x1) * (y - y3) - (y3 - y1) * (x - x3) > 0;
+
+		return  inside;
 	};
 	
-	auto get_lambdas = [](const std::uint32_t x, const std::uint32_t y, const Triangle& tri)
+	auto get_lambdas = [](const float x, const float y, const Triangle& tri)
 	{
 		const auto x1 = tri.vertices[0].position.get(0);
 		const auto y1 = tri.vertices[0].position.get(1);
@@ -107,8 +125,16 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 	{
 		for (std::uint32_t y = topi; y < boti; y++)
 		{
-			if (!pixel_inside(x, y, transformed)) continue;
-			const auto [lambda1, lambda2, lambda3] = get_lambdas(x, y, transformed);
+			const auto fx = static_cast<float>(x) ;
+			const auto fy = static_cast<float>(y) ;
+			if (!pixel_inside(fx, fy, transformed)) continue;
+			const auto [lambda1, lambda2, lambda3] = get_lambdas(fx, fy, transformed);
+
+			const float depth = lambda1 * transformed.vertices[0].position[2] +
+								lambda2 * transformed.vertices[1].position[2] +
+								lambda3 * transformed.vertices[2].position[2];
+
+			if (!framebuffer_->DepthCheckExchange(x, y, depth)) continue;
 
 			color4f color = transformed.vertices[0].color * lambda1 +
 							transformed.vertices[1].color * lambda2 +

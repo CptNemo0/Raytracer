@@ -39,6 +39,8 @@ public:
 	std::uint32_t xy_to_index(const std::uint32_t x, const std::uint32_t y) const;
 	color4& GetPixel(const std::uint32_t x, const std::uint32_t y);
 	void SetPixelf(const std::uint32_t x, const std::uint32_t y, const color4f& color);
+	bool DepthCheck(const std::uint32_t x, const std::uint32_t y, float depth) const;
+	bool DepthCheckExchange(const std::uint32_t x, const std::uint32_t y, float depth);
 };
 
 #endif // !PIXEL_BUFFER_H
