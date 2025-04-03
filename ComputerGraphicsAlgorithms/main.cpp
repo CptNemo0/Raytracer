@@ -11,14 +11,19 @@
 
 int main(int argc, char** argv)
 {
-    Rasterizer rasterizer(400, 300);
+    Rasterizer rasterizer(1000, 1000);
     rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
 
-    triangle tri;
-    tri.vertices[0] = math::vec3(-1.1f, -1.0f, 0.0f);
-    tri.vertices[1] = math::vec3(-1.0f, 1.0f, 0.0f);
-    tri.vertices[2] = math::vec3(1.0f, 1.0f, 0.0f);
-    rasterizer.DrawTriangle(tri);
+    Triangle triangle;
+    triangle.vertices[0].position = math::vec3(0.0, -1.10f, 0.0f);
+    triangle.vertices[1].position = math::vec3(-1.0f, 1.0f, 0.0f);
+    triangle.vertices[2].position = math::vec3(1.0f, 1.0f, 0.0f);
+
+    triangle.vertices[0].color = color4f(255.0f, 0.0f, 0.0f, 255.0f);
+    triangle.vertices[1].color = color4f(0.0f, 255.0f, 0.0f, 255.0f);
+    triangle.vertices[2].color = color4f(0.0f, 0.0f, 255.0f, 255.0f);
+    
+    rasterizer.DrawTriangle(triangle);
 
     rasterizer.framebuffer_->SaveColorToFile("image.bmp");
     return 0;

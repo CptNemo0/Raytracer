@@ -7,9 +7,7 @@
 #include <vec.h>
 #include <string_view>
 
-using byte = std::uint8_t;
-using color4 = math::vec<4, byte>;
-using color3 = math::vec<3, byte>;
+#include "aliasing.h"
 
 class PixelBuffer
 {
@@ -40,6 +38,7 @@ public:
 	void SaveColorToFile(const char* filename) const;
 	std::uint32_t xy_to_index(const std::uint32_t x, const std::uint32_t y) const;
 	color4& GetPixel(const std::uint32_t x, const std::uint32_t y);
+	void SetPixelf(const std::uint32_t x, const std::uint32_t y, const color4f& color);
 };
 
 #endif // !PIXEL_BUFFER_H

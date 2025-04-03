@@ -138,11 +138,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PixelBuffer.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
+    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="aliasing.h" />
     <ClInclude Include="PixelBuffer.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="stb_image_write.h" />
+    <ClInclude Include="Triangle.h" />
+    <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

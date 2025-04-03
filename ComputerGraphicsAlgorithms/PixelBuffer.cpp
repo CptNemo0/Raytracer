@@ -95,3 +95,12 @@ color4& PixelBuffer::GetPixel(const std::uint32_t x, const std::uint32_t y)
 {
 	return color_buffer_[xy_to_index(x, y)];
 }
+
+void PixelBuffer::SetPixelf(const std::uint32_t x, const std::uint32_t y, const color4f& colorf)
+{
+	auto& colori = color_buffer_[xy_to_index(x, y)];
+	colori[0] = static_cast<byte>(colorf.get(0));
+	colori[1] = static_cast<byte>(colorf.get(1));
+	colori[2] = static_cast<byte>(colorf.get(2));
+	colori[3] = static_cast<byte>(colorf.get(3));
+}
