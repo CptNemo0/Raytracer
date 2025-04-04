@@ -11,7 +11,7 @@
 
 int main(int argc, char** argv)
 {
-    Rasterizer rasterizer(1000, 1000);
+    Rasterizer rasterizer(2000, 2000);
     rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
     rasterizer.framebuffer_->DepthClear(std::numeric_limits<float>::max());
     Triangle triangle1;
@@ -59,11 +59,11 @@ int main(int argc, char** argv)
     triangle5.vertices[1].color = color4f(0.0f, 255.0f, 255.0f, 255.0f);
     triangle5.vertices[2].color = color4f(0.0f, 255.0f, 0.0f, 255.0f);
 
+    rasterizer.DrawTriangle(triangle5);
     rasterizer.DrawTriangle(triangle1);
     rasterizer.DrawTriangle(triangle2);
     rasterizer.DrawTriangle(triangle3);
     rasterizer.DrawTriangle(triangle4);
-    rasterizer.DrawTriangle(triangle5);
 
     rasterizer.framebuffer_->SaveColorToFile("image.bmp");
     return 0;

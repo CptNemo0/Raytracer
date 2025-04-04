@@ -162,7 +162,7 @@ namespace math
 			const auto eq = [](float a, float b)
 			{
 				constexpr auto eps = std::numeric_limits<float>::epsilon();
-				return fabs(a - b) < eps;
+				return fabsf(a - b) < eps;
 			};
 
 			for (std::uint32_t i = 0; i < length; i++)
