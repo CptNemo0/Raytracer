@@ -83,23 +83,14 @@ void rendering::Renderer::Render()
 	const float start_x = -(camera_w * 0.5f) + pixel_width  * 0.5f;
 	const float start_y =  (camera_h * 0.5f) - pixel_height * 0.5f;
 
-	std::cout << "start_x: " << start_x << std::endl;
-	std::cout << "start_y: " << start_y << std::endl;
-
-	int hit = 0;
-	int total = 0;
+	math::vec3 light_position(-5.0f, 5.0f, 5.0f);
 
 	for (std::int32_t y = 0; y < height; y++)
 	{
 		for (std::int32_t x = 0; x < width; x++)
 		{
-			if (x == 829 && y == 375)
-			{
-				std::cout << "x: " << x << " y: " << y << std::endl;
-				
-			}
-			total++;
-			math::vec4 color = buffer_->GetPixelf(x, y);
+			
+			const math::vec4 color = buffer_->GetPixelf(x, y);
 			math::vec4 result_color(0.0f);
 
 			const float fx = start_x + static_cast<float>(x) * pixel_width;
@@ -114,74 +105,49 @@ void rendering::Renderer::Render()
 				const auto ray = camera_->GetRay(fx + addx, fy + addy);
 
 				const auto& [result, mat] = ShootRay(ray);
-				
+
 				if (result.type == intersections::IntersectionType::MISS)
 				{
 					result_color += color * weight;
 				}
 				else if (result.type == intersections::IntersectionType::HIT)
 				{
-					hit++;
-					result_color += mat.ambient * weight;
+					auto light_dir = light_position - result.intersection_point;
+					math::normalize(light_dir);
+
+					auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
+
+					auto new_ray = intersections::Ray(new_origin, new_origin + light_dir);
+
+					const auto& [new_result, new_mat] = ShootRay(new_ray);
+
+					if (new_result.type == intersections::IntersectionType::HIT)
+					{
+						result_color += mat.ambient * weight;
+						continue;
+					}
+
+					auto view_dir = camera_->position_ - result.intersection_point;
+					math::normalize(view_dir);
+
+					auto half_vector = light_dir + view_dir;
+					math::normalize(half_vector);
+
+					auto dot_product = math::dot(result.intersection_normal, light_dir);
+					dot_product *= dot_product > 0.0f;
+
+					auto spec = std::powf(std::fmaxf(math::dot(result.intersection_normal, half_vector), 0.0f), mat.shininess);
+					spec *= dot_product > 0.0f;
+
+					result_color += ((mat.ambient + (mat.diffuse * dot_product) + mat.specular * spec)) * weight;
 				}
 			}
-		
+
+			result_color[3] = 255.0f;
+
 			buffer_->SetPixelf(x, y, result_color);
 		}
 	}
-
-	std::cout << "hits: " << hit << std::endl;
-	std::cout << "total: " << total << std::endl;
-	
-	buffer_->SaveColorToFile("test.bmp");
-}
-
-void rendering::Renderer::RenderAAOrto() 
-{
-	const std::int32_t width = static_cast<std::int32_t>(buffer_->Width());
-	const std::int32_t height = static_cast<std::int32_t>(buffer_->Height());
-	const auto [w, h] = camera_->GetDimensions(width, height);
-	const auto pixel_width = w / static_cast<float>(buffer_->Width());
-	const auto pixel_height = h / static_cast<float>(buffer_->Height());
-	const auto start_x = -w * 0.5f + pixel_width * 0.5f;
-	const auto start_y = h * 0.5f - pixel_height * 0.5f;
-	
-	int hits = 0;
-
-	for (std::int32_t y = 0; y < height; y++)
-	{
-		for (std::int32_t x = 0; x < width; x++)
-		{
-			auto& color = buffer_->GetPixel(x, y);
-			math::vec4 colorf = color;
-			
-			float localx = static_cast<float>(x) - (width / 2.0f);
-			float localy = static_cast<float>(y) - (height / 2.0f);
-			float fx = localx * camera_->scale_;
-			float fy = localy * camera_->scale_;
-
-			const math::vec3 ray_dir = camera_->forward_;
-			const math::vec3 ray_pos = camera_->GetPixelPosition(fx, fy);
-
-			if (ray_pos.get(2) != 0.0f)
-			{
-				exit(22);
-			}
-
-			const intersections::Ray ray(ray_pos, ray_dir);
-
-			const auto& [result, mat] = ShootRay(ray);
-
-			if (result.type == intersections::IntersectionType::HIT)
-			{
-				hits++;
-				color = mat.ambient;
-			}
-		}
-	}
-
-	std::cout << "max hits: " << height * width << std::endl;
-	std::cout << "hits: " << hits << std::endl;
 
 	buffer_->SaveColorToFile("test.bmp");
 }

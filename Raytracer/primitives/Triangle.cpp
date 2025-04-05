@@ -34,7 +34,7 @@ namespace primitives
         result.intersection_point = ray.SolveParametricEquation(t);
         result.distance = math::distance(result.intersection_point, ray.origin_);
         result.type = intersections::IntersectionType::HIT;
-        result.intersection_normal = normals[0]; 
+        result.intersection_normal = math::normalized(normals[0]); 
 
         return result;
 	}

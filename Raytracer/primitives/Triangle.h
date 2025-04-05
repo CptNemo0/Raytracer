@@ -19,7 +19,7 @@ namespace primitives
 			vertices[0] = a;
 			vertices[1] = b;
 			vertices[2] = c;
-			normals[0] = math::cross(b - a, c - a);
+			normals[0] = math::cross(c - a, b - a);
 			normals[1] = normals[0];
 			normals[2] = normals[0];
 		};

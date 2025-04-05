@@ -1,5 +1,6 @@
 #include "PixelBuffer.h"
 #include "stb_image_write.h"
+#include <algorithm>
 namespace rendering
 {
 	PixelBuffer::PixelBuffer(std::uint32_t width, std::uint32_t height)
@@ -116,10 +117,10 @@ namespace rendering
 	{
 		auto& c = color_buffer_[xy_to_index(x, y)];
 
-		c[0] = static_cast<byte>(color.get(0));
-		c[1] = static_cast<byte>(color.get(1));
-		c[2] = static_cast<byte>(color.get(2));
-		c[3] = static_cast<byte>(color.get(3));
+		c[0] = static_cast<byte>(std::clamp(color.get(0), 0.0f, 255.0f));
+		c[1] = static_cast<byte>(std::clamp(color.get(1), 0.0f, 255.0f));
+		c[2] = static_cast<byte>(std::clamp(color.get(2), 0.0f, 255.0f));
+		c[3] = static_cast<byte>(std::clamp(color.get(3), 0.0f, 255.0f));
 	}
 
 	void PixelBuffer::AddPixelf(const std::uint32_t x, const std::uint32_t y, const math::vec4& color)
