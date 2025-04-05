@@ -15,7 +15,7 @@ namespace rendering
 		math::vec3 right_      = math::vec3(1.0f, 0.0f, 0.0f);
 		math::vec3 look_point_ = math::vec3(0.0f, 0.0f, 1.0f);
 		float aspect_ratio_ = 16.0f / 9.0f;
-		float scale_ = 2.0f;
+		float scale_ = 1.0f;
 
 		virtual std::pair<const float, const float> GetDimensions([[maybe_unused]] const std::uint32_t width = 0.0f, [[maybe_unused]] const std::uint32_t  height = 0.0f) const = 0;
 		virtual intersections::Ray GetRay(const float x, const float y) const = 0;
@@ -54,7 +54,7 @@ namespace rendering
 
 		OrthographicCamera() = default;
 
-		std::pair<const float, const float> GetDimensions([[maybe_unused]] const std::uint32_t  width = 0.0f, [[maybe_unused]] const std::uint32_t  height = 0.0f) const override;
+		std::pair<const float, const float> GetDimensions([[maybe_unused]] const std::uint32_t width = 0.0f, [[maybe_unused]] const std::uint32_t height = 0.0f) const override;
 		intersections::Ray GetRay(const float x, const float y) const override;
 		math::vec3 GetPixelPosition(const float x, const float y) const override;
 	};

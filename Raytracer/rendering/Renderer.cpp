@@ -55,7 +55,7 @@ std::shared_ptr<primitives::Triangle> rendering::Renderer::AddTriangle(const mat
 	return triangle;
 }
 
-void rendering::Renderer::RenderAA() 
+void rendering::Renderer::Render() 
 {
 	static const std::vector<math::vec3> offsets
 	{
@@ -72,31 +72,38 @@ void rendering::Renderer::RenderAA()
 		math::vec3(0.0f, 0.0f, 0.29036f)
 	};
 
-	const auto [w, h] = camera_->GetDimensions(buffer_->Width(), buffer_->Height());
-	const float pixel_width = w / static_cast<float>(buffer_->Width());
-	const float pixel_height = h / static_cast<float>(buffer_->Height());
-	const float start_x = -w * 0.5f + pixel_width * 0.5f;
-	const float start_y = h * 0.5f - pixel_height * 0.5f;
 	const std::int32_t width = static_cast<std::int32_t>(buffer_->Width());
 	const std::int32_t height = static_cast<std::int32_t>(buffer_->Height());
 
-	auto ray = camera_->GetRay(0.0f, 0.0f);
+	const auto [camera_w, camera_h] = camera_->GetDimensions(buffer_->Width(), buffer_->Height());
+
+	const float pixel_width  = camera_w / static_cast<float>(width);
+	const float pixel_height = camera_h / static_cast<float>(height);
+
+	const float start_x = -(camera_w * 0.5f) + pixel_width  * 0.5f;
+	const float start_y =  (camera_h * 0.5f) - pixel_height * 0.5f;
+
+	std::cout << "start_x: " << start_x << std::endl;
+	std::cout << "start_y: " << start_y << std::endl;
+
+	int hit = 0;
+	int total = 0;
 
 	for (std::int32_t y = 0; y < height; y++)
 	{
 		for (std::int32_t x = 0; x < width; x++)
 		{
-			auto& color = buffer_->GetPixel(x, y);
-			math::vec4 colorf;
-			colorf[0] = static_cast<float>(color[0]);
-			colorf[1] = static_cast<float>(color[1]);
-			colorf[2] = static_cast<float>(color[2]);
-			colorf[3] = static_cast<float>(color[3]);
+			if (x == 829 && y == 375)
+			{
+				std::cout << "x: " << x << " y: " << y << std::endl;
+				
+			}
+			total++;
+			math::vec4 color = buffer_->GetPixelf(x, y);
+			math::vec4 result_color(0.0f);
 
 			const float fx = start_x + static_cast<float>(x) * pixel_width;
 			const float fy = start_y - static_cast<float>(y) * pixel_height;
-
-			math::vec4 result_color(0.0f);
 
 			for (const auto& offset : offsets)
 			{
@@ -110,26 +117,22 @@ void rendering::Renderer::RenderAA()
 				
 				if (result.type == intersections::IntersectionType::MISS)
 				{
-					result_color += colorf * weight;
+					result_color += color * weight;
 				}
 				else if (result.type == intersections::IntersectionType::HIT)
 				{
-					math::vec4 cf;
-					cf[0] += static_cast<float>(mat.ambient.get(0));
-					cf[1] += static_cast<float>(mat.ambient.get(1));
-					cf[2] += static_cast<float>(mat.ambient.get(2));
-					cf[3] =  static_cast<float>(mat.ambient.get(3));
-					result_color += cf * weight;
+					hit++;
+					result_color += mat.ambient * weight;
 				}
 			}
 		
-			color[0] = static_cast<byte>(result_color[0]);
-			color[1] = static_cast<byte>(result_color[1]);
-			color[2] = static_cast<byte>(result_color[2]);
-			color[3] = static_cast<byte>(result_color[3]);
+			buffer_->SetPixelf(x, y, result_color);
 		}
 	}
 
+	std::cout << "hits: " << hit << std::endl;
+	std::cout << "total: " << total << std::endl;
+	
 	buffer_->SaveColorToFile("test.bmp");
 }
 
@@ -137,10 +140,13 @@ void rendering::Renderer::RenderAAOrto()
 {
 	const std::int32_t width = static_cast<std::int32_t>(buffer_->Width());
 	const std::int32_t height = static_cast<std::int32_t>(buffer_->Height());
-	const float pixel_width = width / static_cast<float>(buffer_->Width());
-	const float pixel_height = height / static_cast<float>(buffer_->Height());
-	const float start_x = -width * 0.5f + pixel_width * 0.5f;
-	const float start_y = height * 0.5f - pixel_height * 0.5f;
+	const auto [w, h] = camera_->GetDimensions(width, height);
+	const auto pixel_width = w / static_cast<float>(buffer_->Width());
+	const auto pixel_height = h / static_cast<float>(buffer_->Height());
+	const auto start_x = -w * 0.5f + pixel_width * 0.5f;
+	const auto start_y = h * 0.5f - pixel_height * 0.5f;
+	
+	int hits = 0;
 
 	for (std::int32_t y = 0; y < height; y++)
 	{
@@ -149,21 +155,33 @@ void rendering::Renderer::RenderAAOrto()
 			auto& color = buffer_->GetPixel(x, y);
 			math::vec4 colorf = color;
 			
-			const float fx = start_x + (static_cast<float>(x) * pixel_width);
-			const float fy = start_y - (static_cast<float>(y) * pixel_height);
+			float localx = static_cast<float>(x) - (width / 2.0f);
+			float localy = static_cast<float>(y) - (height / 2.0f);
+			float fx = localx * camera_->scale_;
+			float fy = localy * camera_->scale_;
 
-			math::vec4 result_color(0.0f);
+			const math::vec3 ray_dir = camera_->forward_;
+			const math::vec3 ray_pos = camera_->GetPixelPosition(fx, fy);
 
-			intersections::Ray ray(math::vec3(fx, fy, 0.0f), math::vec3(0.0f, 0.0f, 1.0f));
+			if (ray_pos.get(2) != 0.0f)
+			{
+				exit(22);
+			}
+
+			const intersections::Ray ray(ray_pos, ray_dir);
 
 			const auto& [result, mat] = ShootRay(ray);
 
 			if (result.type == intersections::IntersectionType::HIT)
 			{
+				hits++;
 				color = mat.ambient;
 			}
 		}
 	}
+
+	std::cout << "max hits: " << height * width << std::endl;
+	std::cout << "hits: " << hits << std::endl;
 
 	buffer_->SaveColorToFile("test.bmp");
 }
@@ -182,17 +200,17 @@ std::pair<intersections::IntersectionResult, rendering::Material> rendering::Ren
 		(
 			[&result, &ray, &depth, &hit_material, &hit_result](auto& primitive)
 			{
-				result = primitive->Intersect(ray, 1000);
+				result = primitive->Intersect(ray, 1000.0f);
 
-				if (result.type == intersections::IntersectionType::HIT)
-				{
-					if (depth > result.distance)
-					{
-						depth = result.distance;
-						hit_material = primitive->material;
-						hit_result = result;
-					}
-				}
+				std::int16_t flags = 0;
+				flags += (result.type != intersections::IntersectionType::HIT) << 0;
+				flags += (depth < result.distance) << 1;
+				
+				if (flags) return;
+
+				depth = result.distance;
+				hit_material = primitive->material;
+				hit_result = result;
 			},
 			geometry
 		);

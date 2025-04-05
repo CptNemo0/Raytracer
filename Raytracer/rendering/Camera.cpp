@@ -6,7 +6,7 @@ math::vec3 rendering::PerspectiveCamera::GetPixelPosition(const float x, const f
 
 	return_value += right_ * x;
 	return_value += up_ * y;
-	return_value += forward_ * scale_;
+	return_value += forward_;
 
 	return return_value;
 }
@@ -37,12 +37,12 @@ math::vec3 rendering::OrthographicCamera::GetPixelPosition(const float x, const 
 
 std::pair<const float, const float> rendering::OrthographicCamera::GetDimensions([[maybe_unused]] const std::uint32_t  width, [[maybe_unused]] const std::uint32_t  height) const
 {
-	return { scale_ * static_cast<float>(width), scale_ * static_cast<float>(height)};
+	return std::make_pair(scale_ * static_cast<float>(width), scale_ * static_cast<float>(height));
 }
 
 intersections::Ray rendering::OrthographicCamera::GetRay(const float x, const float y) const
 {
 	math::vec3 pixel_position = GetPixelPosition(x, y);
-	return intersections::Ray(pixel_position, forward_);
+	return intersections::Ray(pixel_position, pixel_position + forward_);
 }
 

@@ -9,6 +9,7 @@ namespace rendering
 {
 	using byte = std::uint8_t;
 	using color4 = math::vec<4, byte>;
+	using color4f = math::vec<4, float>;
 	using color3 = math::vec<3, byte>;
 
 	class PixelBuffer
@@ -39,7 +40,10 @@ namespace rendering
 		void SaveColorToFile(const char* filename) const;
 		std::uint32_t xy_to_index(const std::uint32_t x, const std::uint32_t y) const;
 		color4& GetPixel(const std::uint32_t x, const std::uint32_t y);
+		math::vec4 GetPixelf(const std::uint32_t x, const std::uint32_t y) const;
 		void SetPixel(const std::uint32_t x, const std::uint32_t y, const color4& color);
+		void SetPixelf(const std::uint32_t x, const std::uint32_t y, const math::vec4& color);
+		void AddPixelf(const std::uint32_t x, const std::uint32_t y, const math::vec4& color);
 	};
 }
 

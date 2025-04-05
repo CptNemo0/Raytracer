@@ -9,24 +9,20 @@ namespace rendering
 	class Material
 	{
 	public:
-		color4 ambient;
-		color4 diffuse;
-		color4 specular;
+		color4f ambient;
+		color4f diffuse;
+		color4f specular;
 		float shininess;
-        Material(const color4& ambient, const color4& diffuse, const color4& specular, float shininess)
+
+        Material(const color4& ambient, const color4& diffuse, const color4f& specular, float shininess)
             : ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess) {
         }
 
-        Material(const color4 ambient) : ambient(ambient)
-        {
-            color4 color(0.0f, 0.0f, 0.0f, 0.0f);
-            diffuse = color;
-            specular = color;
-            shininess = 0.0f;
-        }
+		Material(const color4 ambient) : ambient(ambient), diffuse(color4f(0.0f, 0.0f, 0.0f, 255.0f)),
+			specular(color4f(0.0f, 0.0f, 0.0f, 255.0f)), shininess(0.0f) {}
 
         Material()
-            : ambient(0.0f, 0.0f, 0.0f, 0.0f), diffuse(0.0f, 0.0f, 0.0f, 0.0f), specular(0.0f, 0.0f, 0.0f, 0.0f), shininess(0.0f) {
+            : ambient(0.0f, 0.0f, 0.0f, 255.0f), diffuse(0.0f, 0.0f, 0.0f, 255.0f), specular(0.0f, 0.0f, 0.0f, 255.0f), shininess(0.0f) {
         }
 
         ~Material() {}

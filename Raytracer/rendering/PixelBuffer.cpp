@@ -96,8 +96,39 @@ namespace rendering
 	{
 		return color_buffer_[xy_to_index(x, y)];
 	}
+
+	math::vec4 PixelBuffer::GetPixelf(const std::uint32_t x, const std::uint32_t y) const
+	{
+		auto& c = color_buffer_[xy_to_index(x, y)];
+		math::vec4 rv;
+		rv[0] = c.get(0);
+		rv[1] = c.get(1);
+		rv[2] = c.get(2);
+		rv[3] = c.get(3);
+		return rv;
+	}
 	void PixelBuffer::SetPixel(const std::uint32_t x, const std::uint32_t y, const color4& color)
 	{
 		color_buffer_[xy_to_index(x, y)] = color;
+	}
+
+	void PixelBuffer::SetPixelf(const std::uint32_t x, const std::uint32_t y, const math::vec4& color)
+	{
+		auto& c = color_buffer_[xy_to_index(x, y)];
+
+		c[0] = static_cast<byte>(color.get(0));
+		c[1] = static_cast<byte>(color.get(1));
+		c[2] = static_cast<byte>(color.get(2));
+		c[3] = static_cast<byte>(color.get(3));
+	}
+
+	void PixelBuffer::AddPixelf(const std::uint32_t x, const std::uint32_t y, const math::vec4& color)
+	{
+		auto& c = color_buffer_[xy_to_index(x, y)];
+
+		c[0] += static_cast<byte>(color.get(0));
+		c[1] += static_cast<byte>(color.get(1));
+		c[2] += static_cast<byte>(color.get(2));
+		c[3] += static_cast<byte>(color.get(3));
 	}
 }
