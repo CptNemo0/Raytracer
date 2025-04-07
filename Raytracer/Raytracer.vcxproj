@@ -137,6 +137,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lights\Light.cpp" />
+    <ClCompile Include="lights\PointLight.cpp" />
     <ClCompile Include="rendering\Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="primitives\Plane.cpp" />
@@ -146,6 +148,8 @@
     <ClCompile Include="rendering\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lights\Light.h" />
+    <ClInclude Include="lights\PointLight.h" />
     <ClInclude Include="rendering\Camera.h" />
     <ClInclude Include="intersections\IntersectionResult.h" />
     <ClInclude Include="intersections\IntersectionType.h" />
