@@ -32,11 +32,20 @@ public:
 
     void drawTriangle(buffer::ColorBuffer& buffer, const Color4 color) 
     {
+		int minx = std::min({ v0_[0], v1_[0], v2_[0] });
+		int maxx = std::max({ v0_[0], v1_[0], v2_[0] });
+		int miny = std::min({ v0_[1], v1_[1], v2_[1] });
+		int maxy = std::max({ v0_[1], v1_[1], v2_[1] });
+
+		minx = std::max(minx, 0);
+		maxx = std::min(maxx, buffer.GetWidth() - 1);
+		miny = std::max(miny, 0);
+		maxy = std::min(maxy, buffer.GetHeight() - 1);
 
 
-		for (int i = 0; i < buffer.GetWidth(); i++)
-		{
-			for (int j = 0; j < buffer.GetHeight(); j++)
+		for (int i = minx; i <= maxx; i++) {
+
+			for (int j = miny; j <= maxy; j++)
 			{
 				math::vec2 p = { i, j };
 				if (isLeft(v0_, v1_, p) && isLeft(v1_, v2_, p) && isLeft(v2_, v0_, p))
