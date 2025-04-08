@@ -134,13 +134,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graphics Algorithms.cpp" />
+    <ClCompile Include="Rasterizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorBuffer.h" />
+    <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="third_party\stb_image.h" />
     <ClInclude Include="third_party\stb_image_resize2.h" />
     <ClInclude Include="third_party\stb_image_write.h" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Raytracer\Raytracer.vcxproj">
+      <Project>{c4d54583-4fbf-4ad8-bf15-0f4027079d52}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
