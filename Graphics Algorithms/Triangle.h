@@ -23,14 +23,28 @@ public:
 		v0_ = v0;
 		v1_ = v1;
 		v2_ = v2;
+		color0_ = Color4(255, 0, 0, 255);
+		color1_ = Color4(0, 255, 0, 255);
+		color2_ = Color4(0, 0, 255, 255);
     }
 	
+	void SetColors(const Color4& color0, const Color4& color1, const Color4& color2)
+	{
+		color0_ = color0;
+		color1_ = color1;
+		color2_ = color2;
+	}
+
+	void SetColor0(const Color4& color) { color0_ = color; }
+	void SetColor1(const Color4& color) { color1_ = color; }
+	void SetColor2(const Color4& color) { color2_ = color; }
+
 	bool isLeft(const math::vec2& v1, const math::vec2& v2, const math::vec2& p) const
 	{
 		return (v1[0] - v2[0]) * (p[1] - v1[1]) - (v1[1] - v2[1]) * (p[0] - v1[0]) < 0;
 	}
 
-    void drawTriangle(buffer::ColorBuffer& buffer, const Color4 color) 
+    void drawTriangle(buffer::ColorBuffer& buffer) 
     {
 		int minx = std::min({ v0_[0], v1_[0], v2_[0] });
 		int maxx = std::max({ v0_[0], v1_[0], v2_[0] });
@@ -50,6 +64,17 @@ public:
 				math::vec2 p = { i, j };
 				if (isLeft(v0_, v1_, p) && isLeft(v1_, v2_, p) && isLeft(v2_, v0_, p))
 				{
+					float denom = (v1_[1] - v2_[1]) * (v0_[0] - v2_[0]) + (v2_[0] - v1_[0]) * (v0_[1] - v2_[1]);
+					float lambda1 = ((v1_[1] - v2_[1]) * (p[0] - v2_[0]) + (v2_[0] - v1_[0]) * (p[1] - v2_[1])) / denom;
+					float lambda2 = ((v2_[1] - v0_[1]) * (p[0] - v2_[0]) + (v0_[0] - v2_[0]) * (p[1] - v2_[1])) / denom;
+					float lambda3 = 1.0f - lambda1 - lambda2;
+
+					Color4 color;
+					color[0] = static_cast<unsigned char>(lambda1 * color0_[0] + lambda2 * color1_[0] + lambda3 * color2_[0]);
+					color[1] = static_cast<unsigned char>(lambda1 * color0_[1] + lambda2 * color1_[1] + lambda3 * color2_[1]);
+					color[2] = static_cast<unsigned char>(lambda1 * color0_[2] + lambda2 * color1_[2] + lambda3 * color2_[2]);
+					color[3] = static_cast<unsigned char>(lambda1 * color0_[3] + lambda2 * color1_[3] + lambda3 * color2_[3]);
+
 					buffer.SetColor(i, j, color);
 				}
 			}
@@ -60,4 +85,8 @@ private:
 	math::vec2 v0_;
 	math::vec2 v1_;
 	math::vec2 v2_;
+
+	Color4 color0_;
+	Color4 color1_;
+	Color4 color2_;
 };

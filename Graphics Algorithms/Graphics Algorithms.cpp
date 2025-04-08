@@ -24,7 +24,7 @@ int main()
 
     Triangle triangle(v0_screen, v1_screen, v2_screen);
 
-	triangle.drawTriangle(colorBuffer, colorT);
+	triangle.drawTriangle(colorBuffer);
 
 	colorBuffer.generateBMP("test.bmp");
 	return 0;
