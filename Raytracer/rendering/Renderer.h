@@ -4,7 +4,9 @@
 #include "Camera.h"
 #include "PixelBuffer.h"
 #include "../primitives/primitives.h"
+#include "../lights/Light.h"
 #include <memory>
+#include "../lights/PointLight.h"
 namespace rendering
 {
 #define MAX_RECURSION 8
@@ -19,6 +21,8 @@ namespace rendering
 		}
 
 		void AddGeometry(const primitives::geometry& geometry);
+		void AddPointLight(const lights::PointLight& light);
+
 		void RenderScene();
 
 		std::shared_ptr<primitives::Sphere> AddSphere();
@@ -26,6 +30,8 @@ namespace rendering
 
 		std::shared_ptr<primitives::Triangle> AddTriangle(const math::vec3& a, const math::vec3& b, const math::vec3& c);
 		std::shared_ptr<primitives::Triangle> AddTriangle(const math::vec3& a, const math::vec3& b, const math::vec3& c, const math::vec3& na, const math::vec3& nb, const math::vec3& nc);
+
+		rendering::color4f CalculatePointLighting(const intersections::IntersectionResult& result, const rendering::Material& material, const lights::PointLight light) const;
 
 		void Render();
 		void FillBackground();
@@ -35,6 +41,9 @@ namespace rendering
 		std::vector<primitives::geometry> scene_;
 
 		std::vector<primitives::geometry_sp> scene;
+
+		std::vector<lights::PointLight> lights_;
+
 
 		std::pair<intersections::IntersectionResult, rendering::Material> ShootRay(const intersections::Ray& ray) const;
 

@@ -12,6 +12,10 @@ namespace rendering
 	using color4f = math::vec<4, float>;
 	using color3 = math::vec<3, byte>;
 
+	inline color4f operator*(const color4f& lhs, const color4f& rhs) {
+		return color4f(lhs.get(0) * rhs.get(0), lhs.get(1) * rhs.get(1), lhs.get(2) * rhs.get(2), lhs.get(3) * rhs.get(3));
+	}
+
 	class PixelBuffer
 	{
 	private:

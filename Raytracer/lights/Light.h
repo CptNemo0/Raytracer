@@ -13,12 +13,10 @@ namespace lights
 	{
 		public:
 			math::vec3 position;
-			rendering::color3 color;
+			rendering::color4f color;
 			float intensity;
 
-			virtual rendering::color3 getDiffuse(math::vec3 cameraPosition, intersections::IntersectionResult intersectionInfo) = 0;
-			virtual rendering::color3 getSpecular(math::vec3 cameraPosition, intersections::IntersectionResult intersectionInfo) = 0;
-			virtual bool isInShadow(intersections::IntersectionResult intersectionInfo, primitives::geometry& geometry) = 0;
+			virtual bool IsInShadow(intersections::IntersectionResult intersectionInfo, primitives::geometry& geometry) = 0;
 	};
 
 }

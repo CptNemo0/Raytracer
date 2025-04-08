@@ -13,9 +13,7 @@ namespace rendering
 		color4f diffuse;
 		color4f specular;
 		float shininess;
-
         float specular_amount;
-        float specular_coeff;
         float reflect_fraction;
 
         Material(const color4& ambient, const color4& diffuse, const color4f& specular, float shininess)
@@ -29,7 +27,7 @@ namespace rendering
             : ambient(0.0f, 0.0f, 0.0f, 255.0f), diffuse(0.0f, 0.0f, 0.0f, 255.0f), specular(0.0f, 0.0f, 0.0f, 255.0f), shininess(0.0f) {
         }
 
-        Material(const color3& diffuse_colour, float specular_amount, float specular_coeff, float reflect_fraction);
+        
         
         ~Material() {}
 

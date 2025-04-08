@@ -5,6 +5,11 @@ void rendering::Renderer::AddGeometry(const primitives::geometry& geometry)
 	scene_.push_back(geometry);
 }
 
+void rendering::Renderer::AddPointLight(const lights::PointLight& light)
+{
+	lights_.push_back(light);
+}
+
 void rendering::Renderer::RenderScene()
 {
 	buffer_->ClearBuffers(color4(0, 0, 0, 255), FLT_MAX);
@@ -53,6 +58,39 @@ std::shared_ptr<primitives::Triangle> rendering::Renderer::AddTriangle(const mat
 	auto triangle = std::make_shared<primitives::Triangle>(a, b, c, na, nb, nc);
 	scene.push_back(triangle);
 	return triangle;
+}
+
+rendering::color4f rendering::Renderer::CalculatePointLighting(const intersections::IntersectionResult& result, const rendering::Material& material, const lights::PointLight light) const
+{
+	rendering::color4f final_color(0, 0, 0, 255);
+	
+	math::vec3 light_dir = light.position - result.intersection_point;
+	math::normalize(light_dir);
+
+	float distance = math::length(light_dir);
+	float attenuation = 1.0f / (light.intensity + light.constAtten + light.linearAtten * distance + light.quadAtten * distance * distance);
+
+
+	rendering::color4f ambient = material.ambient * light.color;
+
+	float diff = std::max(math::dot(result.intersection_normal, light_dir), 0.0f);
+	rendering::color4f diffuse = material.diffuse * diff * light.color;
+
+	math::vec3 view_dir = camera_->position_ - result.intersection_point;
+	math::normalize(view_dir);
+
+	math::vec3 reflect_dir =  result.intersection_normal * 2.0f * math::dot(result.intersection_normal, light_dir) - light_dir;
+
+	float spec = std::pow(std::max(math::dot(view_dir, reflect_dir), 0.0f), material.shininess);
+	rendering::color4f specular = material.specular * light.color * spec;
+
+	ambient = ambient * attenuation;
+	diffuse = diffuse * attenuation;
+	specular = specular * attenuation;
+
+	final_color += ambient + diffuse + specular;
+
+	return final_color;
 }
 
 void rendering::Renderer::Render() 
@@ -112,34 +150,40 @@ void rendering::Renderer::Render()
 				}
 				else if (result.type == intersections::IntersectionType::HIT)
 				{
-					auto light_dir = light_position - result.intersection_point;
-					math::normalize(light_dir);
-
-					auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
-
-					auto new_ray = intersections::Ray(new_origin, new_origin + light_dir);
-
-					const auto& [new_result, new_mat] = ShootRay(new_ray);
-
-					if (new_result.type == intersections::IntersectionType::HIT)
+					for (const auto& light : lights_)
 					{
-						result_color += mat.ambient * weight;
-						continue;
+						auto light_dir = light.position - result.intersection_point;
+						math::normalize(light_dir);
+
+						auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
+
+						auto new_ray = intersections::Ray(new_origin, new_origin + light_dir);
+
+						const auto& [new_result, new_mat] = ShootRay(new_ray);
+
+						if (new_result.type == intersections::IntersectionType::HIT)
+						{
+							result_color += mat.ambient * weight;
+							continue;
+						}
+					
+						/*auto view_dir = camera_->position_ - result.intersection_point;
+						math::normalize(view_dir);
+
+						auto half_vector = light_dir + view_dir;
+						math::normalize(half_vector);
+
+						auto dot_product = math::dot(result.intersection_normal, light_dir);
+						dot_product *= dot_product > 0.0f;
+
+						auto spec = std::powf(std::fmaxf(math::dot(result.intersection_normal, half_vector), 0.0f), mat.shininess);
+						spec *= dot_product > 0.0f;
+						result_color += ((mat.ambient + (mat.diffuse * dot_product) + mat.specular * spec)) * weight ;*/
+
+						result_color += CalculatePointLighting(result, mat, light) * weight;
+
 					}
-
-					auto view_dir = camera_->position_ - result.intersection_point;
-					math::normalize(view_dir);
-
-					auto half_vector = light_dir + view_dir;
-					math::normalize(half_vector);
-
-					auto dot_product = math::dot(result.intersection_normal, light_dir);
-					dot_product *= dot_product > 0.0f;
-
-					auto spec = std::powf(std::fmaxf(math::dot(result.intersection_normal, half_vector), 0.0f), mat.shininess);
-					spec *= dot_product > 0.0f;
-
-					result_color += ((mat.ambient + (mat.diffuse * dot_product) + mat.specular * spec)) * weight;
+					
 				}
 			}
 

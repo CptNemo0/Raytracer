@@ -23,6 +23,7 @@
 
 #include "primitives/primitives.h"
 #include "rendering/Renderer.h"
+#include "lights/PointLight.h"
 
 int main(int argc, char** argv)
 {
@@ -35,6 +36,7 @@ int main(int argc, char** argv)
 		rendering::color4f(250.0f, 250.0f, 250.0f, 255.0f),
 		8.0f
 	);
+
 
 	rendering::PixelBuffer buffer(1920, 1080);
 
@@ -52,8 +54,10 @@ int main(int argc, char** argv)
 		sphere->SetMaterial(material1);
 	}
 
-	
-	//auto sphere2 = renderer.AddSphere(math::vec3(5.0f, -5.0f, 10.0f), 2.0f);
+	lights::PointLight light(math::vec3(-5.0f, 5.0f, 5.0f), rendering::color4f(1.0f, 1.0f, 0.2f, 1.0f), 1.0f);
+	light.setAttenuation(0.0f, 0.0f, 0.0f);
+	renderer.AddPointLight(light);
+	//auto sphere2 = renderer.AddSphere(math::vec3(5.0f, 0.0f, 10.0f), 5.0f);
 	//
 	//sphere1->SetMaterial(material1);
 	//sphere2->SetMaterial(material1);
