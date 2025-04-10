@@ -1,5 +1,5 @@
 #include "pch.h"
-
+#include <stdexcept>
 namespace math
 {
 	mat4x4 rotation_matrix_x_rad(float angle)
@@ -95,6 +95,22 @@ namespace math
 			0.0f, y, 0.0f, 0.0f,
 			0.0f, 0.0f, z, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
+		);
+	}
+
+	mat4x4 projection_matrix(float fov, float aspect, float near, float far)
+	{
+		
+		const float a = 1.0f / (aspect * std::tan(fov * 0.5f));
+		const float b = 1.0f / std::tan(fov * 0.5f);
+		const float c = (far + near) / (near - far);
+		const float d = (2.0f * far * near) / (near - far);
+
+		return mat4x4(
+			   a, 0.0f,  0.0f, 0.0f,
+			0.0f,    b,  0.0f, 0.0f,
+			0.0f, 0.0f,     c,    d,
+			0.0f, 0.0f, -1.0f, 0.0f
 		);
 	}
 	

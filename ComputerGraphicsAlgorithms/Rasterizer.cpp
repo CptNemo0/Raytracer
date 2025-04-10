@@ -14,9 +14,11 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 	const auto height = static_cast<float>(framebuffer_->Height());
 	auto color_buffer = framebuffer_->ColorBuffer();
 	
+	const auto projection_matrix = math::projection_matrix(90, width / (2.0f * height), 0.1f, 100.0f);
+
 	Triangle transformed = input;
 
-	auto cull_bleeding = [&](Triangle& tri)
+	auto cull_bleeding = [](Triangle& tri)
 	{
 		for (std::int32_t i = 0; i < 3; i++)
 		{
@@ -28,13 +30,21 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 		return 0;
 	};
 
-	auto transform_triangle = [&](Triangle& tri)
+	auto transform_triangle = [width, height, &projection_matrix](Triangle& tri)
 	{
 		for (std::int32_t i = 0; i < 3; i++)
 		{
 			auto& x = tri.vertices[i].position[0];
 			auto& y = tri.vertices[i].position[1];
-		
+			auto& z = tri.vertices[i].position[2];
+
+			const math::vec4 extended(x, y, z, 1.0f);
+			const auto projected = math::transformed(projection_matrix, extended);
+
+			x = projected.get(0);
+			y = projected.get(1);
+			z = projected.get(2);
+
 			x = (x + 1.0f) * width  * 0.5f;
 			y = (y + 1.0f) * height * 0.5f;
 		}
