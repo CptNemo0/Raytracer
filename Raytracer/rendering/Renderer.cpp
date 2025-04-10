@@ -157,7 +157,7 @@ void rendering::Renderer::Render()
 
 						auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
 
-						auto new_ray = intersections::Ray(new_origin, new_origin + light_dir);
+						auto new_ray = intersections::Ray(new_origin, light.position);
 
 						const auto& [new_result, new_mat] = ShootRay(new_ray);
 
@@ -166,19 +166,6 @@ void rendering::Renderer::Render()
 							result_color += mat.ambient * weight;
 							continue;
 						}
-					
-						/*auto view_dir = camera_->position_ - result.intersection_point;
-						math::normalize(view_dir);
-
-						auto half_vector = light_dir + view_dir;
-						math::normalize(half_vector);
-
-						auto dot_product = math::dot(result.intersection_normal, light_dir);
-						dot_product *= dot_product > 0.0f;
-
-						auto spec = std::powf(std::fmaxf(math::dot(result.intersection_normal, half_vector), 0.0f), mat.shininess);
-						spec *= dot_product > 0.0f;
-						result_color += ((mat.ambient + (mat.diffuse * dot_product) + mat.specular * spec)) * weight ;*/
 
 						result_color += CalculatePointLighting(result, mat, light) * weight;
 

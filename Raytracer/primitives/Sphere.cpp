@@ -8,8 +8,7 @@ namespace primitives
     {
         intersections::IntersectionResult result;
         const auto center_origin = center_ - ray.origin_;
-        const auto ray_direction = math::normalized(ray.direction_ - ray.origin_);
-        const auto t_ca = ray_direction.dot(center_origin);
+        const auto t_ca = ray.direction_.dot(center_origin);
         if (t_ca < 0) return result;
 
         const auto d2 = math::dot(center_origin, center_origin) - t_ca * t_ca;
@@ -32,7 +31,7 @@ namespace primitives
         const float t = t0;
 
         result.type = intersections::IntersectionType::HIT;
-        result.intersection_point = ray.origin_ + ray_direction * t;
+        result.intersection_point = ray.origin_ + ray.direction_ * t;
         result.distance = math::distance(ray.origin_, result.intersection_point);
         result.intersection_normal = math::normalized(result.intersection_point - center_);
         return result;

@@ -38,8 +38,7 @@ namespace primitives
 	intersections::IntersectionResult Plane::IntersectImpl(const intersections::Ray& ray, const float range) const
 	{
 		intersections::IntersectionResult result;
-		const auto ray_direction = math::normalized(ray.direction_ - ray.origin_);
-		const float denominator = math::dot(normal_, ray_direction);
+		const float denominator = math::dot(normal_, ray.direction_);
 
 		if (math::flt_eq(denominator, 0.0f)) return result;
 
@@ -51,7 +50,7 @@ namespace primitives
 
 		if (range == 0.0f || t < range)
 		{
-			if (math::dot(normal_, ray_direction) < 0.0f)
+			if (math::dot(normal_, ray.direction_) < 0.0f)
 			{
 				result.type = intersections::IntersectionType::HIT;
 			}

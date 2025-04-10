@@ -29,40 +29,53 @@ int main(int argc, char** argv)
 {
 	rendering::PerspectiveCamera cam;
 	cam.scale_ = 3.025f;
+	//cam.scale_ = 0.05f;
 	
 	rendering::Material material1(
 		rendering::color4f(25.5f, 0.0f, 0.0f, 255.0f),
-		rendering::color4f(255.0f, 0.0f, 0.0f, 255.0f),
-		rendering::color4f(250.0f, 250.0f, 250.0f, 255.0f),
-		8.0f
+		rendering::color4f(170.0f, 0.0f, 0.0f, 255.0f),
+		rendering::color4f(170.0f, 170.0f, 170.0f, 255.0f),
+		50.0f
 	);
 
 
-	rendering::PixelBuffer buffer(1920, 1080);
+	rendering::Material material2(
+		rendering::color4f(25.5f, 0.0f, 0.0f, 255.0f),
+		rendering::color4f(170.0f, 0.0f, 0.0f, 255.0f),
+		rendering::color4f(170.0f, 170.0f, 170.0f, 255.0f),
+		5.0f
+	);
 
+	rendering::Material material3(
+		rendering::color4f(0.0f, 25.0f, 0.0f, 255.0f),
+		rendering::color4f(0.0f, 170.0f, 0.0f, 255.0f),
+		rendering::color4f(170.0f, 170.0f, 170.0f, 255.0f),
+		1.0f
+	);
+
+	rendering::PixelBuffer buffer(1920, 1080);
 	rendering::Renderer renderer(&cam, &buffer);
 
-	srand(static_cast<unsigned int>(time(nullptr)));
-	for (int i = 0; i < 50; i++)
-	{
-		float x = static_cast<float>(rand() % 300) * 0.1f - 15.0f;
-		float y = static_cast<float>(rand() % 300) * 0.1f - 15.0f;
-		float z = static_cast<float>(rand() % 100) * 0.1f + 10.0f;
-		float r = rand() % 3 + 1;
+	auto sphere1 = renderer.AddSphere(math::vec3(5.0f, 0.0f, 10.0f), 2.0f);
+	auto sphere2 = renderer.AddSphere(math::vec3(-5.0f, 0.0f, 10.0f), 2.0f);
+	auto triangle = renderer.AddTriangle(
+		math::vec3(0.0f, 50.0f, 20.0f),
+		math::vec3(50.0f, -50.0f, 20.0f),
+		math::vec3(-50.0f, -50.0f, 30.0f)
+	);
 
-		auto sphere = renderer.AddSphere(math::vec3(x, y, z), r);
-		sphere->SetMaterial(material1);
-	}
+	sphere1->SetMaterial(material1);
+	sphere2->SetMaterial(material2);
+	triangle->SetMaterial(material3);
+	lights::PointLight light1(math::vec3(0.0f, 5.0f, 5.0f), rendering::color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0f);
+	lights::PointLight light2(math::vec3(5.0f, 5.0f, 5.0f), rendering::color4f(0.0f, 0.0f, 1.0f, 1.0f), 1.0f);
+	light1.setAttenuation(0.0f, 0.0f, 0.0f);
+	light2.setAttenuation(0.0f, 0.0f, 0.0f);
 
-	lights::PointLight light(math::vec3(-5.0f, 5.0f, 5.0f), rendering::color4f(1.0f, 1.0f, 0.2f, 1.0f), 1.0f);
-	light.setAttenuation(0.0f, 0.0f, 0.0f);
-	renderer.AddPointLight(light);
-	//auto sphere2 = renderer.AddSphere(math::vec3(5.0f, 0.0f, 10.0f), 5.0f);
-	//
-	//sphere1->SetMaterial(material1);
-	//sphere2->SetMaterial(material1);
+	
 
-	//renderer.FillBackground();
+	renderer.AddPointLight(light1);
+	renderer.AddPointLight(light2);
 	renderer.Render();
 
 	return 0;
