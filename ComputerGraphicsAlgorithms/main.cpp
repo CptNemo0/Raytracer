@@ -8,9 +8,15 @@
 
 #include "PixelBuffer.h"
 #include "Rasterizer.h"
+#include "Camera.h"
 
 int main(int argc, char** argv)
 {
+	Camera camera;
+	camera.SetPosition(math::vec3(0.0f, 0.0f, 0.0f));
+    camera.LookAt(math::vec3(0.0f, 0.0f, 0.0f), math::vec3(0.0f, 1.0f, 0.0f));
+    const auto view_matrix = camera.UpdateViewMatrix();
+
     Rasterizer rasterizer(2000, 2000);
     rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
     rasterizer.framebuffer_->DepthClear(std::numeric_limits<float>::max());
@@ -59,11 +65,11 @@ int main(int argc, char** argv)
     triangle5.vertices[1].color = color4f(0.0f, 255.0f, 255.0f, 255.0f);
     triangle5.vertices[2].color = color4f(0.0f, 255.0f, 0.0f, 255.0f);
 
-    rasterizer.DrawTriangle(triangle5);
-    rasterizer.DrawTriangle(triangle1);
-    rasterizer.DrawTriangle(triangle2);
-    rasterizer.DrawTriangle(triangle3);
-    rasterizer.DrawTriangle(triangle4);
+    rasterizer.DrawTriangle(triangle5, view_matrix);
+    rasterizer.DrawTriangle(triangle1, view_matrix);
+    rasterizer.DrawTriangle(triangle2, view_matrix);
+    rasterizer.DrawTriangle(triangle3, view_matrix);
+    rasterizer.DrawTriangle(triangle4, view_matrix);
 
     rasterizer.framebuffer_->SaveColorToFile("image.bmp");
     return 0;

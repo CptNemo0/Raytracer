@@ -15,7 +15,7 @@ class Rasterizer
 public:
 	std::unique_ptr<PixelBuffer> framebuffer_;
 	Rasterizer(const std::uint32_t width, const std::uint32_t height);
-	void DrawTriangle(const Triangle& tri);
+	void DrawTriangle(const Triangle& tri, const math::mat4x4& view_matrix);
 };
 
 #endif // !RASTERIZER_H

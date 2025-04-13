@@ -8,7 +8,7 @@ Rasterizer::Rasterizer(const std::uint32_t width, const std::uint32_t height)
 	framebuffer_ = std::make_unique<PixelBuffer>(width, height);
 }
 
-void Rasterizer::DrawTriangle(const Triangle& input)
+void Rasterizer::DrawTriangle(const Triangle& input, const math::mat4x4& view_matrix)
 {
 	const auto width = static_cast<float>(framebuffer_->Width());
 	const auto height = static_cast<float>(framebuffer_->Height());
@@ -30,7 +30,7 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 		return 0;
 	};
 
-	auto transform_triangle = [width, height, &projection_matrix](Triangle& tri)
+	auto transform_triangle = [width, height, &projection_matrix, &view_matrix](Triangle& tri)
 	{
 		for (std::int32_t i = 0; i < 3; i++)
 		{
@@ -39,7 +39,8 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 			auto& z = tri.vertices[i].position[2];
 
 			const math::vec4 extended(x, y, z, 1.0f);
-			const auto projected = math::transformed(projection_matrix, extended);
+			const auto view_pos = math::transformed(view_matrix, extended);
+			const auto projected = math::transformed(projection_matrix, view_pos);
 
 			x = projected.get(0);
 			y = projected.get(1);
@@ -50,7 +51,7 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 		}
 	};
 
-	auto get_limits = [&](const Triangle& tri)
+	auto get_limits = [width, height](const Triangle& tri)
 	{
 		float left = std::numeric_limits<float>::max();
 		float right = std::numeric_limits<float>::min();
@@ -127,7 +128,6 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 		return std::make_tuple(lambda1, lambda2, lambda3);
 	};
 
-	//if (cull_bleeding(transformed)) return;
 	transform_triangle(transformed);
 	const auto [lefti, righti, topi, boti] = get_limits(transformed);
 	
