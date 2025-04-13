@@ -9,9 +9,9 @@ namespace intersections
 	struct IntersectionResult 
 	{
 		IntersectionType type = IntersectionType::MISS;
-		float distance;
-		math::vec3 intersection_point;
-		math::vec3 intersection_normal;
+		float distance = 0.0f;
+		math::vec3 intersection_point = math::vec3(0.0f, 0.0f, 0.0f);
+		math::vec3 intersection_normal = math::vec3(0.0f, 0.0f, 0.0f);
 	};
 }
 

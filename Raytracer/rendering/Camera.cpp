@@ -21,8 +21,8 @@ std::pair<const float, const float> rendering::PerspectiveCamera::GetDimensions(
 intersections::Ray rendering::PerspectiveCamera::GetRay(const float x, const float y) const
 {
 	math::vec3 pixel_position = GetPixelPosition(x, y);
-	math::vec3 ray_dir = (pixel_position - position_);
-	return intersections::Ray(position_, ray_dir);
+	math::vec3 direction = math::normalized(pixel_position - position_);
+	return intersections::Ray(position_, direction);
 }
 
 math::vec3 rendering::OrthographicCamera::GetPixelPosition(const float x, const float y) const
@@ -43,6 +43,6 @@ std::pair<const float, const float> rendering::OrthographicCamera::GetDimensions
 intersections::Ray rendering::OrthographicCamera::GetRay(const float x, const float y) const
 {
 	math::vec3 pixel_position = GetPixelPosition(x, y);
-	return intersections::Ray(pixel_position, pixel_position + forward_);
+	return intersections::Ray(pixel_position, forward_);
 }
 

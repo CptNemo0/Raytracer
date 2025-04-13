@@ -60,6 +60,13 @@ std::shared_ptr<primitives::Triangle> rendering::Renderer::AddTriangle(const mat
 	return triangle;
 }
 
+std::shared_ptr<primitives::Plane> rendering::Renderer::AddPlane(const math::vec3& normal, const math::vec3& point)
+{
+	auto plane = std::make_shared<primitives::Plane>(normal, point);
+	scene.push_back(plane);
+	return plane;
+}
+
 rendering::color4f rendering::Renderer::CalculatePointLighting(const intersections::IntersectionResult& result, const rendering::Material& material, const lights::PointLight light) const
 {
 	rendering::color4f final_color(0, 0, 0, 255);
@@ -120,9 +127,7 @@ void rendering::Renderer::Render()
 
 	const float start_x = -(camera_w * 0.5f) + pixel_width  * 0.5f;
 	const float start_y =  (camera_h * 0.5f) - pixel_height * 0.5f;
-
-	math::vec3 light_position(-5.0f, 5.0f, 5.0f);
-
+	int shadowed = 0;
 	for (std::int32_t y = 0; y < height; y++)
 	{
 		for (std::int32_t x = 0; x < width; x++)
@@ -152,18 +157,17 @@ void rendering::Renderer::Render()
 				{
 					for (const auto& light : lights_)
 					{
-						auto light_dir = light.position - result.intersection_point;
-						math::normalize(light_dir);
-
 						auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
-
-						auto new_ray = intersections::Ray(new_origin, light.position);
-
+						auto new_dir = math::normalized(light.position - new_origin);
+						auto new_ray = intersections::Ray(new_origin, new_dir);
+						auto new_distance = math::distance(new_origin, light.position);
+						
 						const auto& [new_result, new_mat] = ShootRay(new_ray);
 
-						if (new_result.type == intersections::IntersectionType::HIT)
+						if (new_result.type == intersections::IntersectionType::HIT && new_result.distance < new_distance)
 						{
-							result_color += mat.ambient * weight;
+							result_color += mat.ambient * weight; shadowed++;
+							//std::cout << "Hit light shadow" << std::endl;
 							continue;
 						}
 
@@ -174,12 +178,13 @@ void rendering::Renderer::Render()
 				}
 			}
 
+
 			result_color[3] = 255.0f;
 
 			buffer_->SetPixelf(x, y, result_color);
 		}
 	}
-
+	std::cout << "shadowed: " << shadowed << std::endl;
 	buffer_->SaveColorToFile("test.bmp");
 }
 

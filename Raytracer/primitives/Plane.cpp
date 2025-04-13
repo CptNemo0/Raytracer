@@ -37,17 +37,28 @@ namespace primitives
 
 	intersections::IntersectionResult Plane::IntersectImpl(const intersections::Ray& ray, const float range) const
 	{
+		//intersections::IntersectionResult result;
+		//
+		//auto t = math::dot((point0_ - ray.origin_), normal_) / math::dot(ray.direction_, normal_);
+		//
+		//if (t <= 0.0f) return result;
+		//
+		//result.type = intersections::IntersectionType::HIT;
+		//result.intersection_point= ray.SolveParametricEquation(t);
+		//result.distance = math::distance(result.intersection_point, ray.origin_);
+		//result.intersection_normal = normal_;
+		//return result;
 		intersections::IntersectionResult result;
 		const float denominator = math::dot(normal_, ray.direction_);
-
+		
 		if (math::flt_eq(denominator, 0.0f)) return result;
-
+		
 		const float denominator_inv = 1.0f / denominator;
 		const math::vec3 difference = point0_ - ray.origin_;
 		const float t = math::dot(difference, normal_) * denominator_inv;
-
+		
 		if (t <= 0.0f) return result;
-
+		
 		if (range == 0.0f || t < range)
 		{
 			if (math::dot(normal_, ray.direction_) < 0.0f)
@@ -58,12 +69,12 @@ namespace primitives
 			{
 				result.type = intersections::IntersectionType::INSIDE_PRIMITIVE;
 			}
-
+		
 			result.intersection_point = ray.SolveParametricEquation(t);
 			result.distance = math::distance(result.intersection_point, ray.origin_);
 			result.intersection_normal = normal_;
 		}
-
+		
 		return result;
 	}
 }

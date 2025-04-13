@@ -31,6 +31,8 @@ namespace rendering
 		std::shared_ptr<primitives::Triangle> AddTriangle(const math::vec3& a, const math::vec3& b, const math::vec3& c);
 		std::shared_ptr<primitives::Triangle> AddTriangle(const math::vec3& a, const math::vec3& b, const math::vec3& c, const math::vec3& na, const math::vec3& nb, const math::vec3& nc);
 
+		std::shared_ptr<primitives::Plane> AddPlane(const math::vec3& normal, const math::vec3& point);
+
 		rendering::color4f CalculatePointLighting(const intersections::IntersectionResult& result, const rendering::Material& material, const lights::PointLight light) const;
 
 		void Render();
