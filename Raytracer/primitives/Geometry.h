@@ -16,13 +16,9 @@ namespace primitives
 	class Geometry
 	{
 	public:
-		rendering::Material material;
-		//Geometry(const rendering::Material& mat) : material(mat) {}
-		void SetMaterial(const rendering::Material& mat) { material = mat; }
-		const rendering::Material& GetMaterial() const { return material; }
-
-		//virtual intersections::IntersectionResult Intersects(const intersections::Ray& ray, float range = 0.0f) const = 0;
+		std::shared_ptr<rendering::Material> material_;
 		intersections::IntersectionResult Intersect(const intersections::Ray& ray, float range = 0.0f) const;
+
 	protected:
 		Geometry() = default;
 	};
@@ -33,7 +29,6 @@ namespace primitives
 		auto& derived = (T&)(*this);
 		return derived.IntersectImpl(ray, range);
 	}
-
 }
 
 #endif // !PRIMITIVES_GEOMETRY_H

@@ -45,11 +45,33 @@ namespace math
 	}
 
 	template <std::uint32_t l, typename T>
+		requires std::is_arithmetic_v<T>
+	inline T length2(const vec<l, T>& a)
+	{
+		T result = static_cast<T>(0);
+
+		for (std::uint32_t i = 0; i < l; i++)
+		{
+			result += a.get(i) * a.get(i);
+		}
+
+		return static_cast<T>(result);
+	}
+
+	template <std::uint32_t l, typename T>
 	requires std::is_arithmetic_v<T>
 	inline T distance(const vec<l, T>& a, const vec<l, T>& b)
 	{
 		auto c = b - a;
 		return length(c);
+	}
+
+	template <std::uint32_t l, typename T>
+		requires std::is_arithmetic_v<T>
+	inline T distance2(const vec<l, T>& a, const vec<l, T>& b)
+	{
+		auto c = b - a;
+		return length2(c);
 	}
 
 	template <std::uint32_t l, typename T>

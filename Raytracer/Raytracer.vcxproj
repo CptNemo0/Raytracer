@@ -144,6 +144,7 @@
     <ClCompile Include="primitives\Plane.cpp" />
     <ClCompile Include="primitives\Sphere.cpp" />
     <ClCompile Include="primitives\Triangle.cpp" />
+    <ClCompile Include="rendering\Material.cpp" />
     <ClCompile Include="rendering\PixelBuffer.cpp" />
     <ClCompile Include="rendering\Renderer.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="primitives\primitives.h" />
     <ClInclude Include="primitives\Sphere.h" />
     <ClInclude Include="primitives\Triangle.h" />
+    <ClInclude Include="rendering\MaterialType.h" />
     <ClInclude Include="rendering\PixelBuffer.h" />
     <ClInclude Include="rendering\Renderer.h" />
     <ClInclude Include="rendering\stb_image_write.h" />

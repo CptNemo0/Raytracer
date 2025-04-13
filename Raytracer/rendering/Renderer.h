@@ -20,8 +20,6 @@ namespace rendering
 
 		void AddPointLight(const lights::PointLight& light);
 
-		void RenderScene();
-
 		std::shared_ptr<primitives::Sphere> AddSphere();
 		std::shared_ptr<primitives::Sphere> AddSphere(const math::vec3& center, float radius);
 
@@ -30,7 +28,7 @@ namespace rendering
 
 		std::shared_ptr<primitives::Plane> AddPlane(const math::vec3& normal, const math::vec3& point);
 
-		rendering::color4f CalculatePointLighting(const intersections::IntersectionResult& result, const rendering::Material& material, const lights::PointLight light) const;
+		rendering::color4f CalculatePointLighting(const intersections::IntersectionResult& result, const rendering::Material& material_, const lights::PointLight light) const;
 
 		void Render();
 		void FillBackground();
@@ -40,16 +38,7 @@ namespace rendering
 		std::vector<primitives::geometry_sp> scene_;
 		std::vector<lights::PointLight> lights_;
 		std::pair<intersections::IntersectionResult, rendering::Material> ShootRay(const intersections::Ray& ray) const;
-		std::uint32_t max_depth_ = 0;
-
-		inline void RenderGeometry(
-			const primitives::geometry& geometry,
-			std::int32_t width, std::int32_t height,
-			float pixel_width, float pixel_height,
-			float start_x, float start_y);
-
-		
-		
+		std::uint32_t max_depth_ = 1;		
 	};
 }
 

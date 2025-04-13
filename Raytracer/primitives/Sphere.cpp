@@ -23,9 +23,15 @@ namespace primitives
 		float t = (t1 > 0) ? t1 : ((t2 > 0) ? t2 : -1.0f);
 		if (t < 0 || t > range) return result;
 
+		bool inside = math::distance2(ray.origin_, center_) < radius_ * radius_;
+
 		result.type = intersections::IntersectionType::HIT;
 		result.intersection_point = ray.SolveParametricEquation(t);
 		result.intersection_normal = math::normalized(result.intersection_point - center_);
+		if (inside)
+		{
+			result.intersection_normal = result.intersection_normal * -1.0f;
+		}
 		result.distance = math::distance(result.intersection_point, ray.origin_);
 		
 		

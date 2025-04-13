@@ -61,8 +61,13 @@ namespace math
 
 	inline vec3 reflect(const vec3& vect, const vec3& normal)
 	{
-		return vect - normal * math::dot(vect, normal) * 2.0f;
+		return vect - normal * math::dot(normal, vect) * 2.0f;
 	}
+    inline vec3 refract(const vec3& vect, const vec3& normal, float index)
+    {
+		float dp = math::dot(normal, vect);
+		return ((vect - normal * dp) / (index)) - normal * (1 - (1 - dp * dp) / (index * index));
+    }
 
 	void translate(const vec3& translation, vec4& vector);
 	void rotate_rad(const vec3& rotation, vec4& vector);

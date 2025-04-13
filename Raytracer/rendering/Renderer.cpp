@@ -41,7 +41,7 @@ std::shared_ptr<primitives::Plane> rendering::Renderer::AddPlane(const math::vec
 	return plane;
 }
 
-rendering::color4f rendering::Renderer::CalculatePointLighting(const intersections::IntersectionResult& result, const rendering::Material& material, const lights::PointLight light) const
+rendering::color4f rendering::Renderer::CalculatePointLighting(const intersections::IntersectionResult& result, const rendering::Material& material_, const lights::PointLight light) const
 {
 	rendering::color4f final_color(0, 0, 0, 255);
 	
@@ -52,24 +52,24 @@ rendering::color4f rendering::Renderer::CalculatePointLighting(const intersectio
 	float attenuation = 1.0f / (light.intensity + light.constAtten + light.linearAtten * distance + light.quadAtten * distance * distance);
 
 
-	rendering::color4f ambient = material.ambient * light.color;
+	rendering::color4f ambient_ = material_.ambient_ * light.color;
 
 	float diff = std::max(math::dot(result.intersection_normal, light_dir), 0.0f);
-	rendering::color4f diffuse = material.diffuse * diff * light.color;
+	rendering::color4f diffuse_ = material_.diffuse_ * diff * light.color;
 
 	math::vec3 view_dir = camera_->position_ - result.intersection_point;
 	math::normalize(view_dir);
 
 	math::vec3 reflect_dir =  result.intersection_normal * 2.0f * math::dot(result.intersection_normal, light_dir) - light_dir;
 
-	float spec = std::pow(std::max(math::dot(view_dir, reflect_dir), 0.0f), material.shininess);
-	rendering::color4f specular = material.specular * light.color * spec;
+	float spec = std::pow(std::max(math::dot(view_dir, reflect_dir), 0.0f), material_.shininess_);
+	rendering::color4f specular_ = material_.specular_ * light.color * spec;
 
-	ambient = ambient * attenuation;
-	diffuse = diffuse * attenuation;
-	specular = specular * attenuation;
+	ambient_ = ambient_ * attenuation;
+	diffuse_ = diffuse_ * attenuation;
+	specular_ = specular_ * attenuation;
 
-	final_color += ambient + diffuse + specular;
+	final_color += ambient_ + diffuse_ + specular_;
 
 	return final_color;
 }
@@ -88,7 +88,7 @@ void rendering::Renderer::Render()
 		math::vec3(-0.5f, 0.0f,0.10682f),
 		math::vec3(0.5f, 0.0f, 0.10682f),
 
-		math::vec3(0.0f, 0.0f, 0.29036f)
+		math::vec3(0.0f, 0.0f, 0.29036f)//
 	};
 
 	const std::int32_t width = static_cast<std::int32_t>(buffer_->Width());
@@ -122,54 +122,59 @@ void rendering::Renderer::Render()
 				Material mat;
 				intersections::IntersectionResult result;
 
+				bool refractive = false;
+
 				for (std::uint32_t depth = 0; depth < max_depth_; depth++)
 				{
 					const auto& [local_result, local_mat] = ShootRay(ray);
 					mat = local_mat;
 					result = local_result;
 
-					if (result.type == intersections::IntersectionType::MISS)
+					if (result.type == intersections::IntersectionType::MISS || mat.material_type_ == MaterialType::DIFFUSE) break;	
+
+					if (mat.material_type_ == MaterialType::REFLECTIVE)
 					{
-						result_color += color * weight;
-						break;
+						refractive = false;
+						const auto new_dir = math::reflect(ray.direction_, result.intersection_normal);
+						ray = intersections::Ray(result.intersection_point + result.intersection_normal * 0.01f, new_dir);
 					}
-					else 
-					{	
-						if (!mat.reflective)
-						{
-							//std::cout << "Hit non reflective" << std::endl;
-							break;
-						}
-						else
-						{
-							std::cout << "Hit reflective" << std::endl;
-							const auto new_dir = math::reflect(result.intersection_normal, ray.direction_);
-							ray = intersections::Ray(result.intersection_point + result.intersection_normal * 0.01f, new_dir);
-						}
+					else if (mat.material_type_ == MaterialType::REFRACTIVE)
+					{
+						float sign = refractive ? -1.0f : 1.0f;
+						const auto new_dir = math::refract(ray.direction_, result.intersection_normal, sign * mat.refraction_index_);
+						ray = intersections::Ray(result.intersection_point + ray.direction_ * 0.01f, new_dir);
+						refractive = !refractive;
 					}
 				}
 
-				for (const auto& light : lights_)
+				if (result.type == intersections::IntersectionType::MISS)
 				{
-					auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
-					auto new_dir = math::normalized(light.position - new_origin);
-					auto new_ray = intersections::Ray(new_origin, new_dir);
-					auto new_distance = math::distance(new_origin, light.position);
-
-					const auto& [new_result, new_mat] = ShootRay(new_ray);
-
-					if (new_result.type == intersections::IntersectionType::HIT && new_result.distance < new_distance)
-					{
-						result_color += mat.ambient * weight; shadowed++;
-						//std::cout << "Hit light shadow" << std::endl;
-						continue;
-					}
-
-					result_color += CalculatePointLighting(result, mat, light) * weight;
-
+					result_color += color * weight;
 				}
-			}
+				else
+				{
+					for (const auto& light : lights_)
+					{
+						auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
+						auto new_dir = math::normalized(light.position - new_origin);
+						auto new_ray = intersections::Ray(new_origin, new_dir);
+						auto new_distance = math::distance(new_origin, light.position);
 
+						const auto& [new_result, new_mat] = ShootRay(new_ray);
+
+						if (new_result.type == intersections::IntersectionType::HIT && new_result.distance < new_distance)
+						{
+							result_color += mat.ambient_ * weight; shadowed++;
+							//std::cout << "Hit light shadow" << std::endl;
+							continue;
+						}
+
+						result_color += CalculatePointLighting(result, mat, light) * weight;
+
+					}
+				}
+				
+			}
 
 			result_color[3] = 255.0f;
 
@@ -203,7 +208,7 @@ std::pair<intersections::IntersectionResult, rendering::Material> rendering::Ren
 				if (flags) return;
 
 				depth = result.distance;
-				hit_material = primitive->material;
+				hit_material = *(primitive->material_.get());
 				hit_result = result;
 			},
 			geometry
