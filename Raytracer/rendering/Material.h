@@ -15,7 +15,7 @@ namespace rendering
 		float shininess;
         float specular_amount;
         float reflect_fraction;
-
+        bool reflective = false;
         Material(const color4& ambient, const color4& diffuse, const color4f& specular, float shininess)
             : ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess) {
         }

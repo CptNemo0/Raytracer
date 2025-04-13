@@ -7,20 +7,17 @@
 #include "../lights/Light.h"
 #include <memory>
 #include "../lights/PointLight.h"
+
 namespace rendering
 {
-#define MAX_RECURSION 8
-#define ADAPTIVE_THRESHOLD 0.001f
-
 	class Renderer
 	{
 	public:
 		Renderer() = default;
-		Renderer(rendering::Camera* camera, rendering::PixelBuffer* buffer)
-			: camera_(camera), buffer_(buffer) {
+		Renderer(rendering::Camera* camera, rendering::PixelBuffer* buffer, std::uint32_t max_depth)
+			: camera_(camera), buffer_(buffer), max_depth_(max_depth){
 		}
 
-		void AddGeometry(const primitives::geometry& geometry);
 		void AddPointLight(const lights::PointLight& light);
 
 		void RenderScene();
@@ -40,14 +37,10 @@ namespace rendering
 	private:
 		Camera* camera_;
 		PixelBuffer* buffer_;
-		std::vector<primitives::geometry> scene_;
-
-		std::vector<primitives::geometry_sp> scene;
-
+		std::vector<primitives::geometry_sp> scene_;
 		std::vector<lights::PointLight> lights_;
-
-
 		std::pair<intersections::IntersectionResult, rendering::Material> ShootRay(const intersections::Ray& ray) const;
+		std::uint32_t max_depth_ = 0;
 
 		inline void RenderGeometry(
 			const primitives::geometry& geometry,

@@ -25,6 +25,7 @@ namespace intersections
 			return origin_ + direction_ * t;
 		}
 
+
 		friend std::ostream& operator<<(std::ostream& os, const Ray& ray)
 		{
 			os << "Ray\n("

@@ -59,6 +59,11 @@ namespace math
 	vec3 quat_rotate_rad(vec3& vect, float angle, const vec3& axis);
 	vec3 quat_rotate_deg(const vec3& vect, float angle, const vec3& axis);
 
+	inline vec3 reflect(const vec3& vect, const vec3& normal)
+	{
+		return vect - normal * math::dot(vect, normal) * 2.0f;
+	}
+
 	void translate(const vec3& translation, vec4& vector);
 	void rotate_rad(const vec3& rotation, vec4& vector);
 	void rotate_deg(const vec3& rotation, vec4& vector);

@@ -1,69 +1,43 @@
 ﻿#include "Renderer.h"
 
-void rendering::Renderer::AddGeometry(const primitives::geometry& geometry)
-{
-	scene_.push_back(geometry);
-}
 
 void rendering::Renderer::AddPointLight(const lights::PointLight& light)
 {
 	lights_.push_back(light);
 }
 
-void rendering::Renderer::RenderScene()
-{
-	buffer_->ClearBuffers(color4(0, 0, 0, 255), FLT_MAX);
-	FillBackground();
-
-
-	const auto [w, h] = camera_->GetDimensions();
-	const float pixel_width = w / static_cast<float>(buffer_->Width());
-	const float pixel_height = h / static_cast<float>(buffer_->Height());
-	const float start_x = -w * 0.5f + pixel_width * 0.5f;
-	const float start_y = h * 0.5f - pixel_height * 0.5f;
-	const std::int32_t width = static_cast<std::int32_t>(buffer_->Width());
-	const std::int32_t height = static_cast<std::int32_t>(buffer_->Height());
-
-	for (const auto& geometry : scene_)
-	{
-		RenderGeometry(geometry, width, height, pixel_width, pixel_height, start_x, start_y);
-	}
-
-	buffer_->SaveColorToFile("test.bmp");
-}
-
 std::shared_ptr<primitives::Sphere> rendering::Renderer::AddSphere()
 {
 	auto sphere = std::make_shared<primitives::Sphere>();
-	scene.push_back(sphere);
+	scene_.push_back(sphere);
 	return sphere;
 }
 
 std::shared_ptr<primitives::Sphere> rendering::Renderer::AddSphere(const math::vec3& center, float radius)
 {
 	auto sphere = std::make_shared<primitives::Sphere>(center, radius);
-	scene.push_back(sphere);
+	scene_.push_back(sphere);
 	return sphere;
 }
 
 std::shared_ptr<primitives::Triangle> rendering::Renderer::AddTriangle(const math::vec3& a, const math::vec3& b, const math::vec3& c)
 {
 	auto triangle = std::make_shared<primitives::Triangle>(a, b, c);
-	scene.push_back(triangle);
+	scene_.push_back(triangle);
 	return triangle;
 }
 
 std::shared_ptr<primitives::Triangle> rendering::Renderer::AddTriangle(const math::vec3& a, const math::vec3& b, const math::vec3& c, const math::vec3& na, const math::vec3& nb, const math::vec3& nc)
 {
 	auto triangle = std::make_shared<primitives::Triangle>(a, b, c, na, nb, nc);
-	scene.push_back(triangle);
+	scene_.push_back(triangle);
 	return triangle;
 }
 
 std::shared_ptr<primitives::Plane> rendering::Renderer::AddPlane(const math::vec3& normal, const math::vec3& point)
 {
 	auto plane = std::make_shared<primitives::Plane>(normal, point);
-	scene.push_back(plane);
+	scene_.push_back(plane);
 	return plane;
 }
 
@@ -132,7 +106,6 @@ void rendering::Renderer::Render()
 	{
 		for (std::int32_t x = 0; x < width; x++)
 		{
-			
 			const math::vec4 color = buffer_->GetPixelf(x, y);
 			math::vec4 result_color(0.0f);
 
@@ -145,36 +118,55 @@ void rendering::Renderer::Render()
 				const auto addy = offset.get(1) * pixel_height * 1.50f;
 				const auto weight = offset.get(2);
 
-				const auto ray = camera_->GetRay(fx + addx, fy + addy);
+				auto ray = camera_->GetRay(fx + addx, fy + addy);
+				Material mat;
+				intersections::IntersectionResult result;
 
-				const auto& [result, mat] = ShootRay(ray);
+				for (std::uint32_t depth = 0; depth < max_depth_; depth++)
+				{
+					const auto& [local_result, local_mat] = ShootRay(ray);
+					mat = local_mat;
+					result = local_result;
 
-				if (result.type == intersections::IntersectionType::MISS)
-				{
-					result_color += color * weight;
-				}
-				else if (result.type == intersections::IntersectionType::HIT)
-				{
-					for (const auto& light : lights_)
+					if (result.type == intersections::IntersectionType::MISS)
 					{
-						auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
-						auto new_dir = math::normalized(light.position - new_origin);
-						auto new_ray = intersections::Ray(new_origin, new_dir);
-						auto new_distance = math::distance(new_origin, light.position);
-						
-						const auto& [new_result, new_mat] = ShootRay(new_ray);
-
-						if (new_result.type == intersections::IntersectionType::HIT && new_result.distance < new_distance)
-						{
-							result_color += mat.ambient * weight; shadowed++;
-							//std::cout << "Hit light shadow" << std::endl;
-							continue;
-						}
-
-						result_color += CalculatePointLighting(result, mat, light) * weight;
-
+						result_color += color * weight;
+						break;
 					}
-					
+					else 
+					{	
+						if (!mat.reflective)
+						{
+							//std::cout << "Hit non reflective" << std::endl;
+							break;
+						}
+						else
+						{
+							std::cout << "Hit reflective" << std::endl;
+							const auto new_dir = math::reflect(result.intersection_normal, ray.direction_);
+							ray = intersections::Ray(result.intersection_point + result.intersection_normal * 0.01f, new_dir);
+						}
+					}
+				}
+
+				for (const auto& light : lights_)
+				{
+					auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
+					auto new_dir = math::normalized(light.position - new_origin);
+					auto new_ray = intersections::Ray(new_origin, new_dir);
+					auto new_distance = math::distance(new_origin, light.position);
+
+					const auto& [new_result, new_mat] = ShootRay(new_ray);
+
+					if (new_result.type == intersections::IntersectionType::HIT && new_result.distance < new_distance)
+					{
+						result_color += mat.ambient * weight; shadowed++;
+						//std::cout << "Hit light shadow" << std::endl;
+						continue;
+					}
+
+					result_color += CalculatePointLighting(result, mat, light) * weight;
+
 				}
 			}
 
@@ -195,7 +187,7 @@ std::pair<intersections::IntersectionResult, rendering::Material> rendering::Ren
 
 	float depth = std::numeric_limits<float>::max();
 	
-	for (auto& geometry : scene)
+	for (auto& geometry : scene_)
 	{
 		intersections::IntersectionResult result;
 		std::visit
@@ -219,58 +211,6 @@ std::pair<intersections::IntersectionResult, rendering::Material> rendering::Ren
 	}
 
 	return std::make_pair(hit_result, hit_material);
-}
-
-inline void rendering::Renderer::RenderGeometry(
-	const primitives::geometry& geometry,
-	std::int32_t width, std::int32_t height,
-	float pixel_width, float pixel_height,
-	float start_x, float start_y)
-{
-    for (std::int32_t y = 0; y < height; y++)
-    {
-        for (std::int32_t x = 0; x < width; x++)
-        {
-            const float fx = start_x + static_cast<float>(x) * pixel_width;
-            const float fy = start_y - static_cast<float>(y) * pixel_height;
-
-            intersections::Ray ray = camera_->GetRay(fx, fy);
-            intersections::IntersectionResult result;
-
-            std::visit
-            (
-                [&result, &ray](auto& primitive)
-                {
-                    result = primitive.Intersect(ray, 1000);
-                },
-                geometry
-            );
-
-            if (result.type == intersections::IntersectionType::MISS)
-            {
-                continue;
-            }
-
-            float& depth = buffer_->DepthBuffer()[buffer_->xy_to_index(x, y)];
-
-            if (result.distance < depth)
-            {
-                depth = result.distance;
-                rendering::color4 color;
-                std::visit
-                (
-                    [&](auto& primitive)
-                    {
-                        color = primitive.GetMaterial().ambient;
-                    },
-                    geometry
-                );
-
-                buffer_->SetPixel(x, y, color);
-            }
-
-        }
-    }
 }
 
 void rendering::Renderer::FillBackground()
