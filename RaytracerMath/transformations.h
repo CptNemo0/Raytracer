@@ -63,10 +63,15 @@ namespace math
 	{
 		return vect - normal * math::dot(normal, vect) * 2.0f;
 	}
-    inline vec3 refract(const vec3& vect, const vec3& normal, float index)
+
+    inline vec3 refract(const vec3& I, const vec3& N, float eta)
     {
-		float dp = math::dot(normal, vect);
-		return ((vect - normal * dp) / (index)) - normal * (1 - (1 - dp * dp) / (index * index));
+		const float dp = math::dot(N, I);
+		const float k = 1.0f - eta * eta * (1.0f - dp * dp);
+
+		if (k < 0.0f) return vec3(0.0f); // Total internal reflection
+
+		return I * eta - N * (eta * dp + sqrtf(k));
     }
 
 	void translate(const vec3& translation, vec4& vector);

@@ -130,20 +130,30 @@ void rendering::Renderer::Render()
 					mat = local_mat;
 					result = local_result;
 
-					if (result.type == intersections::IntersectionType::MISS || mat.material_type_ == MaterialType::DIFFUSE) break;	
+					if (result.type == intersections::IntersectionType::MISS || mat.material_type_ == MaterialType::DIFFUSE) break;
 
 					if (mat.material_type_ == MaterialType::REFLECTIVE)
 					{
-						refractive = false;
 						const auto new_dir = math::reflect(ray.direction_, result.intersection_normal);
-						ray = intersections::Ray(result.intersection_point + result.intersection_normal * 0.01f, new_dir);
+						ray = intersections::Ray(result.intersection_point + result.intersection_normal * 0.0001f, new_dir);
 					}
 					else if (mat.material_type_ == MaterialType::REFRACTIVE)
 					{
-						float sign = refractive ? -1.0f : 1.0f;
-						const auto new_dir = math::refract(ray.direction_, result.intersection_normal, sign * mat.refraction_index_);
-						ray = intersections::Ray(result.intersection_point + ray.direction_ * 0.01f, new_dir);
-						refractive = !refractive;
+						auto refracted_dir = math::refract(ray.direction_, result.intersection_normal, mat.refraction_index_);
+						
+						if (refracted_dir == math::vec3(0.0f))
+						{
+							const auto new_dir = math::reflect(ray.direction_, result.intersection_normal);
+							ray = intersections::Ray(result.intersection_point + result.intersection_normal * 0.0001f, new_dir);
+							continue;
+						}
+
+						auto refracted_origin = result.intersection_point + ray.direction_ * 0.001f;
+						auto refracted_ray = intersections::Ray(refracted_origin, refracted_dir);
+						const auto& [refracted_result, refracted_material] = ShootRay(refracted_ray);
+						refracted_dir = math::refract(refracted_ray.direction_, refracted_result.intersection_normal, 1.0f / refracted_material.refraction_index_);
+						refracted_origin = refracted_result.intersection_point + refracted_ray.direction_ * 0.0001f;
+						ray = intersections::Ray(refracted_origin, refracted_dir);
 					}
 				}
 
@@ -155,7 +165,7 @@ void rendering::Renderer::Render()
 				{
 					for (const auto& light : lights_)
 					{
-						auto new_origin = result.intersection_point + result.intersection_normal * 0.01f;
+						auto new_origin = result.intersection_point + result.intersection_normal * 0.0001f;
 						auto new_dir = math::normalized(light.position - new_origin);
 						auto new_ray = intersections::Ray(new_origin, new_dir);
 						auto new_distance = math::distance(new_origin, light.position);

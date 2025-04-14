@@ -28,20 +28,20 @@
 int main(int argc, char** argv)
 {
 	rendering::PerspectiveCamera cam;
-	cam.scale_ = 4.025f;
+	cam.scale_ = 3.025f;
 	cam.fov_ = math::pid4;
-	cam.position_ = math::vec3(0.0f, -5.0f, -3.0f);
+	cam.position_ = math::vec3(0.0f, -6.0f, -3.0f);
 	cam.aspect_ratio_ = 16.0f / 9.0f;
 	//cam.scale_ = 0.05f;
 
 	rendering::PixelBuffer buffer(1920, 1080);
 	rendering::Renderer renderer(&cam, &buffer, 6);
 
-	lights::PointLight light1(math::vec3(1.0f, 9.9f, 0.0f), rendering::color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0f);
+	lights::PointLight light1(math::vec3(3.0f, 7.5f, 5.0f), rendering::color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0f);
 	light1.setAttenuation(0.5f, -1.0f, 3.0f);
 	renderer.AddPointLight(light1);
 
-	lights::PointLight light2(math::vec3(-1.0f, 9.9f, 0.0f), rendering::color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0f);
+	lights::PointLight light2(math::vec3(-3.0f, 7.5f, 5.0f), rendering::color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0f);
 	light2.setAttenuation(0.5f, -1.0f, 3.0f);
 	renderer.AddPointLight(light2);
 
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 		rendering::color4f(6.0f, 6.0f, 6.0f, 255.0f),
 		rendering::color4f(255.0f, 255.0f, 255.0f, 255.0f),
 		rendering::color4f(255.0f, 255.0f, 255.0f, 255.0f),
-		40.0f,
+		20.0f,
 		rendering::MaterialType::DIFFUSE
 	);
 
@@ -100,7 +100,17 @@ int main(int argc, char** argv)
 		40.0f,
 		rendering::MaterialType::REFRACTIVE
 	);
-	refractive->refraction_index_ = 5.0f;
+	refractive->refraction_index_ =	1.02f;
+
+
+	auto hihgly_refractive = std::make_shared<rendering::Material>(
+		rendering::color4f(6.0f, 6.0f, 6.0f, 255.0f),
+		rendering::color4f(255.0f, 255.0f, 255.0f, 255.0f),
+		rendering::color4f(255.0f, 255.0f, 255.0f, 255.0f),
+		40.0f,
+		rendering::MaterialType::REFRACTIVE
+	);
+	hihgly_refractive->refraction_index_ = 1.1f;
 
 	auto left_plane = renderer.AddPlane(math::vec3(1.0f, 0.0f, 0.0f), math::vec3(-15.0f, 0.0f, 0.0f));
 	left_plane->material_ = blue_diffuse;
@@ -115,17 +125,20 @@ int main(int argc, char** argv)
 	bot_plane->material_ = white_diffuse;
 	
 	auto top_plane = renderer.AddPlane(math::vec3(0.0f, -1.0f, 0.0f), math::vec3(0.0f, 10.0f, 0.0f));
-	top_plane->material_ = white_diffuse_highspec;
+	top_plane->material_ = white_diffuse;
 
 	auto sphere_1 = renderer.AddSphere(math::vec3(-3.0f, -7.0f, 10.0f), 3.0f);
 	sphere_1->material_ = reflective;
 	
-	auto sphere_2 = renderer.AddSphere(math::vec3(4.0f, -8.0f, 7.0f), 2.0f);
+	auto sphere_2 = renderer.AddSphere(math::vec3(4.0f, -7.0f, 5.0f), 3.0f);
 	sphere_2->material_ = refractive;
 
 	auto sphere_3 = renderer.AddSphere(math::vec3(3.0f, -7.0f, 10.0f), 2.0f);
 	sphere_3->material_ = shinny_green;
 	
+	auto sphere_4 = renderer.AddSphere(math::vec3(-5.0f, -7.0f, 2.0f), 3.0f);
+	sphere_4->material_ = hihgly_refractive;
+
 	// Start timing
 	auto start_time = std::chrono::high_resolution_clock::now();
 	renderer.Render();
