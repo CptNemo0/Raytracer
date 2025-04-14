@@ -9,13 +9,15 @@
 #include "raytracer_math.h"
 #include "Triangle.h"
 #include "Vertex.h"
+#include "Preprocessor.h"
 
 class Rasterizer
 {
 public:
 	std::unique_ptr<PixelBuffer> framebuffer_;
-	Rasterizer(const std::uint32_t width, const std::uint32_t height);
-	void DrawTriangle(const Triangle& tri, const math::mat4x4& view_matrix);
+	std::shared_ptr<Preprocessor> preprocessor_;
+	Rasterizer(const std::uint32_t width, const std::uint32_t height, std::shared_ptr<Preprocessor> preprocessor);
+	void DrawTriangle(const Triangle& tri);
 };
 
 #endif // !RASTERIZER_H

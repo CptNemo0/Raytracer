@@ -9,17 +9,28 @@
 #include "PixelBuffer.h"
 #include "Rasterizer.h"
 #include "Camera.h"
+#include "Preprocessor.h"
+#include <memory>
 
 int main(int argc, char** argv)
 {
-	Camera camera;
-	camera.SetPosition(math::vec3(1.0f, 0.0f, 0.0f));
-    camera.LookAt(math::vec3(0.0f, 0.0f, 1.0f), math::vec3(0.0f, 1.0f, 0.0f));
-    const auto view_matrix = camera.UpdateViewMatrix();
+    auto preprocessor = std::make_shared<Preprocessor>(2000.0f, 2000.0f);
+    Rasterizer rasterizer(2000, 2000, preprocessor);
+	Camera camera(math::vec3(0.0f, 1.0f, 0.0f), 
+                  math::vec3(0.0f, 0.0f, 0.25f), 
+                  math::vec3(0.0f, 1.0f, 0.0f),
+                  1.0f,
+                  90.0f,
+                  1000.0f,
+                  0.1f);
 
-    Rasterizer rasterizer(2000, 2000);
+    preprocessor->view_matrix_ = camera.UpdateViewMatrix();
+    preprocessor->projection_matrix_ = camera.ProjectionMatrix();
+    preprocessor->model_matrix_ = math::mat4x4(1.0f);
+
     rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
     rasterizer.framebuffer_->DepthClear(std::numeric_limits<float>::max());
+
     Triangle triangle1;
     triangle1.vertices[0].position = math::vec3(0.0f, -0.5f, 0.0f);
     triangle1.vertices[1].position = math::vec3(-0.5f, 0.0f, 0.0f);
@@ -57,19 +68,23 @@ int main(int argc, char** argv)
     triangle4.vertices[2].color = color4f(255.0f, 255.0f, 0.0f, 255.0f);
 
     Triangle triangle5;
-    triangle5.vertices[0].position = math::vec3(-0.3f, 0.0f, -5.0f);
-    triangle5.vertices[1].position = math::vec3(-0.8f, 0.7f, 5.0f);
+    triangle5.vertices[0].position = math::vec3(-0.3f, 0.0f, -2.0f);
+    triangle5.vertices[1].position = math::vec3(-0.8f, 0.7f, 2.0f);
     triangle5.vertices[2].position = math::vec3(0.2f, 0.7f, 0.0f);
 
     triangle5.vertices[0].color = color4f(0.0f, 255.0f, 255.0f, 255.0f);
     triangle5.vertices[1].color = color4f(0.0f, 255.0f, 255.0f, 255.0f);
     triangle5.vertices[2].color = color4f(0.0f, 255.0f, 0.0f, 255.0f);
 
-    rasterizer.DrawTriangle(triangle5, view_matrix);
-    rasterizer.DrawTriangle(triangle1, view_matrix);
-    rasterizer.DrawTriangle(triangle2, view_matrix);
-    rasterizer.DrawTriangle(triangle3, view_matrix);
-    rasterizer.DrawTriangle(triangle4, view_matrix);
+    rasterizer.DrawTriangle(triangle5);
+    preprocessor->model_matrix_ = math::translation_matrix(1.0f, 1.0f, 1.0f);
+    rasterizer.DrawTriangle(triangle1);
+    preprocessor->model_matrix_ = math::mat4x4(1.0f);
+    rasterizer.DrawTriangle(triangle2);
+    preprocessor->model_matrix_ = math::rotation_matrix_y_deg(25.0f);
+    rasterizer.DrawTriangle(triangle3);
+    preprocessor->model_matrix_ = math::scale_matrix(1.0f, 0.2f, 1.0f);
+    rasterizer.DrawTriangle(triangle4);
 
     rasterizer.framebuffer_->SaveColorToFile("image.bmp");
     return 0;
