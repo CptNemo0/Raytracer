@@ -14,7 +14,7 @@ void Rasterizer::DrawTriangle(const Triangle& input, const math::mat4x4& view_ma
 	const auto height = static_cast<float>(framebuffer_->Height());
 	auto color_buffer = framebuffer_->ColorBuffer();
 	
-	const auto projection_matrix = math::projection_matrix(90, width / (2.0f * height), 0.1f, 100.0f);
+	const auto projection_matrix = math::projection_matrix(90, width / height, 0.1f, 100.0f);
 
 	Triangle transformed = input;
 

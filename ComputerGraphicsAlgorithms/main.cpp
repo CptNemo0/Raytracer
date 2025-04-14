@@ -13,8 +13,8 @@
 int main(int argc, char** argv)
 {
 	Camera camera;
-	camera.SetPosition(math::vec3(0.0f, 0.0f, 0.0f));
-    camera.LookAt(math::vec3(0.0f, 0.0f, 0.0f), math::vec3(0.0f, 1.0f, 0.0f));
+	camera.SetPosition(math::vec3(1.0f, 0.0f, 0.0f));
+    camera.LookAt(math::vec3(0.0f, 0.0f, 1.0f), math::vec3(0.0f, 1.0f, 0.0f));
     const auto view_matrix = camera.UpdateViewMatrix();
 
     Rasterizer rasterizer(2000, 2000);
