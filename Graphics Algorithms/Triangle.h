@@ -108,24 +108,24 @@ public:
 	}
 
 
-    void drawTriangle(buffer::ColorBuffer& buffer, math::mat4x4 proj) 
+    void drawTriangle(buffer::ColorBuffer& buffer) 
     {
-		int minx = std::min({ v0_[0], v1_[0], v2_[0] });
-		int maxx = std::max({ v0_[0], v1_[0], v2_[0] });
-		int miny = std::min({ v0_[1], v1_[1], v2_[1] });
-		int maxy = std::max({ v0_[1], v1_[1], v2_[1] });
+		float minx = std::min({ v0_[0], v1_[0], v2_[0] });
+		float maxx = std::max({ v0_[0], v1_[0], v2_[0] });
+		float miny = std::min({ v0_[1], v1_[1], v2_[1] });
+		float maxy = std::max({ v0_[1], v1_[1], v2_[1] });
 
-		minx = std::max(minx, 0);
-		maxx = std::min(maxx, buffer.GetWidth() - 1);
-		miny = std::max(miny, 0);
-		maxy = std::min(maxy, buffer.GetHeight() - 1);
+		minx = std::fmaxf(minx, 0);
+		maxx = std::fminf(maxx, buffer.GetWidth() - 1);
+		miny = std::fmaxf(miny, 0);
+		maxy = std::fminf(maxy, buffer.GetHeight() - 1);
 
-		int dx12 = (int)(v1_[0] - v0_[0]);
-		int dy12 = (int)(v1_[1] - v0_[1]);
-		int dx23 = (int)(v2_[0] - v1_[0]);
-		int dy23 = (int)(v2_[1] - v1_[1]);
-		int dx31 = (int)(v0_[0] - v2_[0]);
-		int dy31 = (int)(v0_[1] - v2_[1]);
+		auto dx12 = (v1_[0] - v0_[0]);
+		auto dy12 = (v1_[1] - v0_[1]);
+		auto dx23 = (v2_[0] - v1_[0]);
+		auto dy23 = (v2_[1] - v1_[1]);
+		auto dx31 = (v0_[0] - v2_[0]);
+		auto dy31 = (v0_[1] - v2_[1]);
 
 		//Top-Left
 		bool t01 = (dy12 < 0 || (dy12 == 0 && dx12 > 0));

@@ -30,7 +30,7 @@ int main()
 
 
 	Rasterizer rasterizer(colorBuffer);
-	math::mat4x4 projectionMatrix = rasterizer.projection_matrix(0.5f, float(width / height), 0.1f, 100.0f);
+	math::mat4x4 projectionMatrix = rasterizer.projection_matrix(1.0f, float(width / height), 0.1f, 100.0f);
 	rasterizer.addProjectionMatrix(projectionMatrix);
 	
 	rasterizer.rasterize(triangle);

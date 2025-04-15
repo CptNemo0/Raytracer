@@ -137,6 +137,7 @@
     <ClCompile Include="Graphics Algorithms.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorBuffer.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="third_party\stb_image.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="third_party\stb_image_write.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="VertexProcessor.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Raytracer\Raytracer.vcxproj">

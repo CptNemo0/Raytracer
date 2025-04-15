@@ -25,7 +25,7 @@ public:
 	{
 		if (triangles_) {
 			triangles_->ToScreenCoordinates(buffer_.width_, buffer_.height_);
-			triangles_->drawTriangle(buffer_, projectionMatrix_);
+			triangles_->drawTriangle(buffer_);
 		}
 	};
 
@@ -33,7 +33,7 @@ public:
 	{
 		triangle.ApplyProjection(projectionMatrix_);
 		triangle.ToScreenCoordinates(buffer_.width_, buffer_.height_);
-		triangle.drawTriangle(buffer_, projectionMatrix_);
+		triangle.drawTriangle(buffer_);
 	};
 
 	void ToScreenCoordinates(Triangle& triangle)
