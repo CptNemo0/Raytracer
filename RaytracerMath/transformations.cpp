@@ -97,6 +97,21 @@ namespace math
 			0.0f, 0.0f, 0.0f, 1.0f
 		);
 	}
+
+	mat4x4 projection_matrix(float fov, float aspect, float near, float far)
+	{
+		float f = 1.0f / tanf(fov * 0.5f);
+		float A = (far + near) / (near - far);
+		float B = (2.0f * far * near) / (near - far);
+
+		return mat4x4(
+			 f / aspect, 0.0f, 0.0f, 0.0,
+			 0.0f,       f,    0.0f, 0.0,
+			 0.0f,       0.0f, A,   B,
+			 0.0f,       0.0f, -1,    0.0
+		);
+		
+	}
 	
 	vec3 quat_rotate_rad(vec3& vect, float angle, const vec3& axis)
 	{

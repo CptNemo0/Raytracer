@@ -1,4 +1,6 @@
-#pragma once  
+#ifndef COLOR_BUFFER_H
+#define COLOR_BUFFER_H
+
 #include "raytracer_math.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "third_party/stb_image_write.h"
@@ -85,4 +87,4 @@ namespace buffer
 	};
 
 };
-
+#endif // COLOR_BUFFER_H

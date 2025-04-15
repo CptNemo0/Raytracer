@@ -1,4 +1,6 @@
-#pragma once
+#ifndef VERTEX_H
+#define VERTEX_H
+
 #include "raytracer_math.h"
 #include "ColorBuffer.h"
 
@@ -8,3 +10,4 @@ struct Vertex
 	Color4 color;
 };
 
+#endif // !VERTEX_H

@@ -1,7 +1,6 @@
 ﻿
 #include <iostream>
-#include "ColorBuffer.h"
-#include "Triangle.h"
+#include "Rasterizer.h"
 
 int main()
 {
@@ -23,22 +22,20 @@ int main()
     int height = colorBuffer.height_;
     int width = colorBuffer.width_;
 
-    math::vec3 v0_screen = { float((v0_ndc[0] + 1) * 0.5 * width), float((1 - v0_ndc[1]) * 0.5 * height), v0_ndc[2] };
-    math::vec3 v1_screen = { float((v1_ndc[0] + 1) * 0.5 * width), float((1 - v1_ndc[1]) * 0.5 * height), v1_ndc[2] };
-    math::vec3 v2_screen = { float((v2_ndc[0] + 1) * 0.5 * width), float((1 - v2_ndc[1]) * 0.5 * height), v2_ndc[2] };
 
-	// Convert to screen coordinates
-	math::vec3 v0_screen1 = { float((v0[0] + 1) * 0.5 * width), float((1 - v0[1]) * 0.5 * height), v0[2] };
-	math::vec3 v1_screen1 = { float((v1[0] + 1) * 0.5 * width), float((1 - v1[1]) * 0.5 * height), v1[2] };
-	math::vec3 v2_screen1 = { float((v2[0] + 1) * 0.5 * width), float((1 - v2[1]) * 0.5 * height), v2[2] };
+	math::mat4x4 projectionMatrix = math::projection_matrix(90.0f, float(width) / float(height), 0.1f, 100.0f);
 
-
-    Triangle triangle(v0_screen, v1_screen, v2_screen);
-	Triangle triangle1(v0_screen1, v1_screen1, v2_screen1);
+	Triangle triangle(v0_ndc, v1_ndc, v2_ndc);
+	Triangle triangle1(v0, v1, v2);
 	triangle1.SetColors(colorT, colorT, colorT);
 
-	triangle1.drawTriangle(colorBuffer);
-	triangle.drawTriangle(colorBuffer);
+
+	Rasterizer rasterizer(colorBuffer);
+	rasterizer.addProjectionMatrix(projectionMatrix);
+	
+	rasterizer.rasterize(triangle);
+	rasterizer.rasterize(triangle1);
+
 
 	colorBuffer.generateBMP("test.bmp");
 	return 0;

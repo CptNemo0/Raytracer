@@ -1,4 +1,8 @@
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
+
 #include "raytracer_math.h"
+#include "ColorBuffer.h"
 
 class Triangle
 {
@@ -28,6 +32,19 @@ public:
 		color2_ = Color4(0, 0, 255, 255);
     }
 	
+
+	void ToScreenCoordinates(int screenWidth, int screenHeight)
+	{
+		v0_[0] = float((v0_[0] + 1.0f) * 0.5f * screenWidth);
+		v0_[1] = float((1.0f - v0_[1]) * 0.5f * screenHeight);
+
+		v1_[0] = float((v1_[0] + 1.0f) * 0.5f * screenWidth);
+		v1_[1] = float((1.0f - v1_[1]) * 0.5f * screenHeight);
+
+		v2_[0] = float((v2_[0] + 1.0f) * 0.5f * screenWidth);
+		v2_[1] = float((1.0f - v2_[1]) * 0.5f * screenHeight);
+	}
+
 	void SetColors(const Color4& color0, const Color4& color1, const Color4& color2)
 	{
 		color0_ = color0;
@@ -68,7 +85,30 @@ public:
 			(w2 > 0 || (w2 == 0 && t20));
 	}
 
-    void drawTriangle(buffer::ColorBuffer& buffer) 
+	void ApplyProjection(const math::mat4x4& proj)
+	{
+		auto projectVertex = [&proj](math::vec3& v) {
+			math::vec4 v4 = { v[0], v[1], v[2], 1.0f };
+			math::vec4 transformed = math::transformed(proj, v4);
+
+			// perspective divide
+			if (transformed[3] != 0.0f)
+			{
+				transformed[0] /= transformed[3];
+				transformed[1] /= transformed[3];
+				transformed[2] /= transformed[3];
+			}
+
+			v = { transformed[0], transformed[1], transformed[2] };
+			};
+
+		projectVertex(v0_);
+		projectVertex(v1_);
+		projectVertex(v2_);
+	}
+
+
+    void drawTriangle(buffer::ColorBuffer& buffer, math::mat4x4 proj) 
     {
 		int minx = std::min({ v0_[0], v1_[0], v2_[0] });
 		int maxx = std::max({ v0_[0], v1_[0], v2_[0] });
@@ -135,3 +175,4 @@ private:
 	Color4 color1_;
 	Color4 color2_;
 };
+#endif // TRIANGLE_H
