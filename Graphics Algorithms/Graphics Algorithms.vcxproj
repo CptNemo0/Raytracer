@@ -135,7 +135,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graphics Algorithms.cpp" />
-    <ClCompile Include="Rasterizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorBuffer.h" />
