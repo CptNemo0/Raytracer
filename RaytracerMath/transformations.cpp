@@ -100,15 +100,16 @@ namespace math
 
 	mat4x4 projection_matrix(float fov, float aspect, float near, float far)
 	{
-		float f = 1.0f / tanf(fov * 0.5f);
-		float A = (far + near) / (near - far);
-		float B = (2.0f * far * near) / (near - far);
+		const float a = 1.0f / (aspect * std::tan(fov * 0.5f));
+		const float b = 1.0f / std::tan(fov * 0.5f);
+		const float c = (far + near) / (near - far);
+		const float d = (2.0f * far * near) / (near - far);
 
 		return mat4x4(
-			 f / aspect, 0.0f, 0.0f, 0.0,
-			 0.0f,       f,    0.0f, 0.0,
-			 0.0f,       0.0f, A,   B,
-			 0.0f,       0.0f, -1,    0.0
+			a, 0.0f, 0.0f, 0.0f,
+			0.0f, b, 0.0f, 0.0f,
+			0.0f, 0.0f, c, d,
+			0.0f, 0.0f, -1.0f, 0.0f
 		);
 		
 	}

@@ -23,7 +23,7 @@ int main()
     int width = colorBuffer.width_;
 
 
-	math::mat4x4 projectionMatrix = math::projection_matrix(90.0f, float(width) / float(height), 0.1f, 100.0f);
+	math::mat4x4 projectionMatrix = math::projection_matrix(0.5f, float(width) / float(height), 0.1f, 100.0f);
 
 	Triangle triangle(v0_ndc, v1_ndc, v2_ndc);
 	Triangle triangle1(v0, v1, v2);
