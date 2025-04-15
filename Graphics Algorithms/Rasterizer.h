@@ -41,6 +41,22 @@ public:
 		triangle.ToScreenCoordinates(buffer_.width_, buffer_.height_);
 	}
 
+	math::mat4x4 projection_matrix(float fov, float aspect, float near, float far)
+	{
+		const float a = 1.0f / (aspect * std::tan(fov * 0.5f));
+		const float b = 1.0f / std::tan(fov * 0.5f);
+		const float c = (far + near) / (near - far);
+		const float d = (2.0f * far * near) / (near - far);
+
+		return math::mat4x4(
+			a, 0.0f, 0.0f, 0.0f,
+			0.0f, b, 0.0f, 0.0f,
+			0.0f, 0.0f, c, d,
+			0.0f, 0.0f, -1.0f, 0.0f
+		);
+
+	}
+
 private:
 	buffer::ColorBuffer buffer_;
 	math::mat4x4 projectionMatrix_;

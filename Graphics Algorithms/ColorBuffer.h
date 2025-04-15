@@ -35,8 +35,7 @@ namespace buffer
 
 		~ColorBuffer()
 		{
-			delete[] colorBuffer_;
-			delete[] colorDepth_;
+			
 		};
 
         void generateBMP(const char* filename) const 

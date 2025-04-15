@@ -23,7 +23,6 @@ int main()
     int width = colorBuffer.width_;
 
 
-	math::mat4x4 projectionMatrix = math::projection_matrix(0.5f, float(width) / float(height), 0.1f, 100.0f);
 
 	Triangle triangle(v0_ndc, v1_ndc, v2_ndc);
 	Triangle triangle1(v0, v1, v2);
@@ -31,6 +30,7 @@ int main()
 
 
 	Rasterizer rasterizer(colorBuffer);
+	math::mat4x4 projectionMatrix = rasterizer.projection_matrix(0.5f, float(width / height), 0.1f, 100.0f);
 	rasterizer.addProjectionMatrix(projectionMatrix);
 	
 	rasterizer.rasterize(triangle);
