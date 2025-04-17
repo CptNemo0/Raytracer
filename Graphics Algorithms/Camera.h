@@ -9,15 +9,15 @@ class Camera
 
 public:
 	
-	Camera(const math::vec3& position, const math::vec3& target, const math::vec3& up, float fov, float aspect, float near, float far)
-		: position_(position), target_(target), up_(up), fov_(fov), aspect_(aspect), near_(near), far_(far)
+	Camera(const math::vec3& position, const math::vec3& forward, const math::vec3& up, float fov, float aspect, float near, float far)
+		: position_(position), fov_(fov), aspect_(aspect), near_(near), far_(far)
 	{
-		LookAt(position_, target_, up_);
+		LookAt(position_, forward_, up_);
 		projectionMatrix_ = math::projection_matrix(fov_, aspect_, near_, far_);
 	}
 
 	void SetPosition(const math::vec3& position) { position_ = position; }
-	void SetTarget(const math::vec3& target) { target_ = target; }
+	void SetTarget(const math::vec3& target) { forward_ = target; }
 	void SetUp(const math::vec3& up) { up_ = up; }
 	const math::mat4x4& GetViewMatrix() const { return viewMatrix_; }
 	const math::mat4x4& GetProjectionMatrix() const { return projectionMatrix_; }
@@ -25,10 +25,10 @@ public:
 	void UpdateViewMatrix()
 	{
 		viewMatrix_ = math::mat4x4(
-			right_[0], up_[0], forward_[0], 0.0f, -math::dot(right_, position_),
-			right_[1], up_[1], forward_[1], 0.0f, -math::dot(up_, position_),
-			right_[2], up_[2], forward_[2], 0.0f, -math::dot(forward_, position_),
-			0.0f, 0.0f, 0.0f, 1.0f
+			right_[0], up_[0], forward_[0], position_[0],
+			right_[1], up_[1], forward_[1], position_[0],
+			right_[2], up_[2], forward_[2], position_[0],
+			0.0f,      0.0f,   0.0f,        1.0f
 		);
 
 	}
@@ -42,11 +42,10 @@ public:
 
 
 private:
-	math::vec3 position_;
-	math::vec3 forward_;
-	math::vec3 up_;
-	math::vec3 right_;
-	math::vec3 target_;
+	math::vec3 position_ = math::vec3(0.0f, 0.0f, 0.0f);
+	math::vec3 forward_ = math::vec3(0.0f, 0.0f, 1.0f);
+	math::vec3 up_ = math::vec3(0.0f, 1.0f, 0.0f);
+	math::vec3 right_ = math::vec3(1.0f, 0.0f, 0.0f);
 
 	math::mat4x4 viewMatrix_;
 	math::mat4x4 projectionMatrix_;

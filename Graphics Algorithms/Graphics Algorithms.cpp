@@ -1,40 +1,84 @@
 ﻿
 #include <iostream>
 #include "Rasterizer.h"
+#include "Camera.h"
+#include "VertexProcessor.h"
 
 int main()
 {
-	buffer::ColorBuffer colorBuffer(800, 600);
+	buffer::ColorBuffer colorBuffer(2000, 2000);
 	Color4 color(0, 255, 0, 255);
 	colorBuffer.fillColorBuffer(color);
-
 	Color4 colorT(255, 0, 255, 255);
+	Color4 colorB(0, 0, 255, 255);
+	
+	Camera camera(math::vec3(0.0f, 0.0f, 0.0f),
+		math::vec3(0.0f, 0.0f, 1.0f),
+		math::vec3(0.0f, 1.0f, 0.0f), 
+		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
+	auto vertexProcessor = std::make_shared<VertexProcessor>();
+	
+
+	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
+	camera.UpdateViewMatrix();
+	vertexProcessor->viewMatrix_ = camera.GetViewMatrix();
+	vertexProcessor->projectionMatrix_ = camera.GetProjectionMatrix();
+
+	
+	/*std::cout << "Model matrix:" << std::endl;
+	vertexProcessor.modelMatrix_.log();
+	std::cout << "View matrix:" << std::endl;
+	vertexProcessor.viewMatrix_.log();
+	std::cout << "Projection matrix:" << std::endl;
+	vertexProcessor.projectionMatrix_.log()*/;
+
+	Rasterizer rasterizer(colorBuffer, vertexProcessor);
+
+	math::vec3 v0_1(0.0f, -0.5f, 1.0f);
+	math::vec3 v1_1(-0.5f, 0.0f, 1.0f);
+	math::vec3 v2_1(0.0f, 0.8f, 1.0f);
+
+	math::vec3 v0_2(0.5f, 0.5f, 1.0f);
+	math::vec3 v1_2(-0.4f, -0.5f, 1.0f);
+	math::vec3 v2_2(0.0f, 1.0f, 1.0f);
+
+	math::vec3 v0_3(-1.0f, 1.0f, 1.0f);
+	math::vec3 v1_3(-0.5f, 0.5f, 1.0f);
+	math::vec3 v2_3(-1.0f, 0.0f, 1.0f);
 
 
-	math::vec3 v0_ndc(0.0f, -0.5f, 0.0f);
-	math::vec3 v1_ndc(-0.5f, 0.0f, 0.0f);
-	math::vec3 v2_ndc(0.0f, 0.8f, 3.0f);
+	Triangle triangle1(v0_1, v1_1, v2_1);
+	Triangle triangle2(v0_2, v1_2, v2_2);
+	Triangle triangle3(v0_3, v1_3, v2_3);
 
-	math::vec3 v0(0.5f, 0.5f, 2.0f);
-	math::vec3 v1(-0.4f, -0.5f, 2.0f);
-	math::vec3 v2(0.0f, 1.0f, 2.0f);
+	triangle2.SetColors(colorT, colorT, colorT);
+	triangle3.SetColors(colorB, colorB, colorB);
 
     int height = colorBuffer.height_;
     int width = colorBuffer.width_;
 
-
-
-	Triangle triangle(v0_ndc, v1_ndc, v2_ndc);
-	Triangle triangle1(v0, v1, v2);
-	triangle1.SetColors(colorT, colorT, colorT);
-
-
-	Rasterizer rasterizer(colorBuffer);
-	math::mat4x4 projectionMatrix = rasterizer.projection_matrix(1.0f, float(width / height), 0.1f, 100.0f);
-	rasterizer.addProjectionMatrix(projectionMatrix);
-	
-	rasterizer.rasterize(triangle);
+	 //Transformacja pierwszego trójkąta (translacja)
+	math::mat4x4 translation = math::translation_matrix(0.5f, 0.5f, 0.0f);
+	vertexProcessor->modelMatrix_ = translation;
 	rasterizer.rasterize(triangle1);
+
+	// Obrót drugiego trójkąta (obrót wokół osi Z)
+	math::mat4x4 rotation = math::rotation_matrix_z_deg(45.0f);
+	vertexProcessor->modelMatrix_ = rotation;
+
+	vertexProcessor->modelMatrix_= math::translation_matrix(0.1f, 0.1f, 1.0f);
+	vertexProcessor->modelMatrix_.log();
+	rasterizer.rasterize(triangle1);
+
+	//vertexProcessor.modelMatrix_ = math::mat4x4(1.0f);
+	vertexProcessor->modelMatrix_ = math::rotation_matrix_y_deg(25.0f);
+	vertexProcessor->modelMatrix_.log();
+	rasterizer.rasterize(triangle2);
+
+	//vertexProcessor.modelMatrix_ = math::mat4x4(1.0f);
+	vertexProcessor->modelMatrix_ = math::scale_matrix(2.0f, 0.1f, 1.0f);
+	vertexProcessor->modelMatrix_.log();
+	rasterizer.rasterize(triangle3);
 
 
 	colorBuffer.generateBMP("test.bmp");

@@ -37,6 +37,13 @@ public:
 	{
 		auto pos = math::vec4(view[0], view[1], view[2], 1.0f);
 		math::transform(projectionMatrix_, pos);
+		// perspective divide
+		if (pos[3] != 0.0f)
+		{
+			pos[0] /= pos[3];
+			pos[1] /= pos[3];
+			pos[2] /= pos[3];
+		}
 		return { pos[0], pos[1], pos[2] };
 	};
 
@@ -47,6 +54,15 @@ public:
 		math::transform(viewMatrix_, pos);
 		math::transform(projectionMatrix_, pos);
 
+		// perspective divide
+		if (pos[3] != 0.0f)
+		{
+			pos[0] /= pos[3];
+			pos[1] /= pos[3];
+			pos[2] /= pos[3];
+		}
+
+
 		pos[0] = (pos[0] + 1.0f) * 0.5f * width;
 		pos[1] = (1.0f - pos[1]) * 0.5f * height;
 
@@ -54,12 +70,12 @@ public:
 	};
 
 
-	void TriangleLocal2Screen(const math::vec3& v0, const math::vec3& v1, const math::vec3& v2, float width, float height)
+	void TriangleLocalToScreen(math::vec3& v0, math::vec3& v1, math::vec3& v2, float width, float height)
 	{
-		auto pos0 = LocalToScreen(v0, width, height);
-		auto pos1 = LocalToScreen(v1, width, height);
-		auto pos2 = LocalToScreen(v2, width, height);
-	};
+		v0 = LocalToScreen(v0, width, height);
+		v1 = LocalToScreen(v1, width, height);
+		v2 = LocalToScreen(v2, width, height);
+	}
 
 };
 

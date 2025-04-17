@@ -3,6 +3,7 @@
 
 #include "raytracer_math.h"
 #include "ColorBuffer.h"
+#include "VertexProcessor.h"
 
 class Triangle
 {
@@ -108,8 +109,23 @@ public:
 	}
 
 
-    void drawTriangle(buffer::ColorBuffer& buffer) 
-    {
+	void drawTriangle(buffer::ColorBuffer& buffer, VertexProcessor& processor)
+	{
+	/*auto projectionMatrix = math::projection_matrix(90.0f, buffer.width_ /  buffer.height_, 0.1f, 100.0f);
+
+		ApplyProjection(projectionMatrix);
+		projectionMatrix.log();
+
+		std::cout << "Projected vertices:\n";
+		std::cout << "v0: " << v0_[0] << ", " << v0_[1] << ", " << v0_[2] << "\n";
+		std::cout << "v1: " << v1_[0] << ", " << v1_[1] << ", " << v1_[2] << "\n";
+		std::cout << "v2: " << v2_[0] << ", " << v2_[1] << ", " << v2_[2] << "\n";
+
+		ToScreenCoordinates(buffer.width_, buffer.height_);*/
+
+		processor.TriangleLocalToScreen(v0_, v1_, v2_, buffer.width_, buffer.height_);
+		
+
 		float minx = std::min({ v0_[0], v1_[0], v2_[0] });
 		float maxx = std::max({ v0_[0], v1_[0], v2_[0] });
 		float miny = std::min({ v0_[1], v1_[1], v2_[1] });
