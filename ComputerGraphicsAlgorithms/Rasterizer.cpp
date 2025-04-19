@@ -120,19 +120,23 @@ void Rasterizer::DrawTriangle(const Triangle& input)
 			if (!pixel_inside(fx, fy, transformed)) continue;
 			const auto [lambda1, lambda2, lambda3] = get_lambdas(fx, fy, transformed);
 
-			const float depth = lambda1 * transformed.vertices[0].position[2] +
+			float depth = lambda1 * transformed.vertices[0].position[2] +
 								lambda2 * transformed.vertices[1].position[2] +
 								lambda3 * transformed.vertices[2].position[2];
 
 			if (!framebuffer_->DepthCheckExchange(x, y, depth)) continue;
 
 			
+			
+			//color4f color = transformed.vertices[0].color * lambda1 +
+			//				transformed.vertices[1].color * lambda2 +
+			//				transformed.vertices[2].color * lambda3;
 
-			color4f color = transformed.vertices[0].color * lambda1 +
-							transformed.vertices[1].color * lambda2 +
-							transformed.vertices[2].color * lambda3;
+			depth = 1 - depth;
 
-			framebuffer_->SetPixelf(x, y, color);
+			//color = color4f(depth * 255.0f, depth * 255.0f, depth * 255.0f, 255.0f);
+
+			framebuffer_->SetPixelf(x, y, preprocessor_->color_);
 		}
 	}
 }

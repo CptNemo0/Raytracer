@@ -113,7 +113,7 @@ namespace math
 			0.0f, 0.0f, -1.0f, 0.0f
 		);
 	}
-	
+
 	vec3 quat_rotate_rad(vec3& vect, float angle, const vec3& axis)
 	{
 		quat p (0.0f, vect);

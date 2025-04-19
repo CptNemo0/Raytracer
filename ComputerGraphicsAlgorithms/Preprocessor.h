@@ -3,6 +3,7 @@
 
 #include "raytracer_math.h"
 #include "Triangle.h"
+#include "aliasing.h"
 
 class Preprocessor
 {
@@ -16,6 +17,9 @@ public:
 	math::mat4x4 model_matrix_		= math::mat4x4(1.0f, true);
 	math::mat4x4 view_matrix_       = math::mat4x4(1.0f, true);;
 	math::mat4x4 projection_matrix_ = math::mat4x4(1.0f, true);;
+
+	color4f background_color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
+	color4f color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
 
 	math::vec3 Local2World(const math::vec3& position) const;
 	math::vec3 World2View(const math::vec3& position) const;

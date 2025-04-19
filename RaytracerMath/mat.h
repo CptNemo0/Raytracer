@@ -72,6 +72,12 @@ namespace math
 			std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 		}
 
+		mat(mat<rows, columns, T>&& other) noexcept
+		{
+			std::cout << "Matrix move constructor\n";
+			std::move(other.data_.begin(), other.data_.end(), data_.begin());
+		}
+
 		template<typename... Args>
 		mat(Args... args) : data_{ static_cast<T>(args)... } {};
 
@@ -171,6 +177,13 @@ namespace math
 			std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 			return *this;
 		}	
+
+		mat& operator=(mat<rows, columns, T>&& other) noexcept
+		{
+			std::cout << "Matrix move assignement operator\n";
+			std::move(other.data_.begin(), other.data_.end(), data_.begin());
+			return *this;
+		}
 
 		bool operator==(const mat<rows, columns, T>& other)
 		{

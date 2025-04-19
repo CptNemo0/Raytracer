@@ -107,7 +107,7 @@ void PixelBuffer::SetPixelf(const std::uint32_t x, const std::uint32_t y, const 
 
 bool PixelBuffer::DepthCheck(const std::uint32_t x, const std::uint32_t y, float depth) const
 {
-	return depth_buffer_[xy_to_index(x, y)] > depth;
+	return depth_buffer_[xy_to_index(x, y)] > depth + 0.000001f;
 }
 bool PixelBuffer::DepthCheckExchange(const std::uint32_t x, const std::uint32_t y, float depth)
 {

@@ -15,8 +15,6 @@ namespace math
 	requires std::is_arithmetic_v<T>
 	class vec
 	{
-	private:
-		//std::uint32_t size_ = length;
 	public:
 		std::array<T, length> data_;
 		

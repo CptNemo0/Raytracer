@@ -8,7 +8,8 @@
 struct Vertex
 {
 	math::vec3 position;
-	color4f	   color;
+	//math::vec3 normal;
+	//color4f	   color;
 };
 
 #endif // !VERTEX_H
