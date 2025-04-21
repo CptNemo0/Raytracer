@@ -9,7 +9,7 @@ namespace rtr
 {
 	struct Vertex
 	{
-		math::vec3 position;
+		math::vec3 position_;
 		//math::vec3 normal;
 		//color4f	   color;
 	};

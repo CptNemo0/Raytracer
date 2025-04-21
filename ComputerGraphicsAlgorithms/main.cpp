@@ -19,7 +19,7 @@ using namespace rtr;
 int main(int argc, char** argv)
 {
     io_utility::InputOutput io;
-	if (io.Init("rasterizer")) return -1;
+	if (io.Init("Rasterizer", 1280, 720)) return -1;
 
     auto preprocessor = std::make_shared<Preprocessor>(static_cast<float>(io.GetMode()->width), static_cast<float>(io.GetMode()->height));
     Rasterizer rasterizer(static_cast<std::uint32_t>(io.GetMode()->width), static_cast<std::uint32_t>(io.GetMode()->height), preprocessor);
@@ -39,14 +39,14 @@ int main(int argc, char** argv)
     rasterizer.framebuffer_->DepthClear(std::numeric_limits<float>::max());
 
     Triangle triangle1;
-    triangle1.vertices[0].position = math::vec3(-0.5f, -0.5f, 0.0f);
-    triangle1.vertices[1].position = math::vec3(0.0f, 0.5f, 0.0f);
-    triangle1.vertices[2].position = math::vec3(0.5f, -0.5f, 0.0f);
+    triangle1.vertices_[0].position_ = math::vec3(-0.5f, -0.5f, 0.0f);
+    triangle1.vertices_[1].position_ = math::vec3(0.0f, 0.5f, 0.0f);
+    triangle1.vertices_[2].position_ = math::vec3(0.5f, -0.5f, 0.0f);
 
     Triangle triangle2;
-    triangle2.vertices[0].position = math::vec3(-0.5f, -0.5f, 0.0f);
-    triangle2.vertices[1].position = math::vec3(0.0f, 0.5f, 0.0f);
-    triangle2.vertices[2].position = math::vec3(0.5f, -0.5f, 0.0f);
+    triangle2.vertices_[0].position_ = math::vec3(-0.5f, -0.5f, 0.0f);
+    triangle2.vertices_[1].position_ = math::vec3(0.0f, 0.5f, 0.0f);
+    triangle2.vertices_[2].position_ = math::vec3(0.5f, -0.5f, 0.0f);
 
     float time0 = 0;
 	float time1 = 0;
@@ -80,7 +80,7 @@ int main(int argc, char** argv)
         preprocessor->color_ = color4f(255.0f, 0.0f, 255.0f, 255.0f);
         rasterizer.DrawTriangle(triangle2);
 
-        io.Draw(reinterpret_cast<void*>(const_cast<color4*>(rasterizer.framebuffer_->ColorBuffer().data())), GL_RGBA, GL_UNSIGNED_BYTE);
+        io.Draw(rasterizer.GetData(), GL_RGBA, GL_UNSIGNED_BYTE);
         
         if (io.GetKey(GLFW_KEY_W) == GLFW_PRESS)
         {

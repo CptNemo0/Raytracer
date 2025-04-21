@@ -8,7 +8,7 @@ namespace rtr
 {
 	struct Triangle
 	{
-		std::array<Vertex, 3> vertices;
+		std::array<Vertex, 3> vertices_;
 
 		Triangle() = default;
 		~Triangle() = default;

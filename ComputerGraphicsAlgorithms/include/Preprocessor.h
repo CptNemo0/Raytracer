@@ -14,7 +14,7 @@ namespace rtr
 		float height_;
 
 	public:
-		Preprocessor(float width, float height) : width_(width), height_(height) {}
+		Preprocessor(const float width, const float height) : width_(width), height_(height) {}
 
 		math::mat4x4 model_matrix_ = math::mat4x4(1.0f, true);
 		math::mat4x4 view_matrix_ = math::mat4x4(1.0f, true);;
@@ -23,10 +23,10 @@ namespace rtr
 		color4f background_color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
 		color4f color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
 
-		math::vec3 Local2World(const math::vec3& position) const;
-		math::vec3 World2View(const math::vec3& position) const;
-		math::vec3 View2Screen(const math::vec3& position) const;
-		math::vec3 Local2Sceen(const math::vec3& position) const;
+		math::vec3 Local2World(const math::vec3& position_) const;
+		math::vec3 World2View(const math::vec3& position_) const;
+		math::vec3 View2Screen(const math::vec3& position_) const;
+		math::vec3 Local2Sceen(const math::vec3& position_) const;
 
 		void TriangleLocal2Screen(Triangle& triangle) const;
 	};

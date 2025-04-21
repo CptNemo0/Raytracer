@@ -5,12 +5,12 @@ namespace rtr
 {
 	Triangle::Triangle(const Triangle& other)
 	{
-		std::copy(other.vertices.begin(), other.vertices.end(), vertices.begin());
+		std::copy(other.vertices_.begin(), other.vertices_.end(), vertices_.begin());
 	}
 
 	Triangle& Triangle::operator=(const Triangle& other)
 	{
-		std::copy(other.vertices.begin(), other.vertices.end(), vertices.begin());
+		std::copy(other.vertices_.begin(), other.vertices_.end(), vertices_.begin());
 		return *this;
 	}
 }

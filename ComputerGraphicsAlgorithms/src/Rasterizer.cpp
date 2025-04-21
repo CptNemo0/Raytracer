@@ -19,19 +19,19 @@ namespace rtr
 
 		Triangle transformed = input;
 		preprocessor_->TriangleLocal2Screen(transformed);
-		TriangleRenderCache trc(transformed);
+		TriangleRasterizationCache trc(transformed);
 
 		float left = std::numeric_limits<float>::max();
 		float right = std::numeric_limits<float>::min();
 		float top = std::numeric_limits<float>::max();
 		float bot = std::numeric_limits<float>::min();
 
-		for (const auto& vertex : transformed.vertices)
+		for (const auto& vertex : transformed.vertices_)
 		{
-			left = std::fminf(vertex.position.get(0), left);
-			right = std::fmaxf(vertex.position.get(0), right);
-			top = std::fminf(vertex.position.get(1), top);
-			bot = std::fmaxf(vertex.position.get(1), bot);
+			left = std::fminf(vertex.position_.get(0), left);
+			right = std::fmaxf(vertex.position_.get(0), right);
+			top = std::fminf(vertex.position_.get(1), top);
+			bot = std::fmaxf(vertex.position_.get(1), bot);
 
 			left = std::fmaxf(left, 0.0f);
 			right = std::fminf(right, width);
@@ -53,9 +53,9 @@ namespace rtr
 				if (!PixelInside(fx, fy, transformed, trc)) continue;
 				const auto [lambda1, lambda2, lambda3] = GetLambdas(fx, fy, transformed, trc);
 
-				float depth = lambda1 * transformed.vertices[0].position[2] +
-					lambda2 * transformed.vertices[1].position[2] +
-					lambda3 * transformed.vertices[2].position[2];
+				float depth = lambda1 * transformed.vertices_[0].position_[2] +
+					lambda2 * transformed.vertices_[1].position_[2] +
+					lambda3 * transformed.vertices_[2].position_[2];
 
 				if (!framebuffer_->DepthCheckExchange(x, y, depth)) continue;
 
@@ -70,6 +70,11 @@ namespace rtr
 				framebuffer_->SetPixelf(x, y, preprocessor_->color_);
 			}
 		}
+	}
+	
+	void* Rasterizer::GetData()
+	{
+		return reinterpret_cast<void*>(const_cast<color4*>(framebuffer_->ColorBuffer().data()));
 	}
 }
 

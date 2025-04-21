@@ -24,14 +24,14 @@ namespace rtr
 	public:
 
 		Camera() = default;
-		Camera(const math::vec3& position,
+		Camera(const math::vec3& position_,
 			const math::vec3& target,
 			const math::vec3& up,
-			float aspect_ratio,
-			float fov,
-			float far,
-			float near)
-			: position_(position), aspect_ratio_(aspect_ratio), fov_(fov), near_(near), far_(far)
+			const float aspect_ratio,
+			const float fov,
+			const float far,
+			const float near)
+			: position_(position_), aspect_ratio_(aspect_ratio), fov_(fov), near_(near), far_(far)
 		{
 			LookAt(target, up);
 		}
@@ -45,17 +45,17 @@ namespace rtr
 			return math::projection_matrix(fov_, aspect_ratio_, near_, far_);
 		}
 
-		inline math::vec3 position() const
+		inline const math::vec3& position() const
 		{
 			return position_;
 		}
 
-		inline math::vec3 forward() const
+		inline const math::vec3& forward() const
 		{
 			return forward_;
 		}
 
-		inline math::vec3 right() const
+		inline const math::vec3& right() const
 		{
 			return right_;
 		}
