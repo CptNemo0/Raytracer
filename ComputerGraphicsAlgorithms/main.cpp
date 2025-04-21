@@ -13,77 +13,20 @@
 #include <memory>
 #include <string>
 
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
+#include "InputOutput.h"
 
 using namespace rtr;
 
 
-int InitGLFW(GLFWwindow*& window, GLFWmonitor*& monitor, GLFWvidmode*& mode, const std::string& window_name)
-{
-    int return_value = 0;
-    if (!glfwInit())
-    {
-        return_value = -1;
-    }
-
-    monitor = glfwGetPrimaryMonitor();
-    mode = (GLFWvidmode*)glfwGetVideoMode(monitor);
-
-    //SET CUSTOM RESOLUTION
-    mode->width = 1280;
-    mode->height = 720;
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-    glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-    glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-    glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-    window = glfwCreateWindow(mode->width, mode->height, window_name.c_str(), nullptr, nullptr);
-
-    if (window == nullptr)
-    {
-        glfwTerminate();
-        return_value = -1;
-    }
-
-    glfwMakeContextCurrent(window);
-     glfwSwapInterval( 0 );
-    // VSYNC
-    // glfwSwapInterval(1);
-    return return_value;
-}
-
-inline int InitGlad()
-{
-    int return_value = 0;
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        return -1;
-    }
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_DEBUG_OUTPUT);
-    glRasterPos2i(-1, -1); // Lower-left corner in NDC
-    //glDebugMessageCallback(MessageCallback, 0);
-    return return_value;
-}
-
 int main(int argc, char** argv)
 {
-	GLFWwindow* window; 
-	GLFWmonitor* monitor;
-    GLFWvidmode* mode;
+    io_utility::InputOutput io;
 
-	InitGLFW(window, monitor, mode, "Rasterizer");
-	InitGlad();
+    io.InitGLFW("Rasterizer", 1280, 720);
+    io.InitGlad();
 
-    auto preprocessor = std::make_shared<Preprocessor>(static_cast<float>(mode->width), static_cast<float>(mode->height));
-    Rasterizer rasterizer(static_cast<std::uint32_t>(mode->width), static_cast<std::uint32_t>(mode->height), preprocessor);
+    auto preprocessor = std::make_shared<Preprocessor>(static_cast<float>(io.GetMode()->width), static_cast<float>(io.GetMode()->height));
+    Rasterizer rasterizer(static_cast<std::uint32_t>(io.GetMode()->width), static_cast<std::uint32_t>(io.GetMode()->height), preprocessor);
     Camera camera(math::vec3(0.0f, 0.0f, 0.0f),
         math::vec3(0.0f, 0.0f, 1.0f),
         math::vec3(0.0f, 1.0f, 0.0f),
@@ -112,17 +55,14 @@ int main(int argc, char** argv)
     float time0 = 0;
 	float time1 = 0;
 	float dt = 0;
-
     float rotation = 0;
-
     float fps_idx = 100;
 
-    while (!glfwWindowShouldClose(window))
+    while (!io.GetWindowShouldClose())
     {
         time0 = time1;
         time1 = static_cast<float>(glfwGetTime());
 		dt = time1 - time0;
-
 
 		rotation += dt * 10.0f;
         
@@ -133,9 +73,8 @@ int main(int argc, char** argv)
         }
         fps_idx--;
 		
-        glfwPollEvents();
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		io.PollEvents();
+		io.ClearGLBuffers();
 
 		rasterizer.framebuffer_->ClearBuffers({12, 24, 64, 255}, std::numeric_limits<float>::max());
         
@@ -147,40 +86,34 @@ int main(int argc, char** argv)
         preprocessor->color_ = color4f(255.0f, 0.0f, 255.0f, 255.0f);
         rasterizer.DrawTriangle(triangle2);
 
-        glDrawPixels(rasterizer.framebuffer_->Width(),
-                          rasterizer.framebuffer_->Height(), 
-                          GL_RGBA, 
-                          GL_UNSIGNED_BYTE, 
-                          reinterpret_cast<void*>(const_cast<color4*>(rasterizer.framebuffer_->ColorBuffer().data()))
-        );
+        io.Draw(reinterpret_cast<void*>(const_cast<color4*>(rasterizer.framebuffer_->ColorBuffer().data())), GL_RGBA, GL_UNSIGNED_BYTE);
         
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        if (io.GetKey(GLFW_KEY_W) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() + camera.forward() * dt * 10.0f);
             preprocessor->view_matrix_ = camera.UpdateViewMatrix();
         }
 
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        if (io.GetKey(GLFW_KEY_S) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() - camera.forward() * dt * 10.0f);
             preprocessor->view_matrix_ = camera.UpdateViewMatrix();
         }
 
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        if (io.GetKey(GLFW_KEY_A) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() - camera.right() * dt * 10.0f);
             preprocessor->view_matrix_ = camera.UpdateViewMatrix();
         }
 
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        if (io.GetKey(GLFW_KEY_D) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() + camera.right() * dt * 10.0f);
             preprocessor->view_matrix_ = camera.UpdateViewMatrix();
         }
 
-        glfwSwapBuffers(window);
+		io.SwapBuffers();  
     }
-
 
     rasterizer.framebuffer_->SaveColorToFile("image.bmp");
 

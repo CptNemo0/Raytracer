@@ -301,7 +301,7 @@ STBIWDEF int stbiw_convert_wchar_to_utf8(char* buffer, size_t bufferlen, const w
 }
 #endif
 
-static FILE* stbiw__fopen(char const* filename, char const* mode)
+static FILE* stbiw__fopen(char const* filename, char const* mode_)
 {
     FILE* f;
 #if defined(_WIN32) && defined(STBIW_WINDOWS_UTF8)
@@ -321,7 +321,7 @@ static FILE* stbiw__fopen(char const* filename, char const* mode)
 #endif
 
 #elif defined(_MSC_VER) && _MSC_VER >= 1400
-    if (0 != fopen_s(&f, filename, mode))
+    if (0 != fopen_s(&f, filename, mode_))
         f = 0;
 #else
     f = fopen(filename, mode);

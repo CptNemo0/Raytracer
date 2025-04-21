@@ -127,7 +127,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath; $(SolutionDir)/glad;$(SolutionDir)/ComputerGraphicsAlgorithms/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath; $(SolutionDir)/ComputerGraphicsAlgorithms/glad;$(SolutionDir)/ComputerGraphicsAlgorithms/include;</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
@@ -150,6 +150,7 @@
     <ClCompile Include="src\Preprocessor.cpp" />
     <ClCompile Include="src\Rasterizer.cpp" />
     <ClCompile Include="src\Triangle.cpp" />
+    <ClCompile Include="src\InputOutput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\glad.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="include\stb_image_write.h" />
     <ClInclude Include="include\Triangle.h" />
     <ClInclude Include="include\Vertex.h" />
+    <ClInclude Include="include\InputOutput.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
