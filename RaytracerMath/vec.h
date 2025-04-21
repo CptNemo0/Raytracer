@@ -39,32 +39,37 @@ namespace math
 
 		vec(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < length; ++i)
-			{
-				std::copy(other.data_.begin(), other.data_.end(), data_.begin());
-			}
+			std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 		}
 
-		T& operator[](const std::uint32_t index)
+		vec(vec<length, T>&& other) noexcept
+		{
+			std::move(other.data_.begin(), other.data_.end(), data_.begin());
+		}
+
+		inline constexpr T& operator[](const std::uint32_t index)
 		{
 			return data_[index];
 		}
 
-		const T& get(std::uint32_t index) const
+		inline constexpr const T& get(std::uint32_t index) const
 		{
 			return data_[index];
 		}
 
-		vec& operator=(const vec<length, T>& other)
+		inline vec& operator=(const vec<length, T>& other)
 		{
-			for (std::uint32_t i = 0; i < length; ++i)
-			{
-				std::copy(other.data_.begin(), other.data_.end(), data_.begin());
-			}
+			std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 			return *this;
 		}
 
-		vec operator+(const vec<length, T>& other) const
+		inline vec& operator=(vec<length, T>&& other) noexcept
+		{
+			std::move(other.data_.begin(), other.data_.end(), data_.begin());
+			return *this;
+		}
+
+		inline vec operator+(const vec<length, T>& other) const
 		{
 			vec<length, T> result;
 			for (std::uint32_t i = 0; i < length; ++i)
@@ -74,7 +79,7 @@ namespace math
 			return result;
 		}
 
-		void operator+=(const vec<length, T>& other)
+		inline void operator+=(const vec<length, T>& other)
 		{
 			vec<length, T> result;
 			for (std::uint32_t i = 0; i < length; ++i)
@@ -83,7 +88,7 @@ namespace math
 			}
 		}
 
-		vec operator-(const vec<length, T>& other) const
+		inline vec operator-(const vec<length, T>& other) const
 		{
 			vec<length, T> result;
 			for (std::uint32_t i = 0; i < length; ++i)
@@ -93,7 +98,7 @@ namespace math
 			return result;
 		}
 
-		void operator-=(const vec<length, T>& other)
+		inline void operator-=(const vec<length, T>& other)
 		{
 			for (std::uint32_t i = 0; i < length; ++i)
 			{
@@ -101,7 +106,7 @@ namespace math
 			}
 		}
 
-		vec operator*(float init) const
+		inline vec operator*(float init) const
 		{
 			vec<length, T> result;
 			for (std::uint32_t i = 0; i < length; ++i)
@@ -111,7 +116,7 @@ namespace math
 			return result;
 		}
 
-		vec operator/(float num) const
+		inline vec operator/(float num) const
 		{
 			vec<length, T> result;
 			float inverse = 1.0f / num;
@@ -122,7 +127,7 @@ namespace math
 			return result;
 		}
 
-		void operator*=(const float init) 
+		inline void operator*=(const float init)
 		{
 			for (std::uint32_t i = 0; i < length; ++i)
 			{
@@ -130,7 +135,7 @@ namespace math
 			}
 		}
 
-		void operator/=(const float init)
+		inline void operator/=(const float init)
 		{
 			float inverse = 1.0f / init;
 
@@ -140,7 +145,7 @@ namespace math
 			}
 		}
 	
-		bool operator==(const vec<length, T>& other)
+		inline bool operator==(const vec<length, T>& other)
 		{
 			const auto eq = [](float a, float b)
 			{
@@ -155,7 +160,7 @@ namespace math
 			return true;
 		}
 
-		bool operator!=(const vec<length, T>& other)
+		inline bool operator!=(const vec<length, T>& other)
 		{
 			const auto eq = [](float a, float b)
 			{

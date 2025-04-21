@@ -68,13 +68,13 @@ namespace math
 
 		mat(const mat<rows, columns, T>& other)
 		{
-			std::cout << "Matrix copy constructor\n";
+			//std::cout << "Matrix copy constructor\n";
 			std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 		}
 
 		mat(mat<rows, columns, T>&& other) noexcept
 		{
-			std::cout << "Matrix move constructor\n";
+			//std::cout << "Matrix move constructor\n";
 			std::move(other.data_.begin(), other.data_.end(), data_.begin());
 		}
 
@@ -97,7 +97,7 @@ namespace math
 			std::cout << ss.str();
 		}
 	
-		mat operator+(const mat<rows, columns, T>& other) const
+		inline mat operator+(const mat<rows, columns, T>& other) const
 		{
 			mat<rows, columns, T> result;
 			for (std::uint32_t i = 0; i < length_; ++i)
@@ -107,7 +107,7 @@ namespace math
 			return result;
 		}
 
-		void operator+=(const mat<rows, columns, T>& other)
+		inline void operator+=(const mat<rows, columns, T>& other)
 		{
 			for (std::uint32_t i = 0; i < length_; ++i)
 			{
@@ -115,7 +115,7 @@ namespace math
 			}
 		}
 
-		mat operator-(const mat<rows, columns, T>& other) const
+		inline mat operator-(const mat<rows, columns, T>& other) const
 		{
 			mat<rows, columns, T> result;
 			for (std::uint32_t i = 0; i < length_; ++i)
@@ -125,7 +125,7 @@ namespace math
 			return result;
 		}
 
-		void operator-=(const mat<rows, columns, T>& other)
+		inline void operator-=(const mat<rows, columns, T>& other)
 		{
 			for (std::uint32_t i = 0; i < length_; ++i)
 			{
@@ -133,7 +133,7 @@ namespace math
 			}
 		}
 
-		mat operator*(const T& other) const
+		inline mat operator*(const T& other) const
 		{
 			mat<rows, columns, T> result;
 			for (std::uint32_t i = 0; i < length_; ++i)
@@ -143,7 +143,7 @@ namespace math
 			return result;
 		}
 
-		void operator*=(const T& other)
+		inline void operator*=(const T& other)
 		{
 			for (std::uint32_t i = 0; i < length_; ++i)
 			{
@@ -151,7 +151,7 @@ namespace math
 			}
 		}
 	
-		mat operator/(const T& other) const
+		inline mat operator/(const T& other) const
 		{
 			mat<rows, columns, T> result;
 			T inverse = 1.0f / other;
@@ -162,7 +162,7 @@ namespace math
 			return result;
 		}
 
-		void operator/=(const T& other)
+		inline void operator/=(const T& other)
 		{
 			T inverse = 1.0f / other;
 			for (std::uint32_t i = 0; i < length_; ++i)
@@ -171,21 +171,21 @@ namespace math
 			}
 		}
 	
-		mat& operator=(const mat<rows, columns, T>& other) 
+		inline mat& operator=(const mat<rows, columns, T>& other)
 		{
-			std::cout << "Matrix copy assignement operator\n";
+			//std::cout << "Matrix copy assignement operator\n";
 			std::copy(other.data_.begin(), other.data_.end(), data_.begin());
 			return *this;
 		}	
 
-		mat& operator=(mat<rows, columns, T>&& other) noexcept
+		inline mat& operator=(mat<rows, columns, T>&& other) noexcept
 		{
-			std::cout << "Matrix move assignement operator\n";
+			//std::cout << "Matrix move assignement operator\n";
 			std::move(other.data_.begin(), other.data_.end(), data_.begin());
 			return *this;
 		}
 
-		bool operator==(const mat<rows, columns, T>& other)
+		inline bool operator==(const mat<rows, columns, T>& other)
 		{
 			const auto eq = [](float a, float b)
 			{
@@ -200,7 +200,7 @@ namespace math
 			return true;
 		}
 
-		bool operator!=(const mat<rows, columns, T>& other)
+		inline bool operator!=(const mat<rows, columns, T>& other)
 		{
 			const auto eq = [](float a, float b)
 			{

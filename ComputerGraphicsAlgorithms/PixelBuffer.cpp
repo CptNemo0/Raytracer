@@ -7,15 +7,11 @@ PixelBuffer::PixelBuffer(std::uint32_t width, std::uint32_t height)
 
 PixelBuffer::~PixelBuffer()
 {
-	if (color_buffer_) free(color_buffer_);
-	if (depth_buffer_) free(depth_buffer_);
+	
 }
 
 void PixelBuffer::Resize(std::uint32_t width, std::uint32_t height)
 {
-	if (color_buffer_) free(color_buffer_);
-	if (depth_buffer_) free(depth_buffer_);
-
 	height_ = height;
 	width_ = width;
 
@@ -24,8 +20,8 @@ void PixelBuffer::Resize(std::uint32_t width, std::uint32_t height)
 	color_buffer_size_ = length_ * sizeof(color4);
 	depth_buffer_size_ = length_ * sizeof(float);
 
-	color_buffer_ = static_cast<color4*>(malloc(color_buffer_size_));
-	depth_buffer_ = static_cast<float*>(malloc(depth_buffer_size_));
+	color_buffer_.resize(length_);
+	depth_buffer_.resize(length_);
 }
 
 void PixelBuffer::ColorClear(const color4& c)
@@ -36,21 +32,21 @@ void PixelBuffer::ColorClear(const color4& c)
 	}
 }
 
+void PixelBuffer::ColorfClear(const color4f& c)
+{
+	color4 colori = color4(c.get(0), c.get(1), c.get(2), c.get(3));
+	std::fill(color_buffer_.begin(), color_buffer_.end(), colori);
+}
+
 void PixelBuffer::DepthClear(const float d)
 {
-	for (std::uint32_t i = 0; i < length_; i++)
-	{
-		depth_buffer_[i] = d;
-	}
+	std::fill(depth_buffer_.begin(), depth_buffer_.end(), d);
 }
 
 void PixelBuffer::ClearBuffers(const color4& c, float d)
 {
-	for (std::uint32_t i = 0; i < length_; i++)
-	{
-		color_buffer_[i] = c;
-		depth_buffer_[i] = d;
-	}
+	std::fill(color_buffer_.begin(), color_buffer_.end(), c);
+	std::fill(depth_buffer_.begin(), depth_buffer_.end(), d);
 }
 
 std::uint32_t PixelBuffer::Height() const
@@ -63,25 +59,26 @@ std::uint32_t PixelBuffer::Width() const
 	return width_;
 }
 
-color4* PixelBuffer::ColorBuffer()
+std::vector<color4>& PixelBuffer::ColorBuffer()
 {
 	return color_buffer_;
 }
 
-float* PixelBuffer::DepthBuffer()
+std::vector<float>& PixelBuffer::DepthBuffer()
 {
 	return depth_buffer_;
 }
 
 void PixelBuffer::SaveColorToFile(const char* filename) const
 {
+	color4* data = const_cast<color4*>(&(color_buffer_.data()[0]));
 	stbi_write_bmp
 	(
 		filename,
 		width_,
 		height_,
 		4,
-		static_cast<void*>(color_buffer_)
+		static_cast<void*>(data)
 	);
 }
 

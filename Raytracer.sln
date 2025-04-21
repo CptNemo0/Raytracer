@@ -10,6 +10,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RaytracerMathTests", "RaytracerMathTests\RaytracerMathTests.vcxproj", "{75886E1C-3AB2-4C60-AD3F-0C769AEB09FF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputerGraphicsAlgorithms", "ComputerGraphicsAlgorithms\ComputerGraphicsAlgorithms.vcxproj", "{945459CE-9475-4A84-A218-D7BAB646E3C0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3CB216BF-8A77-4053-A2E2-178253FFF1D9} = {3CB216BF-8A77-4053-A2E2-178253FFF1D9}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

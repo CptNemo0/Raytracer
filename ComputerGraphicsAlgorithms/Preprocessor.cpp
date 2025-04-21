@@ -28,6 +28,8 @@ math::vec3 Preprocessor::Local2Sceen(const math::vec3& position) const
     math::transform(view_matrix_, position4);
     math::transform(projection_matrix_, position4);
 
+	position4 /= position4.get(3);
+
     position4[0] = (position4[0] + 1.0f) * width_ * 0.5f;
     position4[1] = (position4[1] + 1.0f) * height_ * 0.5f;
 

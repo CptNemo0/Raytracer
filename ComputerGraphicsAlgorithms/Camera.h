@@ -47,6 +47,16 @@ public:
 	{
 		return position_;
 	}
+
+	inline math::vec3 forward() const
+	{
+		return forward_;
+	}
+
+	inline math::vec3 right() const
+	{
+		return right_;
+	}
 };
 
 #endif // !CAMERA_H

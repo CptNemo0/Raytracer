@@ -2,6 +2,7 @@
 
 void Camera::SetPosition(const math::vec3& target)
 {
+	auto delta = target - position_;
 	position_ = target;
 }
 
