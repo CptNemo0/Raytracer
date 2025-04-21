@@ -16,7 +16,7 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
-
+using namespace rtr;
 
 
 int InitGLFW(GLFWwindow*& window, GLFWmonitor*& monitor, GLFWvidmode*& mode, const std::string& window_name)

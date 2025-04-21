@@ -4,14 +4,19 @@
 #include "Vertex.h"
 #include "algorithm"
 
-struct Triangle
+namespace rtr
 {
-	std::array<Vertex, 3> vertices;
+	struct Triangle
+	{
+		std::array<Vertex, 3> vertices;
 
-	Triangle() = default;
-	~Triangle() = default;
-	Triangle(const Triangle& other);
-	Triangle& operator=(const Triangle& other);
-};
+		Triangle() = default;
+		~Triangle() = default;
+		Triangle(const Triangle& other);
+		Triangle& operator=(const Triangle& other);
+	};
+}
+
+
 
 #endif // !TRIANGLE_H

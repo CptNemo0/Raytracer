@@ -5,12 +5,15 @@
 #include "raytracer_math.h"
 #include "aliasing.h"
 
-struct Vertex
+namespace rtr
 {
-	math::vec3 position;
-	//math::vec3 normal;
-	//color4f	   color;
-};
+	struct Vertex
+	{
+		math::vec3 position;
+		//math::vec3 normal;
+		//color4f	   color;
+	};
+}
 
 #endif // !VERTEX_H
 
