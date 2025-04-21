@@ -34,6 +34,14 @@ namespace rtr
 		}
 	}
 
+	void PixelBuffer::ColorClear(color4&& c)
+	{
+		for (std::uint32_t i = 0; i < length_; i++)
+		{
+			color_buffer_[i] = c;
+		}
+	}
+
 	void PixelBuffer::ColorfClear(const color4f& c)
 	{
 		color4 colori = color4(c.get(0), c.get(1), c.get(2), c.get(3));

@@ -6,31 +6,27 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #endif // !STB_IMAGE_WRITE_IMPLEMENTATION
 
-#include "PixelBuffer.h"
-#include "Rasterizer.h"
-#include "Camera.h"
-#include "Preprocessor.h"
 #include <memory>
-#include <string>
 
+#include "Camera.h"
 #include "InputOutput.h"
+#include "PixelBuffer.h"
+#include "Preprocessor.h"
+#include "Rasterizer.h"
 
 using namespace rtr;
-
 
 int main(int argc, char** argv)
 {
     io_utility::InputOutput io;
-
-    io.InitGLFW("Rasterizer", 1280, 720);
-    io.InitGlad();
+	if (io.Init("rasterizer")) return -1;
 
     auto preprocessor = std::make_shared<Preprocessor>(static_cast<float>(io.GetMode()->width), static_cast<float>(io.GetMode()->height));
     Rasterizer rasterizer(static_cast<std::uint32_t>(io.GetMode()->width), static_cast<std::uint32_t>(io.GetMode()->height), preprocessor);
     Camera camera(math::vec3(0.0f, 0.0f, 0.0f),
         math::vec3(0.0f, 0.0f, 1.0f),
         math::vec3(0.0f, 1.0f, 0.0f),
-        1.0f,
+        static_cast<float>(io.GetMode()->width) / static_cast<float>(io.GetMode()->height),
         math::to_radians(90.0f),
         1000.0f,
         0.1f);
@@ -60,12 +56,10 @@ int main(int argc, char** argv)
 
     while (!io.GetWindowShouldClose())
     {
-        time0 = time1;
-        time1 = static_cast<float>(glfwGetTime());
+        time1 = static_cast<float>(io.GetTime());
 		dt = time1 - time0;
+        time0 = time1;
 
-		rotation += dt * 10.0f;
-        
         if (!fps_idx)
         {
             std::cout << 1.0f / dt << std::endl;
@@ -82,7 +76,7 @@ int main(int argc, char** argv)
         preprocessor->color_ = color4f(255.0f, 0.0f, 0.0f, 255.0f);
         rasterizer.DrawTriangle(triangle1);
         
-        preprocessor->model_matrix_ = math::rotation_matrix_y_deg(rotation);
+        preprocessor->model_matrix_ = math::rotation_matrix_y_deg(rotation += dt * 30.0f);
         preprocessor->color_ = color4f(255.0f, 0.0f, 255.0f, 255.0f);
         rasterizer.DrawTriangle(triangle2);
 

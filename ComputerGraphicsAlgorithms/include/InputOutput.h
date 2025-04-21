@@ -1,7 +1,9 @@
 #ifndef INPUT_OUTPUT_H
 #define INPUT_OUTPUT_H
+
+#include <iostream>
 #include <optional>
-#include <string>
+#include <string_view>
 
 #include "glad.h"
 #include <GLFW/glfw3.h>
@@ -14,11 +16,29 @@ namespace io_utility
 		GLFWwindow* window_;
 		GLFWmonitor* monitor_;
 		GLFWvidmode* mode_;
+
+		int InitGLFW(std::string_view window_name, std::optional<int> width = std::nullopt, std::optional<int> height = std::nullopt);
+		int InitGlad();
+
 	public:
 		InputOutput() = default;
 		~InputOutput();
-		int InitGLFW(const std::string& window_name, std::optional<int> width = std::nullopt, std::optional<int> height = std::nullopt);
-		int InitGlad();
+
+		inline int Init(std::string_view  window_name, std::optional<int> width = std::nullopt, std::optional<int> height = std::nullopt)
+		{
+			int return_value = 0;
+			if (return_value = InitGLFW(window_name, width, height); return_value)
+			{
+				std::cerr << "Error initializing GLFW: " << return_value << std::endl;
+				return -1;
+			};
+			if (return_value = InitGlad(); return_value)
+			{
+				std::cerr << "Error initializing GLAD: " << return_value << std::endl;
+				return -1;
+			}
+			return 0;
+		}
 
 		inline GLFWwindow* GetWindow() 
 		{

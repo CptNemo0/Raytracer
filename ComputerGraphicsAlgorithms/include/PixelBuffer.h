@@ -30,6 +30,7 @@ namespace rtr
 		~PixelBuffer();
 		void Resize(std::uint32_t height, std::uint32_t width);
 		void ColorClear(const color4& c);
+		void ColorClear(color4&& c);
 		void ColorfClear(const color4f& c);
 		void DepthClear(const float d);
 		void ClearBuffers(const color4& c, const float d);

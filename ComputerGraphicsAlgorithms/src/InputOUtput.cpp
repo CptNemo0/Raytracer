@@ -2,7 +2,7 @@
 
 namespace io_utility
 {
-    int InputOutput::InitGLFW(const std::string& window_name, std::optional<int> width, std::optional<int> height)
+    int InputOutput::InitGLFW(std::string_view  window_name, std::optional<int> width, std::optional<int> height)
     {
         int return_value = 0;
 
@@ -31,7 +31,7 @@ namespace io_utility
         glfwWindowHint(GLFW_BLUE_BITS, mode_->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode_->refreshRate);
         
-        window_ = glfwCreateWindow(mode_->width, mode_->height, window_name.c_str(), nullptr, nullptr);
+        window_ = glfwCreateWindow(mode_->width, mode_->height, window_name.data(), nullptr, nullptr);
 
         if (window_ == nullptr)
         {
