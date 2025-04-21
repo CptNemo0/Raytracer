@@ -127,10 +127,10 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath; $(SolutionDir)/glad</AdditionalIncludeDirectories>
-      <Optimization>Full</Optimization>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath; $(SolutionDir)/glad;$(SolutionDir)/ComputerGraphicsAlgorithms/include;</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,25 +143,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="glad\glad.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PixelBuffer.cpp" />
-    <ClCompile Include="Preprocessor.cpp" />
-    <ClCompile Include="Rasterizer.cpp" />
-    <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\PixelBuffer.cpp" />
+    <ClCompile Include="src\Preprocessor.cpp" />
+    <ClCompile Include="src\Rasterizer.cpp" />
+    <ClCompile Include="src\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aliasing.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="glad\glad.h" />
     <ClInclude Include="glad\khrplatform.h" />
-    <ClInclude Include="PixelBuffer.h" />
-    <ClInclude Include="Preprocessor.h" />
-    <ClInclude Include="Rasterizer.h" />
-    <ClInclude Include="stb_image_write.h" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="include\aliasing.h" />
+    <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\PixelBuffer.h" />
+    <ClInclude Include="include\Preprocessor.h" />
+    <ClInclude Include="include\Rasterizer.h" />
+    <ClInclude Include="include\stb_image_write.h" />
+    <ClInclude Include="include\Triangle.h" />
+    <ClInclude Include="include\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

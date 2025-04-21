@@ -120,7 +120,7 @@ int main(int argc, char** argv)
     while (!glfwWindowShouldClose(window))
     {
         time0 = time1;
-		time1 = glfwGetTime();
+        time1 = static_cast<float>(glfwGetTime());
 		dt = time1 - time0;
 
 
