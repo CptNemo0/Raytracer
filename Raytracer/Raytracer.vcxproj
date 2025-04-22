@@ -125,7 +125,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

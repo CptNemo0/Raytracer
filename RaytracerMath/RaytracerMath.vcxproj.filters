@@ -15,57 +15,57 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="include\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="include\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="angles.h">
+    <ClInclude Include="include\angles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mat.h">
+    <ClInclude Include="include\mat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mat_operations.h">
+    <ClInclude Include="include\mat_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="transformations.h">
+    <ClInclude Include="include\transformations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vec.h">
+    <ClInclude Include="include\vec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vec_operations.h">
+    <ClInclude Include="include\vec_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="raytracer_math.h">
+    <ClInclude Include="include\raytracer_math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="quat.h">
+    <ClInclude Include="include\quat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="quat_operations.h">
+    <ClInclude Include="include\quat_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="flt_cmp.h">
+    <ClInclude Include="include\flt_cmp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="angles.cpp">
+    <ClCompile Include="src\angles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="transformations.cpp">
+    <ClCompile Include="src\transformations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="quat.cpp">
+    <ClCompile Include="src\quat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="quat_operations.cpp">
+    <ClCompile Include="src\quat_operations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

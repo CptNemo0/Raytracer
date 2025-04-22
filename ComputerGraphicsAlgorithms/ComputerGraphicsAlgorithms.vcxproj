@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath; $(SolutionDir)/glad</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath/include; $(SolutionDir)/ComputerGraphicsAlgorithms/glad; $(SolutionDir)/3rdparty; $(SolutionDir)/ComputerGraphicsAlgorithms/include</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,7 +115,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);RaytracerMath.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)/x64/Debug;</AdditionalLibraryDirectories>
-      <Profile>true</Profile>
+      <Profile>false</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -127,7 +127,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath; $(SolutionDir)/ComputerGraphicsAlgorithms/glad;$(SolutionDir)/ComputerGraphicsAlgorithms/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/RaytracerMath/include;$(SolutionDir)/ComputerGraphicsAlgorithms/glad;$(SolutionDir)/ComputerGraphicsAlgorithms/3rdparty;$(SolutionDir)/ComputerGraphicsAlgorithms/include</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
@@ -150,7 +150,7 @@
     <ClCompile Include="src\Preprocessor.cpp" />
     <ClCompile Include="src\Rasterizer.cpp" />
     <ClCompile Include="src\Triangle.cpp" />
-    <ClCompile Include="src\InputOutput.cpp" />
+    <ClCompile Include="src\io_utility\InputOutput.cpp" />
     <ClCompile Include="src\TriangleRasterizationCache.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,11 +161,11 @@
     <ClInclude Include="include\PixelBuffer.h" />
     <ClInclude Include="include\Preprocessor.h" />
     <ClInclude Include="include\Rasterizer.h" />
-    <ClInclude Include="include\stb_image_write.h" />
+    <ClInclude Include="3rdparty\stb_image_write.h" />
     <ClInclude Include="include\Triangle.h" />
     <ClInclude Include="include\TriangleRasterizationCache.h" />
     <ClInclude Include="include\Vertex.h" />
-    <ClInclude Include="include\InputOutput.h" />
+    <ClInclude Include="include\io_utility\InputOutput.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

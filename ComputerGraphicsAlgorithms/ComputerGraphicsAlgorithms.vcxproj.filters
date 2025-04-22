@@ -36,7 +36,7 @@
     <ClCompile Include="src\Rasterizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\InputOutput.cpp">
+    <ClCompile Include="src\io_utility\InputOutput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TriangleRasterizationCache.cpp">
@@ -68,13 +68,13 @@
     <ClInclude Include="include\Rasterizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\stb_image_write.h">
+    <ClInclude Include="3rdparty\stb_image_write.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\InputOutput.h">
+    <ClInclude Include="include\io_utility\InputOutput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\TriangleRasterizationCache.h">
