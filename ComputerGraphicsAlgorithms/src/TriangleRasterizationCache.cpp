@@ -2,7 +2,7 @@
 
 namespace rtr
 {
-	TriangleRasterizationCache::TriangleRasterizationCache(const Triangle& tri) 
+	TriangleRasterizationCache::TriangleRasterizationCache(const mesh::Triangle& tri)
 	{
 		const auto x1 = tri.vertices_[0].position_.get(0);
 		const auto y1 = tri.vertices_[0].position_.get(1);

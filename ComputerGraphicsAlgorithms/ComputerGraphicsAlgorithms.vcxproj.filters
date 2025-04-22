@@ -21,7 +21,7 @@
     <ClCompile Include="glad\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Triangle.cpp">
+    <ClCompile Include="src\mesh\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera.cpp">
@@ -42,6 +42,12 @@
     <ClCompile Include="src\TriangleRasterizationCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\mesh\ProceduralMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh\Cone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\glad.h">
@@ -53,7 +59,7 @@
     <ClInclude Include="include\aliasing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Vertex.h">
+    <ClInclude Include="include\mesh\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Camera.h">
@@ -71,13 +77,19 @@
     <ClInclude Include="3rdparty\stb_image_write.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Triangle.h">
+    <ClInclude Include="include\mesh\Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\io_utility\InputOutput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\TriangleRasterizationCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mesh\ProceduralMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mesh\Cone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

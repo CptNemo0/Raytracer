@@ -1,7 +1,7 @@
 #ifndef TRIANGLE_RASTERIZATION_CACHE
 #define TRIANGLE_RASTERIZATION_CACHE
 
-#include "Triangle.h"
+#include "mesh/Triangle.h"
 
 namespace rtr
 {
@@ -20,7 +20,7 @@ namespace rtr
 		float tl2_  = 0.0f;
 		float tl3_  = 0.0f;
 
-		TriangleRasterizationCache(const Triangle& tri);
+		TriangleRasterizationCache(const mesh::Triangle& tri);
 	};
 }
 

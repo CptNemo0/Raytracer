@@ -7,17 +7,19 @@
 #include "aliasing.h"
 #include "PixelBuffer.h"
 #include "raytracer_math.h"
-#include "Triangle.h"
-#include "Vertex.h"
 #include "Preprocessor.h"
 #include "TriangleRasterizationCache.h"
+
+#include "mesh/ProceduralMesh.h"
+#include "mesh/Triangle.h"
+#include "mesh/Vertex.h"
 
 namespace rtr
 {
 	class Rasterizer
 	{
 	private:
-		inline bool PixelInside(const float x, const float y, const Triangle& tri, const TriangleRasterizationCache& trc)
+		inline bool PixelInside(const float x, const float y, const mesh::Triangle& tri, const TriangleRasterizationCache& trc)
 		{
 			const auto x1 = tri.vertices_[0].position_.get(0);
 			const auto y1 = tri.vertices_[0].position_.get(1);
@@ -35,7 +37,7 @@ namespace rtr
 			return  inside;
 		};
 
-		std::tuple<const float, const float, const float> GetLambdas(const float x, const float y, const Triangle& tri, const TriangleRasterizationCache& trc)
+		std::tuple<const float, const float, const float> GetLambdas(const float x, const float y, const mesh::Triangle& tri, const TriangleRasterizationCache& trc)
 		{
 			const auto x1 = tri.vertices_[0].position_.get(0);
 			const auto y1 = tri.vertices_[0].position_.get(1);
@@ -58,7 +60,8 @@ namespace rtr
 		std::unique_ptr<PixelBuffer> framebuffer_;
 		std::shared_ptr<Preprocessor> preprocessor_;
 		Rasterizer(const std::uint32_t width, const std::uint32_t height, std::shared_ptr<Preprocessor> preprocessor);
-		void DrawTriangle(const Triangle& tri);
+		void DrawTriangle(const mesh::Triangle& tri);
+		void DrawMesh(const mesh::ProceduralMesh& mesh);
 		void* GetData();
 		inline void ClearBuffers()
 		{

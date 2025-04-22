@@ -11,13 +11,13 @@ namespace rtr
 		preprocessor_ = preprocessor;
 	}
 
-	void Rasterizer::DrawTriangle(const Triangle& input)
+	void Rasterizer::DrawTriangle(const mesh::Triangle& input)
 	{
 		const auto width = static_cast<float>(framebuffer_->Width());
 		const auto height = static_cast<float>(framebuffer_->Height());
 		auto& color_buffer = framebuffer_->ColorBuffer();
 
-		Triangle transformed = input;
+		mesh::Triangle transformed = input;
 		preprocessor_->TriangleLocal2Screen(transformed);
 		TriangleRasterizationCache trc(transformed);
 
@@ -59,16 +59,32 @@ namespace rtr
 
 				if (!framebuffer_->DepthCheckExchange(x, y, depth)) continue;
 
-				//color4f color = transformed.vertices[0].color * lambda1 +
-				//				transformed.vertices[1].color * lambda2 +
-				//				transformed.vertices[2].color * lambda3;
-
+				//math::vec3 color = transformed.vertices_[0].normal_ * lambda1 +
+								   transformed.vertices_[1].normal_ * lambda2 +
+								   transformed.vertices_[2].normal_ * lambda3;
+				//math::vec4 color4 = math::vec4(color.get(0) * 255.0f, color.get(1) * 255.0f, color.get(2) * 255.0f, 255.0f);
 				//depth = 1 - depth;
 
 				//color = color4f(depth * 255.0f, depth * 255.0f, depth * 255.0f, 255.0f);
 
 				framebuffer_->SetPixelf(x, y, preprocessor_->color_);
 			}
+		}
+	}
+
+	void Rasterizer::DrawMesh(const mesh::ProceduralMesh& mesh)
+	{
+		srand(time(0));	
+		for (std::size_t i = 0; i < mesh.indices_.size(); i += 3)
+		{
+			preprocessor_->color_ = color4f(rand() % 255, rand() % 255, rand() % 255, 255.0f);
+			mesh::Triangle tri 
+			(
+				mesh.vertices_[mesh.indices_[i]],
+				mesh.vertices_[mesh.indices_[i + 1]],
+				mesh.vertices_[mesh.indices_[i + 2]]
+			);
+			DrawTriangle(tri);
 		}
 	}
 	

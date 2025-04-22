@@ -2,7 +2,7 @@
 #define PREPROCESSOR
 
 #include "raytracer_math.h"
-#include "Triangle.h"
+#include "mesh/Triangle.h"
 #include "aliasing.h"
 
 namespace rtr
@@ -23,12 +23,12 @@ namespace rtr
 		color4f background_color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
 		color4f color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
 
-		math::vec3 Local2World(const math::vec3& position_) const;
-		math::vec3 World2View(const math::vec3& position_) const;
-		math::vec3 View2Screen(const math::vec3& position_) const;
-		math::vec3 Local2Sceen(const math::vec3& position_) const;
+		void Local2World(math::vec3& position_) const;
+		void World2View(math::vec3& position_) const;
+		void View2Screen(math::vec3& position_) const;
+		void Local2Screen(math::vec3& position_) const;
 
-		void TriangleLocal2Screen(Triangle& triangle) const;
+		void TriangleLocal2Screen(mesh::Triangle& triangle) const;
 	};
 }
 

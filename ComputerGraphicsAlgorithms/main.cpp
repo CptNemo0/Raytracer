@@ -13,6 +13,7 @@
 #include "PixelBuffer.h"
 #include "Preprocessor.h"
 #include "Rasterizer.h"
+#include "mesh/Cone.h"
 
 using namespace rtr;
 
@@ -38,15 +39,8 @@ int main(int argc, char** argv)
     rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
     rasterizer.framebuffer_->DepthClear(std::numeric_limits<float>::max());
 
-    Triangle triangle1;
-    triangle1.vertices_[0].position_ = math::vec3(-0.5f, -0.5f, 0.0f);
-    triangle1.vertices_[1].position_ = math::vec3(0.0f, 0.5f, 0.0f);
-    triangle1.vertices_[2].position_ = math::vec3(0.5f, -0.5f, 0.0f);
-
-    Triangle triangle2;
-    triangle2.vertices_[0].position_ = math::vec3(-0.5f, -0.5f, 0.0f);
-    triangle2.vertices_[1].position_ = math::vec3(0.0f, 0.5f, 0.0f);
-    triangle2.vertices_[2].position_ = math::vec3(0.5f, -0.5f, 0.0f);
+    mesh::Cone cone(2.0f, 3.0f, 15);
+    cone.GenerateMesh();
 
     float time0 = 0;
 	float time1 = 0;
@@ -67,43 +61,38 @@ int main(int argc, char** argv)
         }
         fps_idx--;
 		
+        rotation += dt * 20.0f;
+
 		io.PollEvents();
 		io.ClearGLBuffers();
 
 		rasterizer.framebuffer_->ClearBuffers({12, 24, 64, 255}, std::numeric_limits<float>::max());
-        
-        preprocessor->model_matrix_ = math::mat4x4(1.0f);
-        preprocessor->color_ = color4f(255.0f, 0.0f, 0.0f, 255.0f);
-        rasterizer.DrawTriangle(triangle1);
-        
-        preprocessor->model_matrix_ = math::rotation_matrix_y_deg(rotation += dt * 30.0f);
-        preprocessor->color_ = color4f(255.0f, 0.0f, 255.0f, 255.0f);
-        rasterizer.DrawTriangle(triangle2);
+
+        preprocessor->view_matrix_ = camera.UpdateViewMatrix();
+
+        preprocessor->model_matrix_ = math::matmul(math::rotation_matrix_x_deg(rotation), math::rotation_matrix_y_deg(rotation));
+        rasterizer.DrawMesh(cone);
 
         io.Draw(rasterizer.GetData(), GL_RGBA, GL_UNSIGNED_BYTE);
         
         if (io.GetKey(GLFW_KEY_W) == GLFW_PRESS)
         {
-            camera.SetPosition(camera.position() + camera.forward() * dt * 10.0f);
-            preprocessor->view_matrix_ = camera.UpdateViewMatrix();
+            camera.SetPosition(camera.position() - camera.forward() * dt * 10.0f);
         }
 
         if (io.GetKey(GLFW_KEY_S) == GLFW_PRESS)
         {
-            camera.SetPosition(camera.position() - camera.forward() * dt * 10.0f);
-            preprocessor->view_matrix_ = camera.UpdateViewMatrix();
+            camera.SetPosition(camera.position() + camera.forward() * dt * 10.0f);
         }
 
         if (io.GetKey(GLFW_KEY_A) == GLFW_PRESS)
         {
-            camera.SetPosition(camera.position() - camera.right() * dt * 10.0f);
-            preprocessor->view_matrix_ = camera.UpdateViewMatrix();
+            camera.SetPosition(camera.position() + camera.right() * dt * 10.0f);
         }
 
         if (io.GetKey(GLFW_KEY_D) == GLFW_PRESS)
         {
-            camera.SetPosition(camera.position() + camera.right() * dt * 10.0f);
-            preprocessor->view_matrix_ = camera.UpdateViewMatrix();
+            camera.SetPosition(camera.position() - camera.right() * dt * 10.0f);
         }
 
 		io.SwapBuffers();  

@@ -1,7 +1,7 @@
-#include "Triangle.h"
+#include "mesh/Triangle.h"
 #include <iostream>
 
-namespace rtr
+namespace mesh
 {
 	Triangle::Triangle(const Triangle& other)
 	{

@@ -144,12 +144,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad\glad.c" />
+    <ClCompile Include="src\mesh\Cone.cpp" />
+    <ClCompile Include="src\mesh\ProceduralMesh.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\PixelBuffer.cpp" />
     <ClCompile Include="src\Preprocessor.cpp" />
     <ClCompile Include="src\Rasterizer.cpp" />
-    <ClCompile Include="src\Triangle.cpp" />
+    <ClCompile Include="src\mesh\Triangle.cpp" />
     <ClCompile Include="src\io_utility\InputOutput.cpp" />
     <ClCompile Include="src\TriangleRasterizationCache.cpp" />
   </ItemGroup>
@@ -158,13 +160,15 @@
     <ClInclude Include="glad\khrplatform.h" />
     <ClInclude Include="include\aliasing.h" />
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\mesh\Cone.h" />
+    <ClInclude Include="include\mesh\ProceduralMesh.h" />
     <ClInclude Include="include\PixelBuffer.h" />
     <ClInclude Include="include\Preprocessor.h" />
     <ClInclude Include="include\Rasterizer.h" />
     <ClInclude Include="3rdparty\stb_image_write.h" />
-    <ClInclude Include="include\Triangle.h" />
+    <ClInclude Include="include\mesh\Triangle.h" />
     <ClInclude Include="include\TriangleRasterizationCache.h" />
-    <ClInclude Include="include\Vertex.h" />
+    <ClInclude Include="include\mesh\Vertex.h" />
     <ClInclude Include="include\io_utility\InputOutput.h" />
   </ItemGroup>
   <ItemGroup>
