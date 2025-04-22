@@ -14,6 +14,7 @@
 #include "Preprocessor.h"
 #include "Rasterizer.h"
 #include "mesh/Cone.h"
+#include "mesh/Sphere.h"
 
 using namespace rtr;
 
@@ -42,6 +43,9 @@ int main(int argc, char** argv)
     mesh::Cone cone(2.0f, 3.0f, 15);
     cone.GenerateMesh();
 
+	mesh::Sphere sphere(3.0f, 20, 20);
+	sphere.GenerateMesh();
+
     float time0 = 0;
 	float time1 = 0;
 	float dt = 0;
@@ -69,30 +73,35 @@ int main(int argc, char** argv)
 		rasterizer.framebuffer_->ClearBuffers({12, 24, 64, 255}, std::numeric_limits<float>::max());
 
         preprocessor->view_matrix_ = camera.UpdateViewMatrix();
+        
+        auto rotation_matrix = math::matmul(math::rotation_matrix_x_deg(rotation), math::rotation_matrix_y_deg(rotation));
 
-        preprocessor->model_matrix_ = math::matmul(math::rotation_matrix_x_deg(rotation), math::rotation_matrix_y_deg(rotation));
+		preprocessor->model_matrix_ = math::matmul(math::translation_matrix(4.0f, 0.0f, 0.0f), rotation_matrix);
         rasterizer.DrawMesh(cone);
+
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-4.0f, 0.0f, 0.0f), rotation_matrix);
+        rasterizer.DrawMesh(sphere);
 
         io.Draw(rasterizer.GetData(), GL_RGBA, GL_UNSIGNED_BYTE);
         
         if (io.GetKey(GLFW_KEY_W) == GLFW_PRESS)
         {
-            camera.SetPosition(camera.position() - camera.forward() * dt * 10.0f);
+            camera.SetPosition(camera.position() + camera.forward() * dt * 10.0f);
         }
 
         if (io.GetKey(GLFW_KEY_S) == GLFW_PRESS)
         {
-            camera.SetPosition(camera.position() + camera.forward() * dt * 10.0f);
+            camera.SetPosition(camera.position() - camera.forward() * dt * 10.0f);
         }
 
         if (io.GetKey(GLFW_KEY_A) == GLFW_PRESS)
         {
-            camera.SetPosition(camera.position() + camera.right() * dt * 10.0f);
+            camera.SetPosition(camera.position() - camera.right() * dt * 10.0f);
         }
 
         if (io.GetKey(GLFW_KEY_D) == GLFW_PRESS)
         {
-            camera.SetPosition(camera.position() - camera.right() * dt * 10.0f);
+            camera.SetPosition(camera.position() + camera.right() * dt * 10.0f);
         }
 
 		io.SwapBuffers();  

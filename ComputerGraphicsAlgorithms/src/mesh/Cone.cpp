@@ -30,12 +30,14 @@ namespace mesh
 			const std::uint32_t next = (i == vertex_count - 1) ? 2 : i + 1;
 			// Bottom face
 			indices_.push_back(0);
-			indices_.push_back(i);
 			indices_.push_back(next);
+			indices_.push_back(i);
+			
 			// Side face
 			indices_.push_back(1);
-			indices_.push_back(next);
 			indices_.push_back(i);
+			indices_.push_back(next);
+			
 		}
 		
 		RecalculateNormals();

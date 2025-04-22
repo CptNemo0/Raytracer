@@ -59,15 +59,15 @@ namespace rtr
 
 				if (!framebuffer_->DepthCheckExchange(x, y, depth)) continue;
 
-				//math::vec3 color = transformed.vertices_[0].normal_ * lambda1 +
+				math::vec3 color = transformed.vertices_[0].normal_ * lambda1 +
 								   transformed.vertices_[1].normal_ * lambda2 +
 								   transformed.vertices_[2].normal_ * lambda3;
-				//math::vec4 color4 = math::vec4(color.get(0) * 255.0f, color.get(1) * 255.0f, color.get(2) * 255.0f, 255.0f);
+				math::vec4 color4 = math::vec4(color.get(0) * 255.0f, color.get(1) * 255.0f, color.get(2) * 255.0f, 255.0f);
 				//depth = 1 - depth;
 
 				//color = color4f(depth * 255.0f, depth * 255.0f, depth * 255.0f, 255.0f);
 
-				framebuffer_->SetPixelf(x, y, preprocessor_->color_);
+				framebuffer_->SetPixelf(x, y, color4);
 			}
 		}
 	}
