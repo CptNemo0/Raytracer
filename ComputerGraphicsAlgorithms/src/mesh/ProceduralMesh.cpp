@@ -17,7 +17,7 @@ namespace mesh
 
 			const math::vec3 edge1 = v1.position_ - v0.position_;
 			const math::vec3 edge2 = v2.position_ - v0.position_;
-			const math::vec3 normal = math::normalized(math::cross(edge1, edge2));
+			const math::vec3 normal = math::normalized(math::cross(edge2, edge1));
 
 			vertices_[indices_[i]].normal_ += normal;
 			vertices_[indices_[i + 1]].normal_ += normal;

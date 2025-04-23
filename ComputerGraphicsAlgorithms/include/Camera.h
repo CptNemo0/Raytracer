@@ -59,6 +59,11 @@ namespace rtr
 		{
 			return right_;
 		}
+
+		inline const math::vec3& up() const
+		{
+			return up_;
+		}
 	};
 }
 

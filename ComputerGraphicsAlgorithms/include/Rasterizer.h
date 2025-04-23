@@ -34,7 +34,7 @@ namespace rtr
 			inside &= trc.tl2_ ? trc.dx23_ * (y - y2) - trc.dy23_ * (x - x2) >= 0 : trc.dx23_ * (y - y2) - trc.dy23_ * (x - x2) > 0;
 			inside &= trc.tl3_ ? trc.dx31_ * (y - y3) - trc.dy31_ * (x - x3) >= 0 : trc.dx31_ * (y - y3) - trc.dy31_ * (x - x3) > 0;
 
-			return  inside;
+			return inside;
 		};
 
 		std::tuple<const float, const float, const float> GetLambdas(const float x, const float y, const mesh::Triangle& tri, const TriangleRasterizationCache& trc)

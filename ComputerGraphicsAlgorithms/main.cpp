@@ -29,12 +29,12 @@ int main(int argc, char** argv)
         math::vec3(0.0f, 0.0f, 1.0f),
         math::vec3(0.0f, 1.0f, 0.0f),
         static_cast<float>(io.GetMode()->width) / static_cast<float>(io.GetMode()->height),
-        math::to_radians(90.0f),
+        math::to_radians(45.0f),
         1000.0f,
         0.1f);
 
     preprocessor->view_matrix_ = camera.UpdateViewMatrix();
-    preprocessor->projection_matrix_ = camera.ProjectionMatrix();
+    preprocessor->projection_matrix_ =  camera.ProjectionMatrix();
     preprocessor->model_matrix_ = math::mat4x4(1.0f);
 
     rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
     mesh::Cone cone(2.0f, 3.0f, 15);
     cone.GenerateMesh();
 
-	mesh::Sphere sphere(3.0f, 20, 20);
+	mesh::Sphere sphere(3.0f, 25, 25);
 	sphere.GenerateMesh();
 
     float time0 = 0;
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
         }
         fps_idx--;
 		
-        rotation += dt * 20.0f;
+        rotation += 0.0f;// dt * 20.0f;
 
 		io.PollEvents();
 		io.ClearGLBuffers();
@@ -74,12 +74,12 @@ int main(int argc, char** argv)
 
         preprocessor->view_matrix_ = camera.UpdateViewMatrix();
         
-        auto rotation_matrix = math::matmul(math::rotation_matrix_x_deg(rotation), math::rotation_matrix_y_deg(rotation));
+        auto rotation_matrix = math::matmul(math::rotation_matrix_x_deg(-24.0f), math::rotation_matrix_y_deg(16.0f));
 
-		preprocessor->model_matrix_ = math::matmul(math::translation_matrix(4.0f, 0.0f, 0.0f), rotation_matrix);
+		preprocessor->model_matrix_ = math::matmul(math::translation_matrix(4.0f, 2.0f, 0.0f), rotation_matrix);
         rasterizer.DrawMesh(cone);
 
-        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-4.0f, 0.0f, 0.0f), rotation_matrix);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-4.0f, -2.0f, 0.0f), rotation_matrix);
         rasterizer.DrawMesh(sphere);
 
         io.Draw(rasterizer.GetData(), GL_RGBA, GL_UNSIGNED_BYTE);
@@ -87,21 +87,47 @@ int main(int argc, char** argv)
         if (io.GetKey(GLFW_KEY_W) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() + camera.forward() * dt * 10.0f);
+            std::cout << camera.position() << std::endl;
         }
 
         if (io.GetKey(GLFW_KEY_S) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() - camera.forward() * dt * 10.0f);
+            std::cout << camera.position() << std::endl;
         }
 
         if (io.GetKey(GLFW_KEY_A) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() - camera.right() * dt * 10.0f);
+            std::cout << camera.position() << std::endl;
         }
 
         if (io.GetKey(GLFW_KEY_D) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() + camera.right() * dt * 10.0f);
+            std::cout << camera.position() << std::endl;
+        }
+
+        if (io.GetKey(GLFW_KEY_Q) == GLFW_PRESS)
+        {
+            camera.SetPosition(camera.position() + camera.up() * dt * 10.0f);
+            std::cout << camera.position() << std::endl;
+            
+        }
+
+        if (io.GetKey(GLFW_KEY_E) == GLFW_PRESS)
+        {
+            camera.SetPosition(camera.position() - camera.up() * dt * 10.0f);
+            std::cout << camera.position() << std::endl;
+        }
+
+        if (io.GetKey(GLFW_KEY_F) == GLFW_PRESS)
+        {
+            camera.SetPosition(camera.position() - camera.up() * dt * 10.0f);
+            std::cout << "position: " << camera.position() << std::endl;
+            std::cout << "right: " << camera.right() << std::endl;
+            std::cout << "forward: " << camera.forward() << std::endl;
+            std::cout << "up: " << camera.up() << std::endl;
         }
 
 		io.SwapBuffers();  
