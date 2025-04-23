@@ -3,6 +3,10 @@
 #include "Rasterizer.h"
 #include "Camera.h"
 #include "VertexProcessor.h"
+#include "Mesh.h"
+#include "Sphere.h"
+#include "Cone.h"
+#include "raytracer_math.h"
 
 int main()
 {
@@ -12,7 +16,7 @@ int main()
 	Color4 colorT(255, 0, 255, 255);
 	Color4 colorB(0, 0, 255, 255);
 	
-	Camera camera(math::vec3(0.0f, 0.0f, 0.0f),
+	Camera camera(math::vec3(-2.0f, 6.0f, 0.0f),
 		math::vec3(0.0f, 0.0f, 1.0f),
 		math::vec3(0.0f, 1.0f, 0.0f), 
 		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
@@ -34,7 +38,7 @@ int main()
 
 	Rasterizer rasterizer(colorBuffer, vertexProcessor);
 
-	math::vec3 v0_1(0.0f, -0.5f, 1.0f);
+	/*math::vec3 v0_1(0.0f, -0.5f, 1.0f);
 	math::vec3 v1_1(-0.5f, 0.0f, 1.0f);
 	math::vec3 v2_1(0.0f, 0.8f, 1.0f);
 
@@ -57,12 +61,10 @@ int main()
     int height = colorBuffer.height_;
     int width = colorBuffer.width_;
 
-	 //Transformacja pierwszego trójkąta (translacja)
 	math::mat4x4 translation = math::translation_matrix(0.5f, 0.5f, 0.0f);
 	vertexProcessor->modelMatrix_ = translation;
 	rasterizer.rasterize(triangle1);
 
-	// Obrót drugiego trójkąta (obrót wokół osi Z)
 	math::mat4x4 rotation = math::rotation_matrix_z_deg(45.0f);
 	vertexProcessor->modelMatrix_ = rotation;
 
@@ -70,15 +72,23 @@ int main()
 	vertexProcessor->modelMatrix_.log();
 	rasterizer.rasterize(triangle1);
 
-	//vertexProcessor.modelMatrix_ = math::mat4x4(1.0f);
 	vertexProcessor->modelMatrix_ = math::rotation_matrix_y_deg(25.0f);
 	vertexProcessor->modelMatrix_.log();
 	rasterizer.rasterize(triangle2);
 
-	//vertexProcessor.modelMatrix_ = math::mat4x4(1.0f);
 	vertexProcessor->modelMatrix_ = math::scale_matrix(2.0f, 0.1f, 1.0f);
 	vertexProcessor->modelMatrix_.log();
-	rasterizer.rasterize(triangle3);
+	rasterizer.rasterize(triangle3);*/
+
+
+	/*mesh::Sphere sphere = mesh::Sphere(10, 10, 1.0f);
+	rasterizer.rasterizeMesh(sphere);*/
+
+	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
+	mesh::Cone cone = mesh::Cone(15, 2.0f, 3.0f);
+	math::mat4x4 translation = math::translation_matrix(2.5f, -5.0f, 0.0f);
+	vertexProcessor->modelMatrix_ = translation;
+	rasterizer.rasterizeMesh(cone);
 
 
 	colorBuffer.generateBMP("test.bmp");

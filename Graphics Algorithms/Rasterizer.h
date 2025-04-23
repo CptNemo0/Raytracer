@@ -4,6 +4,7 @@
 #include "Triangle.h"
 #include "ColorBuffer.h"
 #include "VertexProcessor.h"
+#include "Mesh.h"
 #include <memory>
 
 class Rasterizer
@@ -33,6 +34,23 @@ public:
    void rasterize(Triangle& triangle)
    {
        triangle.drawTriangle(buffer_, *vertexProcessor_);
+   };
+
+   void rasterizeMesh(const mesh::Mesh& mesh)
+   {
+	   for (int i = 0; i < mesh.indices.size(); i++) {
+		   math::vec3 v0 = mesh.vertices[mesh.indices[i][0]].position;
+		   math::vec3 v1 = mesh.vertices[mesh.indices[i][1]].position;
+		   math::vec3 v2 = mesh.vertices[mesh.indices[i][2]].position;
+		   Triangle triangle(v0, v1, v2);
+		   /*triangle.SetColors(mesh.vertices[mesh.indices[i][0]].color,
+			   mesh.vertices[mesh.indices[i][1]].color,
+			   mesh.vertices[mesh.indices[i][2]].color);*/
+		   /*triangle.SetColors(Color4(255, 0, 0, 255),
+			   Color4(255, 0, 0, 255),
+			   Color4(255, 0, 0, 255));*/
+		   rasterize(triangle);
+	   }
    };
 
    void ToScreenCoordinates(Triangle& triangle)

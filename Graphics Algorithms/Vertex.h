@@ -7,6 +7,7 @@
 struct Vertex
 {
 	math::vec3 position;
+	math::vec3 normal;
 	Color4 color;
 };
 

@@ -4,6 +4,8 @@
 #include "raytracer_math.h"
 #include "ColorBuffer.h"
 #include "VertexProcessor.h"
+#include "algorithm"
+#include "Vertex.h"
 
 class Triangle
 {
@@ -184,6 +186,8 @@ private:
 	math::vec3 v0_;
 	math::vec3 v1_;
 	math::vec3 v2_;
+
+	std::array<Vertex, 3> vertices_;
 
 
 
