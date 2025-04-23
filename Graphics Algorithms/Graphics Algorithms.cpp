@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include "Sphere.h"
 #include "Cone.h"
+#include "Torus.h"
 #include "raytracer_math.h"
 
 int main()
@@ -16,7 +17,7 @@ int main()
 	Color4 colorT(255, 0, 255, 255);
 	Color4 colorB(0, 0, 255, 255);
 	
-	Camera camera(math::vec3(-2.0f, 6.0f, 0.0f),
+	Camera camera(math::vec3(-5.0f, 6.0f, 2.0f),
 		math::vec3(0.0f, 0.0f, 1.0f),
 		math::vec3(0.0f, 1.0f, 0.0f), 
 		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
@@ -81,14 +82,18 @@ int main()
 	rasterizer.rasterize(triangle3);*/
 
 
-	/*mesh::Sphere sphere = mesh::Sphere(10, 10, 1.0f);
-	rasterizer.rasterizeMesh(sphere);*/
+	mesh::Sphere sphere = mesh::Sphere(10, 10, 1.0f);
+	rasterizer.rasterizeMesh(sphere);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
 	mesh::Cone cone = mesh::Cone(15, 2.0f, 3.0f);
-	math::mat4x4 translation = math::translation_matrix(2.5f, -5.0f, 0.0f);
+	math::mat4x4 translation = math::translation_matrix(2.5f, 3.0f, 5.0f);
 	vertexProcessor->modelMatrix_ = translation;
 	rasterizer.rasterizeMesh(cone);
+
+	mesh::Torus torus = mesh::Torus(10, 10, 2.0f, 0.5f);
+	vertexProcessor->modelMatrix_ = math::translation_matrix(1.5f, 2.0f, 1.0f);
+	rasterizer.rasterizeMesh(torus);
 
 
 	colorBuffer.generateBMP("test.bmp");

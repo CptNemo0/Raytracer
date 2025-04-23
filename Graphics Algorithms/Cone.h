@@ -60,8 +60,8 @@ namespace mesh
 				indices.push_back({ baseCenterIndex, next + 1, i + 1 }); // base cap
 			}
 
-			vSize = vertices.size();
-			tSize = indices.size();
+			//vSize = vertices.size();
+			//tSize = indices.size();
 			MakeNormals();
 		}
 	};
