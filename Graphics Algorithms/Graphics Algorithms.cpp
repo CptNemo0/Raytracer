@@ -17,7 +17,7 @@ int main()
 	Color4 colorT(255, 0, 255, 255);
 	Color4 colorB(0, 0, 255, 255);
 	
-	Camera camera(math::vec3(-5.0f, 6.0f, 2.0f),
+	Camera camera(math::vec3(-5.0f, 0.0f, 5.0f),
 		math::vec3(0.0f, 0.0f, 1.0f),
 		math::vec3(0.0f, 1.0f, 0.0f), 
 		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
