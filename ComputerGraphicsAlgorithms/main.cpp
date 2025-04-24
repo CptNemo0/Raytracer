@@ -15,6 +15,7 @@
 #include "Rasterizer.h"
 #include "mesh/Cone.h"
 #include "mesh/Sphere.h"
+#include "mesh/Torus.h"
 
 using namespace rtr;
 
@@ -40,14 +41,16 @@ int main(int argc, char** argv)
     rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
     rasterizer.framebuffer_->DepthClear(std::numeric_limits<float>::max());
 
-    mesh::Cone cone(2.0f, 3.0f, 15);
+    mesh::Cone cone(2.0f, 3.0f, 30);
     cone.GenerateMesh();
 
-	mesh::Sphere sphere(3.0f, 50, 50);
-	sphere.GenerateMesh();
+	mesh::Torus torus(2.0f, 0.5f, 25, 50);
+	torus.GenerateMesh();
 
-    mesh::Sphere sphere2(0.5f, 15, 15);
+    mesh::Sphere sphere2(1.5f, 50, 50);
     sphere2.GenerateMesh();
+
+    
 
     float time0 = 0;
 	float time1 = 0;
@@ -83,9 +86,9 @@ int main(int argc, char** argv)
         rasterizer.DrawMesh(cone);
 
         preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-4.0f, -2.0f, 0.0f), rotation_matrix);
-        rasterizer.DrawMesh(sphere);
+        rasterizer.DrawMesh(torus);
 
-        preprocessor->model_matrix_ = math::mat4x4(1.0f);
+        preprocessor->model_matrix_ = rotation_matrix;
         rasterizer.DrawMesh(sphere2);
 
         io.Draw(rasterizer.GetData(), GL_RGBA, GL_UNSIGNED_BYTE);

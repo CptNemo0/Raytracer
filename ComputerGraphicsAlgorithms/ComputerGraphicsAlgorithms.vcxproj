@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad\glad.c" />
+    <ClCompile Include="src\mesh\Torus.cpp" />
     <ClCompile Include="src\mesh\Sphere.cpp" />
     <ClCompile Include="src\mesh\Cone.cpp" />
     <ClCompile Include="src\mesh\ProceduralMesh.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="include\mesh\Cone.h" />
     <ClInclude Include="include\mesh\ProceduralMesh.h" />
     <ClInclude Include="include\mesh\Sphere.h" />
+    <ClInclude Include="include\mesh\Torus.h" />
     <ClInclude Include="include\PixelBuffer.h" />
     <ClInclude Include="include\Preprocessor.h" />
     <ClInclude Include="include\Rasterizer.h" />

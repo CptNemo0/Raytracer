@@ -30,19 +30,24 @@ namespace math
 		const std::uint32_t length_ = rows * columns;
 		const mat_size size_ = { rows, columns };
 
-		std::uint32_t xy_to_index(const std::uint32_t x, const std::uint32_t y) const
+		inline std::uint32_t xy_to_index(const std::uint32_t x, const std::uint32_t y) const
 		{
 			return columns_ * y + x;
 		}
 
-		T& get(const std::uint32_t x, const std::uint32_t y)
+		inline T& get(const std::uint32_t x, const std::uint32_t y)
 		{
 			return data_[xy_to_index(x, y)];
 		}
 
-		const T& get(const std::uint32_t x, const std::uint32_t y) const
+		inline const T& get(const std::uint32_t x, const std::uint32_t y) const
 		{
 			return data_[xy_to_index(x, y)];
+		}
+
+		inline const T& get(const std::uint32_t idx) const
+		{
+			return data_[idx];
 		}
 
 		mat() 
