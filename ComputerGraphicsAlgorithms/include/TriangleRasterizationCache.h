@@ -8,17 +8,17 @@ namespace rtr
 	class TriangleRasterizationCache
 	{
 	public:
-		float dx12_ = 0.0f;
-		float dx23_ = 0.0f;
-		float dx31_ = 0.0f;
+		int dx12_ = 0;
+		int dx23_ = 0;
+		int dx31_ = 0;
 
-		float dy12_ = 0.0f;
-		float dy23_ = 0.0f;
-		float dy31_ = 0.0f;
+		int dy12_ = 0;
+		int dy23_ = 0;
+		int dy31_ = 0;
 
-		float tl1_  = 0.0f;
-		float tl2_  = 0.0f;
-		float tl3_  = 0.0f;
+		bool tl1_  = false;
+		bool tl2_  = false;
+		bool tl3_  = false;
 
 		TriangleRasterizationCache(const mesh::Triangle& tri);
 	};

@@ -48,8 +48,8 @@ namespace rtr
 		{
 			for (std::uint32_t y = topi; y < boti; y++)
 			{
-				const auto fx = static_cast<float>(x);
-				const auto fy = static_cast<float>(y);
+				const auto fx = static_cast<float>(x) + 0.5f;
+				const auto fy = static_cast<float>(y) + 0.5f;
 				if (!PixelInside(fx, fy, transformed, trc)) continue;
 				const auto [lambda1, lambda2, lambda3] = GetLambdas(fx, fy, transformed, trc);
 
@@ -74,7 +74,7 @@ namespace rtr
 
 				//color = color4f(depth * 255.0f, depth * 255.0f, depth * 255.0f, 255.0f);
 
-				framebuffer_->SetPixelf(x, y, color4);
+				framebuffer_->SetPixelf(x, y, preprocessor_->color_);
 			}
 		}
 	}

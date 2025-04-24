@@ -38,8 +38,8 @@ namespace rtr
 
         position4 /= position4.get(3);
 
-        position4[0] = (position4[0] + 1.0f) * width_ * 0.5f;
-        position4[1] = (position4[1] + 1.0f) * height_ * 0.5f;
+        position4[0] = static_cast<int>((position4[0] + 1.0f) * width_ * 0.5f);
+        position4[1] = static_cast<int>((position4[1] + 1.0f) * height_ * 0.5f);
 
         position_[0] = position4.get(0);
         position_[1] = position4.get(1);
