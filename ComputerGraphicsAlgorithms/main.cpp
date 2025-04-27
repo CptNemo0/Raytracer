@@ -46,13 +46,13 @@ int main(int argc, char** argv)
     rasterizer.lights_.push_back(plight);
     rasterizer.lights_.push_back(dlight);
 
-    mesh::Cone cone(2.25f, 2.0f, 25);
+    mesh::Cone cone(2.25f, 2.0f, 35);
     cone.GenerateMesh();
 
-	mesh::Torus torus(2.5f, 0.4f, 25, 25);
+	mesh::Torus torus(2.5f, 0.4f, 35, 35);
 	torus.GenerateMesh();
 
-    mesh::Sphere sphere(2.0f, 25, 25);
+    mesh::Sphere sphere(2.0f, 35, 35);
     sphere.GenerateMesh();
 
     float time0 = 0;

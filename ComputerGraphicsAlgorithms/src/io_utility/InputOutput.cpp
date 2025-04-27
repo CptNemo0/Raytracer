@@ -16,11 +16,11 @@ namespace io_utility
 
         if (width.has_value())
         {
-            mode_->width = 1280;
+            mode_->width = width.value();
         }
 		if (height.has_value())
 		{
-			mode_->height = 720;
+			mode_->height = height.value();
 		}
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -31,7 +31,14 @@ namespace io_utility
         glfwWindowHint(GLFW_BLUE_BITS, mode_->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode_->refreshRate);
         
-        window_ = glfwCreateWindow(mode_->width, mode_->height, window_name.data(), nullptr, nullptr);
+        if (width.has_value() || height.has_value())
+        {
+            window_ = glfwCreateWindow(mode_->width, mode_->height, window_name.data(), nullptr, nullptr);
+        }
+        else
+        {
+            window_ = glfwCreateWindow(mode_->width, mode_->height, window_name.data(), monitor_, nullptr);
+        }
 
         if (window_ == nullptr)
         {

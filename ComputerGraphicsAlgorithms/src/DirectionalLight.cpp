@@ -20,7 +20,7 @@ namespace rtr
 		}
 		else
 		{
-			return color3f(10.0f, 10.0f, 10.0f);
+			return color3f(0.0f, 0.0f, 0.0f);
 		}
 	}
 }
