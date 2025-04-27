@@ -84,27 +84,27 @@ int main(int argc, char** argv)
         preprocessor->eye_position = camera.position();
         auto rotation_matrix = math::matmul(math::rotation_matrix_x_deg(rotation), math::rotation_matrix_y_deg(rotation));
 
-        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(0.0f, 5.0f, 0.0f), rotation_matrix);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(0.0f, 3.0f, 0.0f), rotation_matrix);
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
         rasterizer.DrawMeshLightPixel(sphere);
 
-        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-6.0f, 5.0f, 0.0f), rotation_matrix);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-6.0f, 3.0f, 0.0f), rotation_matrix);
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
         rasterizer.DrawMeshLightPixel(torus);
 
-        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(6.0f, 5.0f, 0.0f), rotation_matrix);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(6.0f, 3.0f, 0.0f), rotation_matrix);
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
         rasterizer.DrawMeshLightPixel(cone);
 
-        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(0.0f, -5.0f, 0.0f), rotation_matrix);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(0.0f, -3.0f, 0.0f), rotation_matrix);
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
         rasterizer.DrawMeshLightVertex(sphere);
 
-        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-6.0f, -5.0f, 0.0f), rotation_matrix);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-6.0f, -3.0f, 0.0f), rotation_matrix);
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
         rasterizer.DrawMeshLightVertex(torus);
 
-        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(6.0f, -5.0f, 0.0f), rotation_matrix);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(6.0f, -3.0f, 0.0f), rotation_matrix);
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
         rasterizer.DrawMeshLightVertex(cone);
 
