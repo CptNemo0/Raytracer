@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 	cam.aspect_ratio_ = 16.0f / 9.0f;
 	//cam.scale_ = 0.05f;
 
-	rendering::PixelBuffer buffer(1920, 1080);
+	rendering::PixelBuffer buffer(1280, 720);
 	rendering::Renderer renderer(&cam, &buffer, 6);
 
 	lights::PointLight light1(math::vec3(3.0f, 7.5f, 5.0f), rendering::color4f(1.0f, 1.0f, 1.0f, 1.0f), 1.0f);

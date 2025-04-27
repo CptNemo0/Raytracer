@@ -171,8 +171,8 @@ void rendering::Renderer::Render()
 						auto new_distance = math::distance(new_origin, light.position);
 
 						const auto& [new_result, new_mat] = ShootRay(new_ray);
-
-						if (new_result.type == intersections::IntersectionType::HIT && new_result.distance < new_distance)
+						
+						if (!TraceToLight(light, new_origin, 0))
 						{
 							result_color += mat.ambient_ * weight; shadowed++;
 							//std::cout << "Hit light shadow" << std::endl;
@@ -195,6 +195,8 @@ void rendering::Renderer::Render()
 	buffer_->SaveColorToFile("test.bmp");
 }
 
+
+
 std::pair<intersections::IntersectionResult, rendering::Material> rendering::Renderer::ShootRay(const intersections::Ray& ray) const
 {
 	Material hit_material;
@@ -205,6 +207,7 @@ std::pair<intersections::IntersectionResult, rendering::Material> rendering::Ren
 	for (auto& geometry : scene_)
 	{
 		intersections::IntersectionResult result;
+		
 		std::visit
 		(
 			[&result, &ray, &depth, &hit_material, &hit_result](auto& primitive)
@@ -227,6 +230,8 @@ std::pair<intersections::IntersectionResult, rendering::Material> rendering::Ren
 
 	return std::make_pair(hit_result, hit_material);
 }
+
+
 
 void rendering::Renderer::FillBackground()
 {
@@ -280,3 +285,5 @@ void rendering::Renderer::FillBackground()
         }
     }
 }
+
+
