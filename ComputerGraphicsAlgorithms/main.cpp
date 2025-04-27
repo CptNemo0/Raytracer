@@ -41,18 +41,18 @@ int main(int argc, char** argv)
     rasterizer.framebuffer_->ColorClear(color4(0, 0, 0, 255));
     rasterizer.framebuffer_->DepthClear(std::numeric_limits<float>::max());
 
-    auto plight = std::make_shared<PointLight>(math::vec3(0.0f, 0.0f, 0.0f), 2.5f, math::vec3(165.0f, 50, 50.0f), [](float d) {return 1.0f / (0.25f * d + 1.0f); });
-    auto dlight = std::make_shared<DirectionalLight>(math::vec3(1.0f, 0.0f, 0.0f), 2.5f, math::vec3(50.0f, 50.0f, 165.0f), [](float d) {return 1.0f / (0.25f * d + 1.0f); });
+    auto plight = std::make_shared<PointLight>(math::vec3(0.0f, 0.0f, -5.0f), 4.5f, math::vec3(165.0f, 50, 50.0f), [](float d) {return 1.0f / (0.5f * d + 1.0f); });
+    auto dlight = std::make_shared<DirectionalLight>(math::vec3(1.0f, 0.0f, 0.0f), 4.5f, math::vec3(50.0f, 50.0f, 165.0f), [](float d) {return 1.0f / (0.25f * d + 1.0f); });
     rasterizer.lights_.push_back(plight);
     rasterizer.lights_.push_back(dlight);
 
-    mesh::Cone cone(1.25f, 2.0f, 10);
+    mesh::Cone cone(2.25f, 2.0f, 25);
     cone.GenerateMesh();
 
-	mesh::Torus torus(2.0f, 0.2f, 20, 20);
+	mesh::Torus torus(2.5f, 0.4f, 25, 25);
 	torus.GenerateMesh();
 
-    mesh::Sphere sphere(2.0f, 30, 30);
+    mesh::Sphere sphere(2.0f, 25, 25);
     sphere.GenerateMesh();
 
     float time0 = 0;
@@ -81,7 +81,20 @@ int main(int argc, char** argv)
 
 		rasterizer.framebuffer_->ClearBuffers({0, 0, 0, 255}, std::numeric_limits<float>::max());
         preprocessor->view_matrix_ = camera.UpdateViewMatrix();
+        preprocessor->eye_position = camera.position();
         auto rotation_matrix = math::matmul(math::rotation_matrix_x_deg(rotation), math::rotation_matrix_y_deg(rotation));
+
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(0.0f, 5.0f, 0.0f), rotation_matrix);
+        preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
+        rasterizer.DrawMeshLightPixel(sphere);
+
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-6.0f, 5.0f, 0.0f), rotation_matrix);
+        preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
+        rasterizer.DrawMeshLightPixel(torus);
+
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(6.0f, 5.0f, 0.0f), rotation_matrix);
+        preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
+        rasterizer.DrawMeshLightPixel(cone);
 
         preprocessor->model_matrix_ = math::matmul(math::translation_matrix(0.0f, -5.0f, 0.0f), rotation_matrix);
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));

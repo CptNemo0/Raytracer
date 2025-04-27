@@ -20,7 +20,7 @@ namespace rtr
 		math::mat4x4 view_matrix_ = math::mat4x4(1.0f, true);;
 		math::mat4x4 projection_matrix_ = math::mat4x4(1.0f, true);;
 		math::mat4x4 ti_model_matrix = math::mat4x4(1.0f, true);	
-
+		math::vec3 eye_position = math::vec3(0.0f);
 		color4f background_color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
 		color4f color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
 

@@ -13,7 +13,7 @@ namespace rtr
 			const auto view_direction = math::normalized(view_position - position);
 			const auto halfway_vector = math::normalized(light_direction + view_direction);
 
-			float spec = std::pow(std::max(math::dot(normal, halfway_vector), 0.0f), 40.0f);
+			float spec = std::pow(std::max(math::dot(normal, halfway_vector), 0.0f), 10.0f);
 
 			color3f diffuse_color  = color_ * dot_product;
 			color3f specular_color = color_ * spec;
