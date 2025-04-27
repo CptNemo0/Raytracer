@@ -143,7 +143,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\DirectionalLight.cpp" />
     <ClCompile Include="glad\glad.c" />
+    <ClCompile Include="src\PointLight.cpp" />
     <ClCompile Include="src\mesh\Torus.cpp" />
     <ClCompile Include="src\mesh\Sphere.cpp" />
     <ClCompile Include="src\mesh\Cone.cpp" />
@@ -158,10 +160,12 @@
     <ClCompile Include="src\TriangleRasterizationCache.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\DirectionalLight.h" />
     <ClInclude Include="glad\glad.h" />
     <ClInclude Include="glad\khrplatform.h" />
     <ClInclude Include="include\aliasing.h" />
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\Light.h" />
     <ClInclude Include="include\mesh\Cone.h" />
     <ClInclude Include="include\mesh\ProceduralMesh.h" />
     <ClInclude Include="include\mesh\Sphere.h" />
@@ -174,6 +178,7 @@
     <ClInclude Include="include\TriangleRasterizationCache.h" />
     <ClInclude Include="include\mesh\Vertex.h" />
     <ClInclude Include="include\io_utility\InputOutput.h" />
+    <ClInclude Include="include\PointLight.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -181,11 +186,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\glfw.3.4.0\build\native\glfw.targets" Condition="Exists('..\packages\glfw.3.4.0\build\native\glfw.targets')" />
+    <Import Project="..\packages\glm.1.0.1\build\native\glm.targets" Condition="Exists('..\packages\glm.1.0.1\build\native\glm.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\glfw.3.4.0\build\native\glfw.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glfw.3.4.0\build\native\glfw.targets'))" />
+    <Error Condition="!Exists('..\packages\glm.1.0.1\build\native\glm.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glm.1.0.1\build\native\glm.targets'))" />
   </Target>
 </Project>

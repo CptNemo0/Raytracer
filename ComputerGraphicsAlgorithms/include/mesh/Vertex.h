@@ -19,6 +19,18 @@ namespace mesh
 			position_ = math::vec3(a, b, c);
 			normal_ = math::vec3(0.0f, 0.0f, 0.0f);
 		}
+
+		explicit Vertex(const math::vec3& position)
+		{
+			position_ = position;
+			normal_ = math::vec3(0.0f, 0.0f, 0.0f);
+		}
+
+		explicit Vertex(math::vec3&& position, math::vec3&& normal)
+		{
+			position_ = position;
+			normal_ = normal;
+		}
 	};
 }
 

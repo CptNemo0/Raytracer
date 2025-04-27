@@ -5,6 +5,9 @@
 #include<memory>
 
 #include "aliasing.h"
+#include "Light.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
 #include "PixelBuffer.h"
 #include "raytracer_math.h"
 #include "Preprocessor.h"
@@ -62,6 +65,9 @@ namespace rtr
 	public:
 		std::unique_ptr<PixelBuffer> framebuffer_;
 		std::shared_ptr<Preprocessor> preprocessor_;
+		
+		std::vector<std::shared_ptr<Light>> lights_;
+
 		Rasterizer(const std::uint32_t width, const std::uint32_t height, std::shared_ptr<Preprocessor> preprocessor);
 		void DrawTriangle(const mesh::Triangle& tri);
 		void DrawMesh(const mesh::ProceduralMesh& mesh);
@@ -71,6 +77,9 @@ namespace rtr
 			framebuffer_->ColorfClear(preprocessor_->background_color_);
 			framebuffer_->DepthClear(std::numeric_limits<float>::max());
 		};
+
+		void DrawTriangleLightVertex(const mesh::Triangle& input, const math::ivec3 vidx, const std::vector<color3f>& colors);
+		void DrawMeshLightVertex(const mesh::ProceduralMesh& mesh);
 	};
 }
 

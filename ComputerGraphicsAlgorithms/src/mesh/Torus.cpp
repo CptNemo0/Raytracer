@@ -7,51 +7,44 @@ namespace mesh
         vertices_.clear();
         indices_.clear();
 
-        const float pi = 3.14159265359f;
-        const float two_pi = 2.0f * pi;
+		const auto major_step = math::two_pi / static_cast<float>(major_subdivisions_);
+		const auto minor_step = math::two_pi / static_cast<float>(minor_subdivisions_);
 
-        // Loop through vertical and horizontal subdivisions to generate vertices
-        for (std::uint32_t i = 0; i <= vertical_subdivisions_; ++i)
+        for (float alpha = 0.0f; alpha < math::two_pi; alpha += major_step)
         {
-            float v = static_cast<float>(i) / vertical_subdivisions_;
-            float phi = v * two_pi;
+            const auto minor_x = std::cos(alpha) * major_radius_;
+            const auto minor_y = 0.0f;
+            const auto minor_z = std::sin(alpha) * major_radius_;
 
-            for (std::uint32_t j = 0; j <= horizontal_subdivisions_; ++j)
+			math::vec3 minor_base = math::vec3(minor_x, minor_y, minor_z);
+			math::vec3 direction = math::normalized(math::vec3(minor_x, minor_y, minor_z));
+			
+            for (float beta = 0.0f; beta < math::two_pi; beta += minor_step)
             {
-                float u = static_cast<float>(j) / horizontal_subdivisions_;
-                float theta = u * two_pi;
-
-                // Calculate vertex position
-                float x = (radius1_ + radius2_ * std::cos(phi)) * std::cos(theta);
-                float y = (radius1_ + radius2_ * std::cos(phi)) * std::sin(theta);
-                float z = radius2_ * std::sin(phi);
-
-                // Add vertex to the list
-                vertices_.emplace_back(Vertex{ x, y, z });
+                auto normal = math::normalized(direction * std::cos(beta) + math::vec3(0.0f, 1.0f, 0.0f) * std::sin(beta));
+				auto position = minor_base + normal * minor_radius_;
+				vertices_.emplace_back(std::move(position), std::move(normal));
             }
         }
 
-        // Generate indices for the torus
-        for (std::uint32_t i = 0; i < vertical_subdivisions_; ++i)
-        {
-            for (std::uint32_t j = 0; j < horizontal_subdivisions_; ++j)
-            {
-                std::uint32_t current = i * (horizontal_subdivisions_ + 1) + j;
-                std::uint32_t next = current + horizontal_subdivisions_ + 1;
+		for (std::uint32_t i = 0; i < major_subdivisions_; ++i)
+		{
+			const auto this_subidivision_start = i * minor_subdivisions_;
+			const auto next_subidivision_start = ((i + 1) % major_subdivisions_) * minor_subdivisions_;
 
-                // First triangle
-                indices_.push_back(current);
-                indices_.push_back(next);
-                indices_.push_back(current + 1);
+			for (std::uint32_t j = 0; j < minor_subdivisions_; ++j)
+			{
+				const auto a = this_subidivision_start + j;
+				const auto b = this_subidivision_start + ((j + 1) % minor_subdivisions_);
 
-                // Second triangle
-                indices_.push_back(current + 1);
-                indices_.push_back(next);
-                indices_.push_back(next + 1);
-            }
-        }
+				const auto c = next_subidivision_start + j;
+				const auto d = next_subidivision_start + ((j + 1) % minor_subdivisions_);
 
-        // Recalculate normals for the generated mesh
-        RecalculateNormals();
+				indices_.emplace_back(a, c, d);
+				indices_.emplace_back(a, d, b);
+			}
+		}
+
+		RecalculateNormals();
     }
 }

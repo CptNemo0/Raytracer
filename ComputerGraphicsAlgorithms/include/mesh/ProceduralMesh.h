@@ -13,7 +13,7 @@ namespace mesh
 	{
 	public:
 		std::vector<Vertex> vertices_;
-		std::vector<std::uint32_t> indices_;
+		std::vector<math::ivec3> indices_;
 
 	public:
 		void RecalculateNormals();

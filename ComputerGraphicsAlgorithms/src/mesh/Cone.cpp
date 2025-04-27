@@ -25,21 +25,24 @@ namespace mesh
 			vertices_.emplace_back(x, y, z); // ring vertices
 		}
 
+
+
 		for (std::uint32_t i = 2; i < vertex_count; ++i)
 		{
 			const std::uint32_t next = (i == vertex_count - 1) ? 2 : i + 1;
 			// Bottom face
-			indices_.push_back(0);
-			indices_.push_back(next);
-			indices_.push_back(i);
-			
-			// Side face
-			indices_.push_back(1);
-			indices_.push_back(i);
-			indices_.push_back(next);
-			
+			indices_.emplace_back(i, 0, next);
+			indices_.emplace_back(next, 1, i);
 		}
-		
+
+		for (auto& vertex : vertices_)
+		{
+			math::normalize(vertex.normal_);
+		}
+
 		RecalculateNormals();
+
+		vertices_[0].normal_ = math::vec3(0.0f, -1.0f, 0.0f);
+		vertices_[1].normal_ = math::vec3(0.0f, 1.0f, 0.0f);
 	}
 }

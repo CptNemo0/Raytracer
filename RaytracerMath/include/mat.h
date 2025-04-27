@@ -95,7 +95,7 @@ namespace math
 				{
 					std::uint32_t index = xy_to_index(x, y);
 
-					ss << data_[index] << std::setw(4);
+					ss << data_[index] << "  ";
 				}
 				ss << "\n";
 			}

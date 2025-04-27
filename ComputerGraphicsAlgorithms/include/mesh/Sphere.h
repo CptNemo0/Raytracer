@@ -14,7 +14,7 @@ namespace mesh
 	public:
 		Sphere(const float radius, const int vertical_subdivisions, const int horizontal_subdivisions)
 			: radius_(std::max(std::numeric_limits<float>().min(), radius)),
-			  vertical_subdivisions_(std::max(3, vertical_subdivisions)),
+			  vertical_subdivisions_(vertical_subdivisions),
 			  horizontal_subdivisions_(std::max(3, horizontal_subdivisions)) {
 		}
 		virtual void GenerateMesh() override;

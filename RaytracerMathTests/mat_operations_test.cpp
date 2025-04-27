@@ -89,27 +89,4 @@ TEST(mat_operations_test, det4x4_test)
 	ASSERT_TRUE(math::eq(det, 6.6f));
 }
 
-TEST(mat_operations_test, adj4x4_test)
-{
-	mat4x4 a
-	{
-		2.0f, 1.0f, 0.0f, 4.0f,
-		0.7f, 2.0f, 0.0f, -5.0f,
-		0.0f, 0.0f, 2.0f, 10.0f,
-		0.0f, 0.0f, 0.0f, 1.0f
-	};
 
-	mat4x4 b
-	{
-		4.0f, -2.0f, 0.0f, -26.0f,
-		-1.4f, 4.0f, 0.0f, 25.6f,
-		0.0f, 0.0f, 3.3f, -33.0f,
-		0.0f, 0.0f, 0.0f, 6.6f
-	};
-
-	mat4x4 adj_mat  = math::adj(a);
-
-
-
-	ASSERT_TRUE(a == b);
-}

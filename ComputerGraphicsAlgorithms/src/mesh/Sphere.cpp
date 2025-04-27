@@ -6,6 +6,7 @@ void mesh::Sphere::GenerateMesh()
 	const std::uint32_t index_count = vertical_subdivisions_ * horizontal_subdivisions_ * 6;
 	vertices_.reserve(vertex_count);
 	indices_.reserve(index_count);
+
 	for (std::uint32_t i = 0; i <= vertical_subdivisions_; ++i)
 	{
 		const float theta = static_cast<float>(i) / static_cast<float>(vertical_subdivisions_) * math::pi;
@@ -22,21 +23,23 @@ void mesh::Sphere::GenerateMesh()
 			vertices_.emplace_back(x, y, z);
 		}
 	}
+
 	for (std::uint32_t i = 0; i < vertical_subdivisions_; ++i)
 	{
 		for (std::uint32_t j = 0; j < horizontal_subdivisions_; ++j)
 		{
 			const std::uint32_t first = (i * (horizontal_subdivisions_ + 1)) + j;
 			const std::uint32_t second = first + horizontal_subdivisions_ + 1;
-			// First triangle
-			indices_.push_back(first);
-			indices_.push_back(second);
-			indices_.push_back(first + 1);
-			// Second triangle
-			indices_.push_back(second);
-			indices_.push_back(second + 1);
-			indices_.push_back(first + 1);
+			
+			indices_.emplace_back(first, second, first + 1);
+			indices_.emplace_back(second, second + 1, first + 1);
 		}
 	}
-	RecalculateNormals();
+
+	for (auto& vertex : vertices_)
+	{
+		vertex.normal_ = math::normalized(vertex.position_);
+	}
+
+	//RecalculateNormals();
 }

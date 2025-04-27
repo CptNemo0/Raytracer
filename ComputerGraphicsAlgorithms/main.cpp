@@ -38,19 +38,22 @@ int main(int argc, char** argv)
     preprocessor->projection_matrix_ =  camera.ProjectionMatrix();
     preprocessor->model_matrix_ = math::mat4x4(1.0f);
 
-    rasterizer.framebuffer_->ColorClear(color4(222, 121, 255, 255));
+    rasterizer.framebuffer_->ColorClear(color4(0, 0, 0, 255));
     rasterizer.framebuffer_->DepthClear(std::numeric_limits<float>::max());
 
-    mesh::Cone cone(2.0f, 3.0f, 30);
+    auto plight = std::make_shared<PointLight>(math::vec3(0.0f, 0.0f, 0.0f), 2.5f, math::vec3(165.0f, 50, 50.0f), [](float d) {return 1.0f / (0.25f * d + 1.0f); });
+    auto dlight = std::make_shared<DirectionalLight>(math::vec3(1.0f, 0.0f, 0.0f), 2.5f, math::vec3(50.0f, 50.0f, 165.0f), [](float d) {return 1.0f / (0.25f * d + 1.0f); });
+    rasterizer.lights_.push_back(plight);
+    rasterizer.lights_.push_back(dlight);
+
+    mesh::Cone cone(1.25f, 2.0f, 10);
     cone.GenerateMesh();
 
-	mesh::Torus torus(2.0f, 0.5f, 25, 50);
+	mesh::Torus torus(2.0f, 0.2f, 20, 20);
 	torus.GenerateMesh();
 
-    mesh::Sphere sphere2(1.5f, 50, 50);
-    sphere2.GenerateMesh();
-
-    
+    mesh::Sphere sphere(2.0f, 30, 30);
+    sphere.GenerateMesh();
 
     float time0 = 0;
 	float time1 = 0;
@@ -72,24 +75,25 @@ int main(int argc, char** argv)
         fps_idx--;
 		
         rotation += dt * 20.0f;
-
+        
 		io.PollEvents();
 		io.ClearGLBuffers();
 
-		rasterizer.framebuffer_->ClearBuffers({12, 24, 64, 255}, std::numeric_limits<float>::max());
-
+		rasterizer.framebuffer_->ClearBuffers({0, 0, 0, 255}, std::numeric_limits<float>::max());
         preprocessor->view_matrix_ = camera.UpdateViewMatrix();
-        
         auto rotation_matrix = math::matmul(math::rotation_matrix_x_deg(rotation), math::rotation_matrix_y_deg(rotation));
 
-		preprocessor->model_matrix_ = math::matmul(math::translation_matrix(4.0f, 2.0f, 0.0f), rotation_matrix);
-        rasterizer.DrawMesh(cone);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(0.0f, -5.0f, 0.0f), rotation_matrix);
+        preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
+        rasterizer.DrawMeshLightVertex(sphere);
 
-        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-4.0f, -2.0f, 0.0f), rotation_matrix);
-        rasterizer.DrawMesh(torus);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(-6.0f, -5.0f, 0.0f), rotation_matrix);
+        preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
+        rasterizer.DrawMeshLightVertex(torus);
 
-        preprocessor->model_matrix_ = rotation_matrix;
-        rasterizer.DrawMesh(sphere2);
+        preprocessor->model_matrix_ = math::matmul(math::translation_matrix(6.0f, -5.0f, 0.0f), rotation_matrix);
+        preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
+        rasterizer.DrawMeshLightVertex(cone);
 
         io.Draw(rasterizer.GetData(), GL_RGBA, GL_UNSIGNED_BYTE);
         
@@ -126,6 +130,7 @@ int main(int argc, char** argv)
             
         }
 
+        
         if (io.GetKey(GLFW_KEY_E) == GLFW_PRESS)
         {
             camera.SetPosition(camera.position() - camera.up() * dt * 10.0f);

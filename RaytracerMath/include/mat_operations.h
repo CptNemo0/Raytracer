@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include "mat.h"
+#include <glm/ext/matrix_transform.hpp>
 
 namespace math
 {
@@ -122,6 +123,25 @@ namespace math
 			}
 		}
 		return adj_mat;
+	}
+
+	inline mat4x4 inverse(const mat4x4& input)
+	{	
+		glm::mat4x4 glm_mat =
+		{
+			input.get(0, 0), input.get(0, 1), input.get(0, 2), input.get(0, 3),
+			input.get(1, 0), input.get(1, 1), input.get(1, 2), input.get(1, 3),
+			input.get(2, 0), input.get(2, 1), input.get(2, 2), input.get(2, 3),
+			input.get(3, 0), input.get(3, 1), input.get(3, 2), input.get(3, 3)
+		};
+		auto inversed_glm = glm::inverse(glm_mat);
+		
+		return math::mat4x4(
+			inversed_glm[0][0], inversed_glm[1][0], inversed_glm[2][0], inversed_glm[3][0],
+			inversed_glm[0][1], inversed_glm[1][1], inversed_glm[2][1], inversed_glm[3][1],
+			inversed_glm[0][2], inversed_glm[1][2], inversed_glm[2][2], inversed_glm[3][2],
+			inversed_glm[0][3], inversed_glm[1][3], inversed_glm[2][3], inversed_glm[3][3]
+		);
 	}
 }
 

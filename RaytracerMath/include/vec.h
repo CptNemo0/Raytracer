@@ -187,7 +187,7 @@ namespace math
 
 		friend std::ostream& operator<<(std::ostream& os, const vec<length, T>& v)
         {
-            os << "[";
+            os << "(";
             for (std::uint32_t i = 0; i < length; ++i)
             {
                 os << v.data_[i];
@@ -196,7 +196,7 @@ namespace math
                     os << ", ";
                 }
             }
-            os << "]";
+            os << ")";
             return os;
         }
 	};

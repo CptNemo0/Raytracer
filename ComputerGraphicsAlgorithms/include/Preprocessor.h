@@ -19,6 +19,7 @@ namespace rtr
 		math::mat4x4 model_matrix_ = math::mat4x4(1.0f, true);
 		math::mat4x4 view_matrix_ = math::mat4x4(1.0f, true);;
 		math::mat4x4 projection_matrix_ = math::mat4x4(1.0f, true);;
+		math::mat4x4 ti_model_matrix = math::mat4x4(1.0f, true);	
 
 		color4f background_color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
 		color4f color_ = color4f(0.0f, 0.0f, 0.0f, 255.0f);
@@ -28,7 +29,14 @@ namespace rtr
 		void View2Screen(math::vec3& position_) const;
 		void Local2Screen(math::vec3& position_) const;
 
+		void TriangleLocal2World(mesh::Triangle& triangle) const;
+
+		void TriangleWorld2View(mesh::Triangle& triangle) const;
+
+		void TriangleView2Screen(mesh::Triangle& triangle) const;
+
 		void TriangleLocal2Screen(mesh::Triangle& triangle) const;
+		math::vec3 FixNormal(const math::vec3& normal) const;
 	};
 }
 
