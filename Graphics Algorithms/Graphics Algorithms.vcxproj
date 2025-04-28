@@ -145,6 +145,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Rasterizer.h" />
+    <ClInclude Include="ReflectorLight.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="third_party\stb_image.h" />
     <ClInclude Include="third_party\stb_image_resize2.h" />

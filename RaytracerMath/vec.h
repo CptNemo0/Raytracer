@@ -195,6 +195,16 @@ namespace math
             return result;
         }
 
+        vec operator-() const
+        {
+            vec<length, T> result;
+            for (std::uint32_t i = 0; i < length; ++i)
+            {
+                result.data_[i] = -data_[i];
+            }
+            return result;
+        }
+
 		friend std::ostream& operator<<(std::ostream& os, const vec<length, T>& v)
         {
             os << "[";

@@ -7,25 +7,26 @@
 class DirectionalLight : public Light
 {
 public:
-	DirectionalLight(const math::vec3& direction, const math::vec3& ambient, const math::vec3& diffuse, const math::vec3& specular, float shininess)
-		: Light(direction, ambient, diffuse, specular, shininess), direction_(direction) {
-	}
-	math::vec3 calculate(const Vertex& fragment, VertexProcessor& vertexProcessor) const override
-	{
-		// Normalize the direction vector
-		math::vec3 lightDir = -math::normalized(direction_);
-		// Calculate the final color
-		math::vec3 ambientColor = ambient;
-		math::vec3 diffuseColor = diffuse * std::max(0.0f, math::dot(fragment.normal, lightDir));
-		math::vec3 specularColor = specular * std::pow(std::max(0.0f, math::dot(fragment.viewDir, lightDir)), shininess);
-		return ambientColor + diffuseColor + specularColor;
-	}
+    math::vec3 direction; // kierunek œwiat³a w uk³adzie œwiata
 
-private:
-	math::vec3 direction_;
+    DirectionalLight(const math::vec3& dir, const math::vec3& ambient, const math::vec3& diffuse, const math::vec3& specular, float shininess)
+        : Light(ambient, diffuse, specular, shininess), direction(math::normalized(dir))
+    {
+    }
 
+    math::vec3 calculate(const Fragment& fragment) const override
+    {
+        math::vec3 N = math::normalized(fragment.normal);
+        math::vec3 V = math::normalized(-fragment.position); // wektor widoku
 
+        math::vec3 L = math::normalized(-direction); // wektor œwiat³a
+        math::vec3 R = math::reflect(-L, N);
 
+        float diff = std::max(math::dot(N, L), 0.0f);
+        float spec = pow(std::max(math::dot(R, V), 0.0f), shininess);
+
+        return ambient + diffuse * diff + specular * spec;
+    }
 };
 
 #endif // !DIRECTIONALLIGHT_H
