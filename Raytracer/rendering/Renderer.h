@@ -45,7 +45,9 @@ namespace rendering
 			if (first_result.type == intersections::IntersectionType::MISS ||
 				(first_result.type == intersections::IntersectionType::HIT && first_result.distance > new_distance)) return true;
 			if (first_mat.material_type_ != MaterialType::REFRACTIVE) return false;
-			
+			if (!math::flt_eq(first_mat.refraction_index_, 1.0f)) return false;
+
+
 			auto refracted_dir = math::refract(ray.direction_, first_result.intersection_normal, first_mat.refraction_index_);
 			if (refracted_dir == math::vec3(0.0f)) return false;
 

@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 		40.0f,
 		rendering::MaterialType::REFRACTIVE
 	);
-	refractive->refraction_index_ =	1.02f;
+	refractive->refraction_index_ =	1.01f;
 
 
 	auto hihgly_refractive = std::make_shared<rendering::Material>(
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 		40.0f,
 		rendering::MaterialType::REFRACTIVE
 	);
-	hihgly_refractive->refraction_index_ = 1.1f;
+	hihgly_refractive->refraction_index_ = 0.25f;
 
 	auto left_plane = renderer.AddPlane(math::vec3(1.0f, 0.0f, 0.0f), math::vec3(-15.0f, 0.0f, 0.0f));
 	left_plane->material_ = blue_diffuse;
@@ -128,15 +128,15 @@ int main(int argc, char** argv)
 	top_plane->material_ = white_diffuse;
 
 	auto sphere_1 = renderer.AddSphere(math::vec3(-3.0f, -7.0f, 10.0f), 3.0f);
-	sphere_1->material_ = reflective;
+	sphere_1->material_ = shinny_green;
 	
 	auto sphere_2 = renderer.AddSphere(math::vec3(4.0f, -7.0f, 5.0f), 3.0f);
 	sphere_2->material_ = refractive;
 
 	auto sphere_3 = renderer.AddSphere(math::vec3(3.0f, -7.0f, 10.0f), 2.0f);
-	sphere_3->material_ = shinny_green;
+	sphere_3->material_ = reflective;
 	
-	auto sphere_4 = renderer.AddSphere(math::vec3(-5.0f, -7.0f, 2.0f), 3.0f);
+	auto sphere_4 = renderer.AddSphere(math::vec3(-3.5f, -7.0f, 2.0f), 3.0f);
 	sphere_4->material_ = hihgly_refractive;
 
 	// Start timing
