@@ -64,6 +64,11 @@ namespace mesh
            }  
 
 	       MakeNormals();
+
+           /*for (auto& vertex : vertices)
+           {
+               vertex.normal = math::normalized(vertex.position);
+           }*/
         }
 
 		void SetColors(const Color4 color)

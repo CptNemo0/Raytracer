@@ -11,6 +11,7 @@ public:
 	math::mat4x4 modelMatrix_;
 	math::mat4x4 viewMatrix_;
 	math::mat4x4 projectionMatrix_;
+	math::mat4x4 invModelMatrix_;
 
 	VertexProcessor()
 	{
@@ -75,6 +76,15 @@ public:
 		v0 = LocalToScreen(v0, width, height);
 		v1 = LocalToScreen(v1, width, height);
 		v2 = LocalToScreen(v2, width, height);
+	}
+
+	math::vec3 FixNormal(const math::vec3& normal) const
+	{
+		auto normal4 = math::vec4(normal.get(0), normal.get(1), normal.get(2), 1.0f);
+		math::transform(invModelMatrix_, normal4);
+		normal4[3] = 0.0f;
+		math::normalize(normal4);
+		return math::vec3(normal4.get(0), normal4.get(1), normal4.get(2));
 	}
 
 };

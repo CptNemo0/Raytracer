@@ -24,7 +24,7 @@ public:
     {
     }
 
-    virtual math::vec3 calculate(const Fragment& fragment) const = 0;
+    virtual math::vec3 calculate(const Fragment& fragment, const math::vec3& eyePosition, bool useBlinn = true) const = 0;
 };
 
 #endif // !LIGHT_H

@@ -57,6 +57,55 @@ namespace math
 		}
 		return return_value;
 	}
+	template <std::uint32_t S, typename T>
+	requires std::is_arithmetic_v<T>
+	inline mat<S, S, T> inverse(const mat<S, S, T>& matrix)
+	{
+		mat<S, S, T> result;
+		mat<S, S * 2, T> augmented;
+
+		for (std::uint32_t i = 0; i < S; i++)
+		{
+			for (std::uint32_t j = 0; j < S; j++)
+			{
+				augmented.get(j, i) = matrix.get(j, i);
+				augmented.get(j + S, i) = (i == j) ? 1 : 0;
+			}
+		}
+
+		for (std::uint32_t i = 0; i < S; i++)
+		{
+			T diag = augmented.get(i, i);
+			if (diag == 0)
+				throw std::runtime_error("Matrix is singular and cannot be inverted.");
+
+			for (std::uint32_t j = 0; j < S * 2; j++)
+			{
+				augmented.get(j, i) /= diag;
+			}
+
+			for (std::uint32_t k = 0; k < S; k++)
+			{
+				if (k == i) continue;
+
+				T factor = augmented.get(i, k);
+				for (std::uint32_t j = 0; j < S * 2; j++)
+				{
+					augmented.get(j, k) -= factor * augmented.get(j, i);
+				}
+			}
+		}
+
+		for (std::uint32_t i = 0; i < S; i++)
+		{
+			for (std::uint32_t j = 0; j < S; j++)
+			{
+				result.get(j, i) = augmented.get(j + S, i);
+			}
+		}
+
+		return result;
+	}
 }
 
 #endif // !MATH_MAT_OPERATIONS

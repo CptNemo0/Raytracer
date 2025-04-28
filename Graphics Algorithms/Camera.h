@@ -14,9 +14,12 @@ public:
 	{
 		LookAt(position_, forward_, up_);
 		projectionMatrix_ = math::projection_matrix(fov_, aspect_, near_, far_);
+		UpdateViewMatrix();
 	}
 
 	void SetPosition(const math::vec3& position) { position_ = position; }
+	math::vec3 GetPosition() const { return position_; }
+
 	void SetTarget(const math::vec3& target) { forward_ = target; }
 	void SetUp(const math::vec3& up) { up_ = up; }
 	const math::mat4x4& GetViewMatrix() const { return viewMatrix_; }

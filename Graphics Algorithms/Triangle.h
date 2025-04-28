@@ -55,6 +55,23 @@ public:
 		color2_ = color2;
 	}
 
+    void SetColorsf(const math::vec3& color0, const math::vec3& color1, const math::vec3& color2)  
+    {  
+       color0_ = Color4(static_cast<unsigned char>(color0[0] * 255.0f),  
+                        static_cast<unsigned char>(color0[1] * 255.0f),
+                        static_cast<unsigned char>(color0[2] * 255.0f),
+                        255);  
+
+       color1_ = Color4(static_cast<unsigned char>(color1[0] * 255.0f),
+                        static_cast<unsigned char>(color1[1] * 255.0f),
+                        static_cast<unsigned char>(color1[2] * 255.0f),
+                        255);  
+
+       color2_ = Color4(static_cast<unsigned char>(color2[0] * 255.0f),
+                        static_cast<unsigned char>(color2[1] * 255.0f),
+                        static_cast<unsigned char>(color2[2] * 255.0f),
+                        255);  
+    }
 	void SetColor0(const Color4& color) { color0_ = color; }
 	void SetColor1(const Color4& color) { color1_ = color; }
 	void SetColor2(const Color4& color) { color2_ = color; }
@@ -170,10 +187,10 @@ public:
 						buffer.SetColorDepth(i, j, z);
 
 						Color4 color;
-						color[0] = static_cast<unsigned char>(lambda1 * color0_[0] + lambda2 * color1_[0] + lambda3 * color2_[0]);
-						color[1] = static_cast<unsigned char>(lambda1 * color0_[1] + lambda2 * color1_[1] + lambda3 * color2_[1]);
-						color[2] = static_cast<unsigned char>(lambda1 * color0_[2] + lambda2 * color1_[2] + lambda3 * color2_[2]);
-						color[3] = static_cast<unsigned char>(lambda1 * color0_[3] + lambda2 * color1_[3] + lambda3 * color2_[3]);
+						color[0] = (lambda1 * color0_[0] + lambda2 * color1_[0] + lambda3 * color2_[0]);
+						color[1] = (lambda1 * color0_[1] + lambda2 * color1_[1] + lambda3 * color2_[1]);
+						color[2] = (lambda1 * color0_[2] + lambda2 * color1_[2] + lambda3 * color2_[2]);
+						color[3] = (lambda1 * color0_[3] + lambda2 * color1_[3] + lambda3 * color2_[3]);
 
 						buffer.SetColor(i, j, color);
 					}

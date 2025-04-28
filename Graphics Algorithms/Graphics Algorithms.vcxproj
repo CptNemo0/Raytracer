@@ -156,6 +156,9 @@
     <ClInclude Include="VertexProcessor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RaytracerMath\RaytracerMath.vcxproj">
+      <Project>{3cb216bf-8a77-4053-a2e2-178253fff1d9}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Raytracer\Raytracer.vcxproj">
       <Project>{c4d54583-4fbf-4ad8-bf15-0f4027079d52}</Project>
     </ProjectReference>

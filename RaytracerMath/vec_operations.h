@@ -57,7 +57,10 @@ namespace math
 	inline void normalize(vec<l, T>& v)
 	{
 		auto len = length(v);
-		v /= len;
+		if (len > 0)
+			v = v / len;
+		else
+			v = vec<l, T>(0);
 	}
 
 	template <std::uint32_t l, typename T>
@@ -65,8 +68,16 @@ namespace math
 	inline vec<l, T> normalized(const vec<l, T>& v)
 	{
 		auto len = length(v);
-		auto inv_len = 1.0f / len;
-		return v * inv_len;
+		if (len > 0)
+		{
+			auto inv_len = 1.0f / len;
+			return v * inv_len;
+		}
+		else
+		{
+			return vec<l, T>(0);
+		}
+		
 	}
 
 	template <std::uint32_t l, typename T>
@@ -87,11 +98,7 @@ namespace math
 		return to_degrees(angle_rad(a, b));
 	}
 
-	template<typename T>
-	vec<3, T> reflect(const vec<3, T>& I, const vec<3, T>& N)
-	{
-		return I - 2.0f * dot(N, I) * N;
-	}
+	
 }
 
 #endif // !MATH_VEC_OPERATIONS_H

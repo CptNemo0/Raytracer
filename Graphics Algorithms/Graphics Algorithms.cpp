@@ -7,22 +7,36 @@
 #include "Sphere.h"
 #include "Cone.h"
 #include "Torus.h"
+#include "PointLight.h"
+#include "DirectionalLight.h"
+#include "vec.h"
+#include "transformations.h"
 #include "raytracer_math.h"
 
 int main()
 {
 	buffer::ColorBuffer colorBuffer(2000, 2000);
-	Color4 color(0, 255, 0, 255);
+	Color4 color(30, 30, 125, 255);
 	colorBuffer.fillColorBuffer(color);
 	Color4 colorT(255, 0, 255, 255);
 	Color4 colorB(0, 0, 255, 255);
+	Color4 colorG(0, 255, 0, 255);
 	
 	Camera camera(math::vec3(-5.0f, 0.0f, -3.0f),
 		math::vec3(0.0f, 0.0f, 1.0f),
 		math::vec3(0.0f, 1.0f, 0.0f), 
 		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
 	auto vertexProcessor = std::make_shared<VertexProcessor>();
-	
+
+	// 2. Utwórz światło (DirectionalLight)
+	math::vec3 lightDirection = math::normalized(math::vec3(1.0f, 0.0f, -0.5f));
+	math::vec3 ambientLight(1.0f, 0.2f, 0.2f);
+	math::vec3 diffuseLight(0.0f, 0.0f, 1.0f);
+	math::vec3 specularLight(0.0f, 1.0f, 0.0f);
+	float shininess = 4.0f;
+
+	auto dirLight = std::make_shared<DirectionalLight>(lightDirection, ambientLight, diffuseLight, specularLight, shininess);
+	auto pointLight = std::make_shared<PointLight>(math::vec3(-1.0f, -1.0f, -1.0f), ambientLight, diffuseLight, specularLight, shininess);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
 	camera.UpdateViewMatrix();
@@ -38,6 +52,10 @@ int main()
 	vertexProcessor.projectionMatrix_.log()*/;
 
 	Rasterizer rasterizer(colorBuffer, vertexProcessor);
+	rasterizer.setEyePosition(camera.GetPosition());
+	//rasterizer.addLight(dirLight);
+	rasterizer.addLight(pointLight);
+
 
 	/*math::vec3 v0_1(0.0f, -0.5f, 1.0f);
 	math::vec3 v1_1(-0.5f, 0.0f, 1.0f);
@@ -83,15 +101,22 @@ int main()
 
 
 	mesh::Sphere sphere = mesh::Sphere(10, 10, 1.0f);
+	sphere.SetMeshColors(colorT);
+	
+
 	rasterizer.rasterizeMesh(sphere);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
+	vertexProcessor->invModelMatrix_ = math::transposed(math::inverse(vertexProcessor->modelMatrix_));
+
 	mesh::Cone cone = mesh::Cone(15, 2.0f, 3.0f);
+	cone.SetMeshColors(colorB);
 	math::mat4x4 translation = math::translation_matrix(2.5f, 3.0f, 5.0f);
 	vertexProcessor->modelMatrix_ = translation;
-	rasterizer.rasterizeMesh(cone);
+	rasterizer.RasterizeMeshLightVertex(cone);
 
 	mesh::Torus torus = mesh::Torus(5, 5, 3.0f, 1.0f);
+	torus.SetMeshColors(colorG);
 	math::mat4x4 T = math::translation_matrix(3.5f, 3.0f, -3.0f);
 	math::mat4x4 R = math::rotation_matrix_z_deg(60.0f);
 
