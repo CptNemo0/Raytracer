@@ -17,7 +17,7 @@ int main()
 	Color4 colorT(255, 0, 255, 255);
 	Color4 colorB(0, 0, 255, 255);
 	
-	Camera camera(math::vec3(-5.0f, 0.0f, 5.0f),
+	Camera camera(math::vec3(-5.0f, 0.0f, -3.0f),
 		math::vec3(0.0f, 0.0f, 1.0f),
 		math::vec3(0.0f, 1.0f, 0.0f), 
 		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
@@ -91,8 +91,13 @@ int main()
 	vertexProcessor->modelMatrix_ = translation;
 	rasterizer.rasterizeMesh(cone);
 
-	mesh::Torus torus = mesh::Torus(10, 10, 2.0f, 0.5f);
-	vertexProcessor->modelMatrix_ = math::translation_matrix(1.5f, 2.0f, 1.0f);
+	mesh::Torus torus = mesh::Torus(5, 5, 3.0f, 1.0f);
+	math::mat4x4 T = math::translation_matrix(3.5f, 3.0f, -3.0f);
+	math::mat4x4 R = math::rotation_matrix_z_deg(60.0f);
+
+	vertexProcessor->modelMatrix_ = math::matmul(T, R);
+
+
 	rasterizer.rasterizeMesh(torus);
 
 

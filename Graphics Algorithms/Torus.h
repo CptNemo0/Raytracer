@@ -46,13 +46,13 @@ namespace mesh
 					float y = minorRadius_ * sinPhi;
 					float z = (majorRadius_ + minorRadius_ * cosPhi) * sinTheta;
 
-					float nx = cosPhi * cosTheta;
-					float ny = sinPhi;
-					float nz = cosPhi * sinTheta;
+					float nx = x - majorRadius_ * cosTheta;
+					float ny = y;
+					float nz = z - majorRadius_ * sinTheta;
 
-					math::vec3 normal(nx, ny, nz);
+					math::vec3 n(nx, ny, nz);
+					math::vec3 normal = math::normalized(n);
 
-					math::normalize(normal);
 					vertices.push_back({ {x, y, z}, normal });
 				}
 			}
@@ -66,8 +66,8 @@ namespace mesh
 					uint32_t c = a + 1;
 					uint32_t d = b + 1;
 
-					indices.push_back({ a, b, c });
-					indices.push_back({ c, b, d });
+					indices.push_back({ a, c, b });
+					indices.push_back({ c, d, b });
 				}
 			}
 

@@ -86,6 +86,14 @@ namespace math
 	{
 		return to_degrees(angle_rad(a, b));
 	}
+
+	template <std::uint32_t l, typename T>
+		requires std::is_arithmetic_v<T>
+	inline vec<l, T> reflect(const vec<l, T>& incident, const vec<l, T>& normal)
+	{
+		auto n = normalized(normal);
+		return incident - n * static_cast<T>(2) * dot(incident, n);
+	}
 }
 
 #endif // !MATH_VEC_OPERATIONS_H
