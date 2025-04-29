@@ -24,7 +24,7 @@ int main()
 	Color4 colorG(0, 255, 0, 255);
 	
 	Camera camera(math::vec3(-5.0f, 0.0f, 0.0f),
-		math::vec3(0.0f, 0.0f, 1.0f),
+		math::vec3(1.0f, 0.0f, 0.0f),
 		math::vec3(0.0f, 1.0f, 0.0f), 
 		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
 	auto vertexProcessor = std::make_shared<VertexProcessor>();
@@ -106,7 +106,7 @@ int main()
 	rasterizer.rasterize(triangle3);*/
 
 
-	mesh::Sphere sphere = mesh::Sphere(12, 12, 1.0f);
+	/*mesh::Sphere sphere = mesh::Sphere(12, 12, 1.0f);
 	sphere.SetMeshColors(colorT);
 	
 
@@ -131,8 +131,46 @@ int main()
 	vertexProcessor->modelMatrix_ = math::matmul(T, R);
 
 
-	rasterizer.rasterizeMesh(torus);
+	rasterizer.rasterizeMesh(torus);*/
 
+	
+    mesh::Sphere sphere1 = mesh::Sphere(12, 12, 1.0f);
+    sphere1.SetMeshColors(colorT);
+    math::mat4x4 translation1 = math::translation_matrix(0.0f, 3.0f, 0.0f);
+    vertexProcessor->modelMatrix_ = translation1;
+    rasterizer.RasterizeMeshVertexLight(sphere1);
+
+    mesh::Sphere sphere2 = mesh::Sphere(12, 12, 1.0f);
+    sphere2.SetMeshColors(colorB);
+    math::mat4x4 translation2 = math::translation_matrix(3.0f, 3.0f, 0.0f);
+    vertexProcessor->modelMatrix_ = translation2;
+    rasterizer.RasterizeMeshVertexLight(sphere2);
+
+    mesh::Sphere sphere3 = mesh::Sphere(12, 12, 1.0f);
+    sphere3.SetMeshColors(colorG);
+    math::mat4x4 translation3 = math::translation_matrix(6.0f, 3.0f, 0.0f);
+    vertexProcessor->modelMatrix_ = translation3;
+    rasterizer.RasterizeMeshVertexLight(sphere3);
+
+	///////
+
+    mesh::Sphere sphere4 = mesh::Sphere(12, 12, 1.0f);
+    sphere4.SetMeshColors(colorT);
+    math::mat4x4 translation4 = math::translation_matrix(0.0f, 0.0f, 0.0f);
+    vertexProcessor->modelMatrix_ = translation4;
+    rasterizer.ResterizeMeshPixelLight(sphere4);
+
+    mesh::Sphere sphere5 = mesh::Sphere(12, 12, 1.0f);
+    sphere5.SetMeshColors(colorB);
+    math::mat4x4 translation5 = math::translation_matrix(3.0f, 0.0f, 0.0f);
+    vertexProcessor->modelMatrix_ = translation5;
+    rasterizer.ResterizeMeshPixelLight(sphere5);
+
+    mesh::Sphere sphere6 = mesh::Sphere(12, 12, 1.0f);
+    sphere6.SetMeshColors(colorG);
+    math::mat4x4 translation6 = math::translation_matrix(6.0f, 0.0f, 0.0f);
+    vertexProcessor->modelMatrix_ = translation6;
+    rasterizer.ResterizeMeshPixelLight(sphere6);
 
 	colorBuffer.generateBMP("test.bmp");
 	return 0;
