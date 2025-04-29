@@ -48,6 +48,11 @@ public:
        triangle.drawTriangle(buffer_, *vertexProcessor_);
    };
 
+   void rasterizePixelLight(Triangle& triangle, std::vector<std::shared_ptr<Light>> lights, std::vector<math::vec3> normal) 
+   {
+	   triangle.drawTrianglePixelLight(buffer_, *vertexProcessor_, lights, normal);
+   }
+
    void rasterizeMesh(const mesh::Mesh& mesh)  
    {  
 	   
@@ -65,6 +70,30 @@ public:
 			   Color4(0, 0, 255, 255));
           rasterize(triangle);  
       }  
+   };
+
+   void ResterizeMeshPixelLight(const mesh::Mesh& mesh)
+   {
+	   for (int i = 0; i < mesh.indices.size(); i++) {
+		   math::vec3 v0 = mesh.vertices[mesh.indices[i][0]].position;
+		   math::vec3 v1 = mesh.vertices[mesh.indices[i][1]].position;
+		   math::vec3 v2 = mesh.vertices[mesh.indices[i][2]].position;
+
+		   math::vec3 normal = mesh.vertices[mesh.indices[i][0]].normal;
+		   math::vec3 normal1 = mesh.vertices[mesh.indices[i][1]].normal;
+		   math::vec3 normal2 = mesh.vertices[mesh.indices[i][2]].normal;
+
+		   std::vector<math::vec3> normals;
+		   normals.push_back(normal);
+		   normals.push_back(normal1);
+		   normals.push_back(normal2);
+
+		   Triangle triangle(v0, v1, v2);
+		   triangle.SetColors(Color4(255, 0, 0, 255),
+			   Color4(0, 255, 0, 255),
+			   Color4(0, 0, 255, 255));
+		   rasterizePixelLight(triangle, lights, normals);
+	   }
    };
 
    void RasterizeMeshLightVertex(const mesh::Mesh& mesh)
@@ -108,6 +137,7 @@ public:
            rasterize(triangle);
        }
    }
+
 
    void ToScreenCoordinates(Triangle& triangle)
    {

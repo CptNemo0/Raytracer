@@ -12,6 +12,7 @@ public:
 	math::mat4x4 viewMatrix_;
 	math::mat4x4 projectionMatrix_;
 	math::mat4x4 invModelMatrix_;
+	math::vec3 eyePosition_;
 
 	VertexProcessor()
 	{

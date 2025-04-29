@@ -6,6 +6,8 @@
 #include "VertexProcessor.h"
 #include "algorithm"
 #include "Vertex.h"
+#include "Light.h"
+#include "vector"
 
 class Triangle
 {
@@ -75,6 +77,16 @@ public:
 	void SetColor0(const Color4& color) { color0_ = color; }
 	void SetColor1(const Color4& color) { color1_ = color; }
 	void SetColor2(const Color4& color) { color2_ = color; }
+
+	Color4 FloatToColor4(const math::vec3& color)
+	{
+		return Color4(
+			static_cast<unsigned char>(std::clamp(color[0] * 255.0f, 0.0f, 255.0f)),
+			static_cast<unsigned char>(std::clamp(color[1] * 255.0f, 0.0f, 255.0f)),
+			static_cast<unsigned char>(std::clamp(color[2] * 255.0f, 0.0f, 255.0f)),
+			255
+		);
+	}
 
 	bool isLeft(const math::vec2& v1, const math::vec2& v2, const math::vec2& p) const
 	{
@@ -193,6 +205,61 @@ public:
 						color[3] = (lambda1 * color0_[3] + lambda2 * color1_[3] + lambda3 * color2_[3]);
 
 						buffer.SetColor(i, j, color);
+					}
+				}
+			}
+		}
+	}
+
+	void drawTrianglePixelLight(buffer::ColorBuffer& buffer, VertexProcessor& processor, std::vector<std::shared_ptr<Light>> lights, std::vector<math::vec3> N)
+	{
+		processor.TriangleLocalToScreen(v0_, v1_, v2_, buffer.width_, buffer.height_);
+
+		float minx = std::min({ v0_[0], v1_[0], v2_[0] });
+		float maxx = std::max({ v0_[0], v1_[0], v2_[0] });
+		float miny = std::min({ v0_[1], v1_[1], v2_[1] });
+		float maxy = std::max({ v0_[1], v1_[1], v2_[1] });
+
+		minx = std::fmaxf(minx, 0);
+		maxx = std::fminf(maxx, buffer.GetWidth() - 1);
+		miny = std::fmaxf(miny, 0);
+		maxy = std::fminf(maxy, buffer.GetHeight() - 1);
+
+		float denom = (v1_[1] - v2_[1]) * (v0_[0] - v2_[0]) + (v2_[0] - v1_[0]) * (v0_[1] - v2_[1]);
+
+		for (int i = minx; i <= maxx; i++) {
+			for (int j = miny; j <= maxy; j++) {
+				math::vec2 p = { i + 0.5f, j + 0.5f };
+				if (isInsideTopLeft(p))
+				{
+					float lambda1 = ((v1_[1] - v2_[1]) * (p[0] - v2_[0]) + (v2_[0] - v1_[0]) * (p[1] - v2_[1])) / denom;
+					float lambda2 = ((v2_[1] - v0_[1]) * (p[0] - v2_[0]) + (v0_[0] - v2_[0]) * (p[1] - v2_[1])) / denom;
+					float lambda3 = 1.0f - lambda1 - lambda2;
+
+					float z = lambda1 * v0_[2] + lambda2 * v1_[2] + lambda3 * v2_[2];
+
+					if (z > buffer.GetColorDepth(i, j)) {
+						buffer.SetColorDepth(i, j, z);
+
+						math::vec3 position = v0_ * lambda1 + v1_ * lambda2 + v2_ * lambda3;
+
+						math::vec3 normal = N[0] * lambda1 + N[1] * lambda2 + N[2] * lambda3;
+
+						math::vec3 color(0.0f, 0.0f, 0.0f);
+
+						Fragment fragment(position, normal);
+						for (auto& light : lights)
+						{
+							color += light->calculate(fragment, processor.eyePosition_);
+						}
+
+						color[0] = std::clamp(color[0], 0.0f, 255.0f);
+						color[1] = std::clamp(color[1], 0.0f, 255.0f);
+						color[2] = std::clamp(color[2], 0.0f, 255.0f);
+
+						Color4 color4 = FloatToColor4(color);
+
+						buffer.SetColor(i, j, color4);
 					}
 				}
 			}

@@ -27,6 +27,7 @@ int main()
 		math::vec3(0.0f, 1.0f, 0.0f), 
 		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
 	auto vertexProcessor = std::make_shared<VertexProcessor>();
+	vertexProcessor->eyePosition_ = camera.GetPosition();
 
 	// 2. Utwórz światło (DirectionalLight)
 	math::vec3 lightDirection = math::normalized(math::vec3(1.0f, 0.0f, -0.5f));
@@ -113,7 +114,7 @@ int main()
 	cone.SetMeshColors(colorB);
 	math::mat4x4 translation = math::translation_matrix(2.5f, 3.0f, 5.0f);
 	vertexProcessor->modelMatrix_ = translation;
-	rasterizer.RasterizeMeshLightVertex(cone);
+	rasterizer.ResterizeMeshPixelLight(cone);
 
 	mesh::Torus torus = mesh::Torus(5, 5, 3.0f, 1.0f);
 	torus.SetMeshColors(colorG);
