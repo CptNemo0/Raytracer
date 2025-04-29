@@ -9,6 +9,7 @@
 #include "Torus.h"
 #include "PointLight.h"
 #include "DirectionalLight.h"
+#include "ReflectorLight.h"
 #include "vec.h"
 #include "transformations.h"
 #include "raytracer_math.h"
@@ -35,9 +36,11 @@ int main()
 	math::vec3 diffuseLight(0.0f, 0.0f, 1.0f);
 	math::vec3 specularLight(0.0f, 1.0f, 0.0f);
 	float shininess = 4.0f;
+	float cutoffAngle = 50.0f;
 
 	auto dirLight = std::make_shared<DirectionalLight>(lightDirection, ambientLight, diffuseLight, specularLight, shininess);
 	auto pointLight = std::make_shared<PointLight>(math::vec3(-1.0f, -1.0f, -1.0f), ambientLight, diffuseLight, specularLight, shininess);
+	auto reflectorLight = std::make_shared<ReflectorLight>(math::vec3(0.0f, 0.0f, 1.0f), ambientLight, diffuseLight, specularLight, shininess, cutoffAngle);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
 	camera.UpdateViewMatrix();
@@ -55,7 +58,7 @@ int main()
 	Rasterizer rasterizer(colorBuffer, vertexProcessor);
 	rasterizer.setEyePosition(camera.GetPosition());
 	//rasterizer.addLight(dirLight);
-	rasterizer.addLight(pointLight);
+	rasterizer.addLight(reflectorLight);
 
 
 	/*math::vec3 v0_1(0.0f, -0.5f, 1.0f);
@@ -114,7 +117,7 @@ int main()
 	cone.SetMeshColors(colorB);
 	math::mat4x4 translation = math::translation_matrix(2.5f, 3.0f, 5.0f);
 	vertexProcessor->modelMatrix_ = translation;
-	rasterizer.ResterizeMeshPixelLight(cone);
+	rasterizer.RasterizeMeshVertexLight(cone);
 
 	mesh::Torus torus = mesh::Torus(5, 5, 3.0f, 1.0f);
 	torus.SetMeshColors(colorG);

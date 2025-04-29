@@ -96,7 +96,7 @@ public:
 	   }
    };
 
-   void RasterizeMeshLightVertex(const mesh::Mesh& mesh)
+   void RasterizeMeshVertexLight(const mesh::Mesh& mesh)
    {
        std::vector<math::vec3> vColors;
        vColors.reserve(mesh.indices.size());
