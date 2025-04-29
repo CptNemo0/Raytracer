@@ -23,7 +23,7 @@ int main()
 	Color4 colorB(0, 0, 255, 255);
 	Color4 colorG(0, 255, 0, 255);
 	
-	Camera camera(math::vec3(-5.0f, 0.0f, -3.0f),
+	Camera camera(math::vec3(-5.0f, 0.0f, 0.0f),
 		math::vec3(0.0f, 0.0f, 1.0f),
 		math::vec3(0.0f, 1.0f, 0.0f), 
 		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
@@ -31,16 +31,17 @@ int main()
 	vertexProcessor->eyePosition_ = camera.GetPosition();
 
 	// 2. Utwórz światło (DirectionalLight)
-	math::vec3 lightDirection = math::normalized(math::vec3(1.0f, 0.0f, -0.5f));
-	math::vec3 ambientLight(1.0f, 0.2f, 0.2f);
-	math::vec3 diffuseLight(0.0f, 0.0f, 1.0f);
-	math::vec3 specularLight(0.0f, 1.0f, 0.0f);
+	math::vec3 lightDirection = math::normalized(math::vec3(1.0f, -2.0f, 0.5f));
+	math::vec3 ambientLight(0.0f, 0.3f, 0.0f);
+	math::vec3 diffuseLight(0.0f, 0.3f, 0.0f);
+	math::vec3 specularLight(0.5f, 0.5f, 0.5f);
 	float shininess = 4.0f;
 	float cutoffAngle = 50.0f;
+	float outerCutoffAngle = 70.0f;
 
 	auto dirLight = std::make_shared<DirectionalLight>(lightDirection, ambientLight, diffuseLight, specularLight, shininess);
-	auto pointLight = std::make_shared<PointLight>(math::vec3(-1.0f, -1.0f, -1.0f), ambientLight, diffuseLight, specularLight, shininess);
-	auto reflectorLight = std::make_shared<ReflectorLight>(math::vec3(0.0f, 0.0f, 1.0f), ambientLight, diffuseLight, specularLight, shininess, cutoffAngle);
+	auto pointLight = std::make_shared<PointLight>(math::vec3(1.5f, 4.0f, 2.0f), ambientLight, diffuseLight, specularLight, shininess);
+	auto reflectorLight = std::make_shared<ReflectorLight>(math::vec3(5.5f, -1.0f, 0.0f), lightDirection,cutoffAngle, outerCutoffAngle, ambientLight, diffuseLight, specularLight, shininess);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
 	camera.UpdateViewMatrix();
@@ -58,6 +59,7 @@ int main()
 	Rasterizer rasterizer(colorBuffer, vertexProcessor);
 	rasterizer.setEyePosition(camera.GetPosition());
 	//rasterizer.addLight(dirLight);
+	//rasterizer.addLight(pointLight);
 	rasterizer.addLight(reflectorLight);
 
 
@@ -104,11 +106,11 @@ int main()
 	rasterizer.rasterize(triangle3);*/
 
 
-	mesh::Sphere sphere = mesh::Sphere(10, 10, 1.0f);
+	mesh::Sphere sphere = mesh::Sphere(12, 12, 1.0f);
 	sphere.SetMeshColors(colorT);
 	
 
-	rasterizer.rasterizeMesh(sphere);
+	rasterizer.RasterizeMeshVertexLight(sphere);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
 	vertexProcessor->invModelMatrix_ = math::transposed(math::inverse(vertexProcessor->modelMatrix_));
@@ -116,10 +118,12 @@ int main()
 	mesh::Cone cone = mesh::Cone(15, 2.0f, 3.0f);
 	cone.SetMeshColors(colorB);
 	math::mat4x4 translation = math::translation_matrix(2.5f, 3.0f, 5.0f);
-	vertexProcessor->modelMatrix_ = translation;
+	math::mat4x4 rotation = math::rotation_matrix_x_deg(-15.0f);
+	
+	vertexProcessor->modelMatrix_ = math::matmul(translation, rotation);
 	rasterizer.RasterizeMeshVertexLight(cone);
 
-	mesh::Torus torus = mesh::Torus(5, 5, 3.0f, 1.0f);
+	mesh::Torus torus = mesh::Torus(8, 8, 3.0f, 1.0f);
 	torus.SetMeshColors(colorG);
 	math::mat4x4 T = math::translation_matrix(3.5f, 3.0f, -3.0f);
 	math::mat4x4 R = math::rotation_matrix_z_deg(60.0f);
