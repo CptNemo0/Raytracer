@@ -110,7 +110,7 @@ int main()
 	sphere.SetMeshColors(colorT);
 	
 
-	rasterizer.RasterizeMeshVertexLight(sphere);
+	rasterizer.ResterizeMeshPixelLight(sphere);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
 	vertexProcessor->invModelMatrix_ = math::transposed(math::inverse(vertexProcessor->modelMatrix_));
