@@ -1,5 +1,5 @@
 #include "mesh/ProceduralMesh.h"
-
+#include <cmath>
 namespace mesh
 {
 	void ProceduralMesh::RecalculateNormals()
@@ -27,6 +27,19 @@ namespace mesh
 		for (auto& vertex : vertices_)
 		{
 			math::normalize(vertex.normal_);
+		}
+	}
+
+	void ProceduralMesh::RecalculateUVs()
+	{
+		for (auto& vertex : vertices_)
+		{
+			const auto S = 1.0f / 5.0f;
+
+			const auto u = S * vertex.position_[0];
+			const auto v = S * vertex.position_[2];
+
+			vertex.uv_ = math::vec2(u, v);
 		}
 	}
 }

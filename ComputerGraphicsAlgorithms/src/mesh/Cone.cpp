@@ -11,21 +11,27 @@ namespace mesh
 		vertices_.reserve(vertex_count);
 		indices_.reserve(index_count);
 
-		vertices_.emplace_back(0.0f, 0.0f, 0.0f);    //0 - bottom center 
-		vertices_.emplace_back(0.0f, height_, 0.0f); // 1 - top apex
+		vertices_.emplace_back(0.0f, -height_ * 0.5f, 0.0f);    //0 - bottom center 
+		vertices_.emplace_back(0.0f, height_ * 0.5f, 0.0f); // 1 - top apex
+		vertices_[0].uv_ = math::vec2(0.5f, 0.0f);
+		vertices_[1].uv_ = math::vec2(0.5f, 1.0f);
 
 		const float angle_step = math::two_pi / static_cast<float>(subdivisions_);
-
+		auto u_substep = 1.0f / subdivisions_;
+		
 		for (std::uint32_t i = 0; i < subdivisions_; ++i)
 		{
 			const float angle = i * angle_step;
 			const float x = radius_ * std::cos(angle);
-			const float y = 0.0f;
+			const float y = -height_ * 0.5f;
 			const float z = radius_ * std::sin(angle);
-			vertices_.emplace_back(x, y, z); // ring vertices
+
+			math::vec3 position(x, y, z);
+			math::vec3 normal(0.0f, 0.0f, 0.0f);
+			math::vec2 uv(u_substep * static_cast<float>(i), height_ / (radius_ + height_));
+
+			vertices_.emplace_back(std::move(position), std::move(normal), std::move(uv)); // ring vertices
 		}
-
-
 
 		for (std::uint32_t i = 2; i < vertex_count; ++i)
 		{
@@ -41,7 +47,7 @@ namespace mesh
 		}
 
 		RecalculateNormals();
-
+		//RecalculateUVs();
 		vertices_[0].normal_ = math::vec3(0.0f, -1.0f, 0.0f);
 		vertices_[1].normal_ = math::vec3(0.0f, 1.0f, 0.0f);
 	}

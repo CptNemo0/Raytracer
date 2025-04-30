@@ -83,6 +83,12 @@ namespace rtr
 
 		void DrawTriangleLightPixel(const mesh::Triangle& input, const math::ivec3 vidx, const std::vector<math::vec3>& positions, const std::vector<math::vec3>& normals);
 		void DrawMeshLightPixel(const mesh::ProceduralMesh& mesh);
+
+		void DrawTriangleTextured(const mesh::Triangle& input);
+		void DrawMeshTextured(const mesh::ProceduralMesh& mesh);
+
+		void DrawTriangleLightPixelTextured(const mesh::Triangle& input, const math::ivec3 vidx, const std::vector<math::vec3>& positions, const std::vector<math::vec3>& normals);
+		void DrawMeshLightPixelTextured(const mesh::ProceduralMesh& mesh);
 	};
 }
 

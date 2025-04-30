@@ -82,6 +82,11 @@ namespace rtr
         math::normalize(normal4);
 		return math::vec3(normal4.get(0), normal4.get(1), normal4.get(2));
     }
+    color3f Preprocessor::SampleTexture(const math::vec2& uv) const
+    {
+        if (!texture_) return default_texture_.Sample(uv);
+        return texture_->Sample(uv);
+    }
 }
 
 

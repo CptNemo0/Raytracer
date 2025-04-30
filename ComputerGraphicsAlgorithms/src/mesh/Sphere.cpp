@@ -7,6 +7,9 @@ void mesh::Sphere::GenerateMesh()
 	vertices_.reserve(vertex_count);
 	indices_.reserve(index_count);
 
+	auto subsetp_u = 1.0f / static_cast<float>(vertical_subdivisions_);
+	auto subsetp_v = 1.0f / static_cast<float>(horizontal_subdivisions_);
+
 	for (std::uint32_t i = 0; i <= vertical_subdivisions_; ++i)
 	{
 		const float theta = static_cast<float>(i) / static_cast<float>(vertical_subdivisions_) * math::pi;
@@ -20,7 +23,11 @@ void mesh::Sphere::GenerateMesh()
 			const float x = radius_ * sin_theta * cos_phi;
 			const float y = radius_ * cos_theta;
 			const float z = radius_ * sin_theta * sin_phi;
-			vertices_.emplace_back(x, y, z);
+
+			math::vec3 position(x, y, z);
+			math::vec3 normal = math::normalized(position);
+			math::vec2 uv(subsetp_u * static_cast<float>(j), subsetp_v * static_cast<float>(i));
+			vertices_.emplace_back(std::move(position), std::move(normal), std::move(uv));
 		}
 	}
 
@@ -40,6 +47,6 @@ void mesh::Sphere::GenerateMesh()
 	{
 		vertex.normal_ = math::normalized(vertex.position_);
 	}
-
+	//RecalculateUVs();
 	//RecalculateNormals();
 }

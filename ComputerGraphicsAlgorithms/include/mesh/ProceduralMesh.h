@@ -17,6 +17,7 @@ namespace mesh
 
 	public:
 		void RecalculateNormals();
+		void RecalculateUVs();
 		virtual void GenerateMesh() = 0;
 	};
 }
