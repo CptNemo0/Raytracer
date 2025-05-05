@@ -18,9 +18,10 @@ public:
     math::vec3 diffuse;
     math::vec3 specular;
     float shininess;
+    float intensitivity;
 
-    Light(const math::vec3& ambient, const math::vec3& diffuse, const math::vec3& specular, float shininess)
-        : ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess)
+    Light(const math::vec3& ambient, const math::vec3& diffuse, const math::vec3& specular, float shininess, float intensitivity =1)
+        : ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess), intensitivity(intensitivity)
     {
     }
 

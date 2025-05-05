@@ -23,30 +23,31 @@ int main()
 	Color4 colorB(0, 0, 255, 255);
 	Color4 colorG(0, 255, 0, 255);
 	
-	Camera camera(math::vec3(-5.0f, 0.0f, 0.0f),
+	Camera camera(math::vec3(0.0f, 0.0f, 0.0f),
 		math::vec3(1.0f, 0.0f, 0.0f),
 		math::vec3(0.0f, 1.0f, 0.0f), 
-		90.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
+		80.0f, colorBuffer.width_ / colorBuffer.height_, 0.1f, 1000.0f);
 	auto vertexProcessor = std::make_shared<VertexProcessor>();
 	vertexProcessor->eyePosition_ = camera.GetPosition();
 
 	// 2. Utwórz światło (DirectionalLight)
-	math::vec3 lightDirection = math::normalized(math::vec3(1.0f, -2.0f, 0.5f));
+	math::vec3 lightDirection = math::normalized(math::vec3(0.0f, 0.5f, 1.0f));
 	math::vec3 ambientLight(0.0f, 0.3f, 0.0f);
 	math::vec3 diffuseLight(0.0f, 0.3f, 0.0f);
-	math::vec3 specularLight(0.5f, 0.5f, 0.5f);
+	math::vec3 specularLight(0.5f, 0.3f, 0.0f);
 	float shininess = 4.0f;
 	float cutoffAngle = 50.0f;
 	float outerCutoffAngle = 70.0f;
 
 	auto dirLight = std::make_shared<DirectionalLight>(lightDirection, ambientLight, diffuseLight, specularLight, shininess);
-	auto pointLight = std::make_shared<PointLight>(math::vec3(1.5f, 4.0f, 2.0f), ambientLight, diffuseLight, specularLight, shininess);
-	auto reflectorLight = std::make_shared<ReflectorLight>(math::vec3(5.5f, -1.0f, 0.0f), lightDirection,cutoffAngle, outerCutoffAngle, ambientLight, diffuseLight, specularLight, shininess);
+	auto pointLight = std::make_shared<PointLight>(math::vec3(0.0f, 0.0f, -2.0), ambientLight, diffuseLight, specularLight, shininess, 100);
+	auto reflectorLight = std::make_shared<ReflectorLight>(math::vec3(0.0f, 0.0f, 0.0f), lightDirection,cutoffAngle, outerCutoffAngle, ambientLight, diffuseLight, specularLight, shininess);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
 	camera.UpdateViewMatrix();
 	vertexProcessor->viewMatrix_ = camera.GetViewMatrix();
 	vertexProcessor->projectionMatrix_ = camera.GetProjectionMatrix();
+
 
 	
 	/*std::cout << "Model matrix:" << std::endl;
@@ -58,9 +59,9 @@ int main()
 
 	Rasterizer rasterizer(colorBuffer, vertexProcessor);
 	rasterizer.setEyePosition(camera.GetPosition());
-	//rasterizer.addLight(dirLight);
+	rasterizer.addLight(dirLight);
 	//rasterizer.addLight(pointLight);
-	rasterizer.addLight(reflectorLight);
+	//rasterizer.addLight(reflectorLight);
 
 
 	/*math::vec3 v0_1(0.0f, -0.5f, 1.0f);
@@ -134,43 +135,43 @@ int main()
 	rasterizer.rasterizeMesh(torus);*/
 
 	
-    mesh::Sphere sphere1 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere1 = mesh::Sphere(12, 12, 1.3f);
     sphere1.SetMeshColors(colorT);
-    math::mat4x4 translation1 = math::translation_matrix(0.0f, 3.0f, 0.0f);
+    math::mat4x4 translation1 = math::translation_matrix(-2.0f, -1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation1;
-    rasterizer.RasterizeMeshVertexLight(sphere1);
+    rasterizer.RasterizeMeshPixelLight(sphere1);
 
-    mesh::Sphere sphere2 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere2 = mesh::Sphere(12, 12, 1.3f);
     sphere2.SetMeshColors(colorB);
-    math::mat4x4 translation2 = math::translation_matrix(3.0f, 3.0f, 0.0f);
+    math::mat4x4 translation2 = math::translation_matrix(0.0f, -1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation2;
-    rasterizer.RasterizeMeshVertexLight(sphere2);
+    rasterizer.RasterizeMeshPixelLight(sphere2);
 
-    mesh::Sphere sphere3 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere3 = mesh::Sphere(12, 12, 1.3f);
     sphere3.SetMeshColors(colorG);
-    math::mat4x4 translation3 = math::translation_matrix(6.0f, 3.0f, 0.0f);
+    math::mat4x4 translation3 = math::translation_matrix(2.0f, -1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation3;
-    rasterizer.RasterizeMeshVertexLight(sphere3);
+    rasterizer.RasterizeMeshPixelLight(sphere3);
 
 	///////
 
-    mesh::Sphere sphere4 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere4 = mesh::Sphere(12, 12, 1.3f);
     sphere4.SetMeshColors(colorT);
-    math::mat4x4 translation4 = math::translation_matrix(0.0f, 0.0f, 0.0f);
+    math::mat4x4 translation4 = math::translation_matrix(-2.0f, 1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation4;
-    rasterizer.ResterizeMeshPixelLight(sphere4);
+    rasterizer.RasterizeMeshVertexLight(sphere4);
 
-    mesh::Sphere sphere5 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere5 = mesh::Sphere(12, 12, 1.3f);
     sphere5.SetMeshColors(colorB);
-    math::mat4x4 translation5 = math::translation_matrix(3.0f, 0.0f, 0.0f);
+    math::mat4x4 translation5 = math::translation_matrix(0.0f, 1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation5;
-    rasterizer.ResterizeMeshPixelLight(sphere5);
+    rasterizer.RasterizeMeshVertexLight(sphere5);
 
-    mesh::Sphere sphere6 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere6 = mesh::Sphere(12, 12, 1.3f);
     sphere6.SetMeshColors(colorG);
-    math::mat4x4 translation6 = math::translation_matrix(6.0f, 0.0f, 0.0f);
+    math::mat4x4 translation6 = math::translation_matrix(2.0f, 1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation6;
-    rasterizer.ResterizeMeshPixelLight(sphere6);
+    rasterizer.RasterizeMeshVertexLight(sphere6);
 
 	colorBuffer.generateBMP("test.bmp");
 	return 0;

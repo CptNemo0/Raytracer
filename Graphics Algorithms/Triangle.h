@@ -225,13 +225,13 @@ public:
 		miny = std::fmaxf(miny, 0);
 		maxy = std::fminf(maxy, buffer.GetHeight() - 1);
 
-		float denom = (v1_[1] - v2_[1]) * (v0_[0] - v2_[0]) + (v2_[0] - v1_[0]) * (v0_[1] - v2_[1]);
 
 		for (int i = minx; i <= maxx; i++) {
 			for (int j = miny; j <= maxy; j++) {
 				math::vec2 p = { i + 0.5f, j + 0.5f };
 				if (isInsideTopLeft(p))
 				{
+					float denom = (v1_[1] - v2_[1]) * (v0_[0] - v2_[0]) + (v2_[0] - v1_[0]) * (v0_[1] - v2_[1]);
 					float lambda1 = ((v1_[1] - v2_[1]) * (p[0] - v2_[0]) + (v2_[0] - v1_[0]) * (p[1] - v2_[1])) / denom;
 					float lambda2 = ((v2_[1] - v0_[1]) * (p[0] - v2_[0]) + (v0_[0] - v2_[0]) * (p[1] - v2_[1])) / denom;
 					float lambda3 = 1.0f - lambda1 - lambda2;
@@ -243,7 +243,7 @@ public:
 
 						math::vec3 position = v0_ * lambda1 + v1_ * lambda2 + v2_ * lambda3;
 
-						math::vec3 normal = N[0] * lambda1 + N[1] * lambda2 + N[2] * lambda3;
+						math::vec3 normal = math::normalized(N[0] * lambda1 + N[1] * lambda2 + N[2] * lambda3);
 
 						math::vec3 color(0.0f, 0.0f, 0.0f);
 

@@ -15,11 +15,6 @@ public:
    Rasterizer(buffer::ColorBuffer& buffer, std::shared_ptr<VertexProcessor> processor) 
        : buffer_(buffer), vertexProcessor_(processor) {};
 
-   void addTriangle(const Triangle& triangle)
-   {
-       triangles_ = std::make_shared<Triangle>(triangle);
-   };
-
    void addProjectionMatrix(const math::mat4x4& projectionMatrix)
    {
        projectionMatrix_ = projectionMatrix;
@@ -48,7 +43,7 @@ public:
        triangle.drawTriangle(buffer_, *vertexProcessor_);
    };
 
-   void rasterizePixelLight(Triangle& triangle, std::vector<std::shared_ptr<Light>> lights, std::vector<math::vec3> normal) 
+   void rasterizePixelLight(Triangle& triangle, const std::vector<std::shared_ptr<Light>>& lights, const std::vector<math::vec3>& normal) 
    {
 	   triangle.drawTrianglePixelLight(buffer_, *vertexProcessor_, lights, normal);
    }
@@ -72,71 +67,83 @@ public:
       }  
    };
 
-   void ResterizeMeshPixelLight(const mesh::Mesh& mesh)
-   {
-	   for (int i = 0; i < mesh.indices.size(); i++) {
-		   math::vec3 v0 = mesh.vertices[mesh.indices[i][0]].position;
-		   math::vec3 v1 = mesh.vertices[mesh.indices[i][1]].position;
-		   math::vec3 v2 = mesh.vertices[mesh.indices[i][2]].position;
+   void RasterizeMeshPixelLight(const mesh::Mesh& mesh)  
+   {  
+      std::vector<math::vec3> vNormals;  
+      vNormals.reserve(mesh.vertices.size()); 
 
-		   math::vec3 normal = mesh.vertices[mesh.indices[i][0]].normal;
-		   math::vec3 normal1 = mesh.vertices[mesh.indices[i][1]].normal;
-		   math::vec3 normal2 = mesh.vertices[mesh.indices[i][2]].normal;
-
-		   std::vector<math::vec3> normals;
-		   normals.push_back(normal);
-		   normals.push_back(normal1);
-		   normals.push_back(normal2);
-
-		   Triangle triangle(v0, v1, v2);
-		   triangle.SetColors(Color4(255, 0, 0, 255),
-			   Color4(0, 255, 0, 255),
-			   Color4(0, 0, 255, 255));
-		   rasterizePixelLight(triangle, lights, normals);
-	   }
-   };
-
-   void RasterizeMeshVertexLight(const mesh::Mesh& mesh)
-   {
-       std::vector<math::vec3> vColors;
-       vColors.reserve(mesh.indices.size());
+	  math::mat4x4 normalMatrix = math::transposed(math::inverse(vertexProcessor_->modelMatrix_));
 
 
-       for (const auto& vertex : mesh.vertices) {
-           /*math::vec3 color = math::vec3(
-               static_cast<float>(vertex.color[0]),
-               static_cast<float>(vertex.color[1]),
-               static_cast<float>(vertex.color[2])
-           );*/
+      for (const auto& vertex : mesh.vertices)  
+      {  
+          math::vec3 normal = vertex.normal;
+		  math::vec4 normaled = math::transformed(normalMatrix, math::vec4(normal[0], normal[1], normal[2], 0.0f));
+          normal = math::normalized(math::vec3(normaled[0], normaled[1], normaled[2]));
+          vNormals.push_back(normal);  
+      }  
 
-		   math::vec3 color = math::vec3(0.0f, 0.0f, 0.0f);
-           Fragment fragment0(vertex.position, vertex.normal);
-           for (const auto& light : lights) {
-               color += (light->calculate(fragment0, eyePosition_));
-           }
+      for (int i = 0; i < mesh.indices.size(); i++)  
+      {  
+          math::vec3 v0 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][0]].position);  
+          math::vec3 v1 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][1]].position);  
+          math::vec3 v2 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][2]].position);  
 
-           color[0] = std::clamp(color[0], 0.0f, 255.0f);
-           color[1] = std::clamp(color[1], 0.0f, 255.0f);
-           color[2] = std::clamp(color[2], 0.0f, 255.0f);
+          Triangle triangle(v0, v1, v2);  
+          /*triangle.SetColors(Color4(255, 0, 0, 255),  
+                             Color4(0, 255, 0, 255),  
+                             Color4(0, 0, 255, 255));*/  
 
-           vColors.push_back(color);
-       }
+          std::vector<math::vec3> triangleNormals = {  
+              vNormals[mesh.indices[i][0]],  
+              vNormals[mesh.indices[i][1]],  
+              vNormals[mesh.indices[i][2]]  
+          };  
 
-
-
-       for (int i = 0; i < mesh.indices.size(); i++) {
-           math::vec3 v0 = mesh.vertices[mesh.indices[i][0]].position;
-           math::vec3 v1 = mesh.vertices[mesh.indices[i][1]].position;
-           math::vec3 v2 = mesh.vertices[mesh.indices[i][2]].position;
-
-           Triangle triangle(v0, v1, v2);
-           triangle.SetColorsf(
-               vColors[mesh.indices[i][0]],
-               vColors[mesh.indices[i][1]],
-               vColors[mesh.indices[i][2]]);
-           rasterize(triangle);
-       }
+          rasterizePixelLight(triangle, lights, triangleNormals);  
+      }  
    }
+
+   void RasterizeMeshVertexLight(const mesh::Mesh& mesh)  
+     {  
+        std::vector<math::vec3> vColors;  
+        vColors.reserve(mesh.indices.size());  
+
+        math::mat4x4 normalMatrix = math::transposed(math::inverse(vertexProcessor_->modelMatrix_));  
+
+        for (const auto& vertex : mesh.vertices) {  
+            math::vec3 color = math::vec3(0.0f, 0.0f, 0.0f);  
+            math::vec3 worldPosition = vertexProcessor_->LocalToWorld(vertex.position);  
+
+            math::vec3 normal = vertex.normal;  
+            math::vec4 transformedNormal = math::transformed(normalMatrix, math::vec4(normal[0], normal[1], normal[2], 0.0f));  
+            normal = math::normalized(math::vec3(transformedNormal[0], transformedNormal[1], transformedNormal[2]));  
+
+            Fragment fragment0(worldPosition, normal);  
+            for (const auto& light : lights) {  
+                color += (light->calculate(fragment0, eyePosition_));  
+            }  
+
+            color[0] = std::clamp(color[0], 0.0f, 255.0f);  
+            color[1] = std::clamp(color[1], 0.0f, 255.0f);  
+            color[2] = std::clamp(color[2], 0.0f, 255.0f);  
+
+            vColors.push_back(color);  
+        }  
+
+        for (int i = 0; i < mesh.indices.size(); i++) {  
+            math::vec3 v0 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][0]].position);  
+            math::vec3 v1 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][1]].position);  
+            math::vec3 v2 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][2]].position);  
+
+            Triangle triangle(v0, v1, v2);  
+            triangle.SetColorsf(  
+                vColors[mesh.indices[i][0]],  
+                vColors[mesh.indices[i][1]],  
+                vColors[mesh.indices[i][2]]);  
+            rasterize(triangle);  
+        }  
+     }
 
 
    void ToScreenCoordinates(Triangle& triangle)

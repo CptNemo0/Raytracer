@@ -73,7 +73,12 @@ namespace mesh
 
 			vSize = vertices.size();
 			tSize = indices.size();
-			MakeNormals();
+			//MakeNormals();
+
+			for (auto& vertex : vertices)
+			{
+				vertex.normal = math::normalized(vertex.position);
+			}
 		}
 	};
 }
