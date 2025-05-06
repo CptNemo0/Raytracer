@@ -60,8 +60,8 @@ int main()
 	Rasterizer rasterizer(colorBuffer, vertexProcessor);
 	rasterizer.setEyePosition(camera.GetPosition());
 	//rasterizer.addLight(dirLight);
-	//rasterizer.addLight(pointLight);
-	rasterizer.addLight(reflectorLight);
+	rasterizer.addLight(pointLight);
+	//rasterizer.addLight(reflectorLight);
 
 
 	/*math::vec3 v0_1(0.0f, -0.5f, 1.0f);

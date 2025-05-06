@@ -211,7 +211,7 @@ public:
 		}
 	}
 
-	void drawTrianglePixelLight(buffer::ColorBuffer& buffer, VertexProcessor& processor, std::vector<std::shared_ptr<Light>> lights, std::vector<math::vec3> N)
+	void drawTrianglePixelLight(buffer::ColorBuffer& buffer, VertexProcessor& processor, std::vector<std::shared_ptr<Light>> lights, std::vector<math::vec3> pos, std::vector<math::vec3> N)
 	{
 		processor.TriangleLocalToScreen(v0_, v1_, v2_, buffer.width_, buffer.height_);
 
@@ -241,7 +241,7 @@ public:
 					if (z > buffer.GetColorDepth(i, j)) {
 						buffer.SetColorDepth(i, j, z);
 
-						math::vec3 position = v0_ * lambda1 + v1_ * lambda2 + v2_ * lambda3;
+						math::vec3 position = pos[0] * lambda1 + pos[1] * lambda2 + pos[2] * lambda3;
 
 						math::vec3 normal = math::normalized(N[0] * lambda1 + N[1] * lambda2 + N[2] * lambda3);
 

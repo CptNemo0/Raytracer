@@ -32,12 +32,14 @@ namespace mesh
 
 			for (uint32_t i = 0; i <= majorSegments_; ++i)
 			{
+				float u = float(i) / majorSegments_;
 				float theta = 2.0f * math::pi * i / majorSegments_;
 				float cosTheta = cos(theta);
 				float sinTheta = sin(theta);
 
 				for (uint32_t j = 0; j <= minorSegments_; ++j)
 				{
+					float v = float(j) / minorSegments_;
 					float phi = 2.0f * math::pi * j / minorSegments_;
 					float cosPhi = cos(phi);
 					float sinPhi = sin(phi);
@@ -50,10 +52,14 @@ namespace mesh
 					float ny = y;
 					float nz = z - majorRadius_ * sinTheta;
 
-					math::vec3 n(nx, ny, nz);
-					math::vec3 normal = math::normalized(n);
+					math::vec3 position(x, y, z);
+					math::vec3 normal = math::normalized(math::vec3(nx, ny, nz));
 
-					vertices.push_back({ {x, y, z}, normal });
+					Vertex vertex;
+					vertex.position = position;
+					vertex.normal = normal;
+					vertex.uv = { u, v }; 
+					vertices.push_back(vertex);
 				}
 			}
 

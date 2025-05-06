@@ -46,7 +46,17 @@ namespace mesh
                        radius_ * sinTheta * sinPhi  
                    );  
 
-                   vertices[vertexIndex++].position = { position };  
+                   math::vec3 normal = math::normalized(position);
+
+                   math::vec2 uv(
+                       static_cast<float>(j) / sectors_,   // u: 0.0 - 1.0
+                       static_cast<float>(i) / rings_     // v: 0.0 - 1.0
+                   );
+
+                   Vertex& v = vertices[vertexIndex++];
+                   v.position = position;
+                   v.normal = normal;
+                   v.uv = uv;
                }  
            }  
 

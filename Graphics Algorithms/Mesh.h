@@ -3,6 +3,7 @@
 #include "raytracer_math.h"
 #include "Triangle.h"
 #include "Vertex.h"
+#include "Texture.h"
 #include <vector> 
 
 namespace mesh
@@ -15,6 +16,8 @@ namespace mesh
         std::vector<Vertex> vertices;
         std::vector<math::vec<3, int>> indices;
 
+        std::shared_ptr<Texture> texture;
+
 		void SetMeshColors(const Color4& color0)
 		{
 			for (auto& vertex : vertices)
@@ -24,6 +27,7 @@ namespace mesh
 		}
 
         virtual void Generate() = 0;
+
         void MakeNormals()  
            {  
                for (auto& vertex : vertices)  
@@ -51,6 +55,13 @@ namespace mesh
                    math::normalize(vertex.normal);  
                }  
            };
+
+        void SetTexture(std::shared_ptr<Texture> texture) 
+        {
+			this->texture = texture;
+        }
+
+
     
     };
 }

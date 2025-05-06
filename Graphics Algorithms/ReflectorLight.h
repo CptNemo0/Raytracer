@@ -33,7 +33,7 @@ public:
         math::vec3 N = math::normalized(fragment.normal);
         math::vec3 L = math::normalized(position - fragment.position);
 
-        float theta = math::dot(L, math::normalized(direction));
+        float theta = math::dot(L, math::normalized(-direction));
 
         if (theta > outerCutoff)
         {

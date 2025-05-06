@@ -29,7 +29,11 @@ namespace mesh
 
 			// Apex (top of cone)
 			math::vec3 apex_pos(0.0f, height_, 0.0f);
-			vertices.push_back({ apex_pos, {0.0f, 1.0f, 0.0f} });
+			Vertex apex;
+			apex.position = apex_pos;
+			apex.normal = { 0.0f, 1.0f, 0.0f };
+			apex.uv = { 0.5f, 1.0f };
+			vertices.push_back(apex);
 
 			// Base vertices
 			for (uint32_t i = 0; i < slices_; ++i)
@@ -39,11 +43,20 @@ namespace mesh
 				float z = radius_ * sin(theta);
 				math::vec3 pos(x, 0.0f, z);
 				math::vec3 norm = math::normalized(math::vec3(x, height_, z));
-				vertices.push_back({ pos, norm });
+
+				Vertex v;
+				v.position = pos;
+				v.normal = norm;
+				v.uv = { static_cast<float>(i) / slices_, 0.0f };  
+				vertices.push_back(v);
 			}
 
 			// Center of base (for bottom face)
-			vertices.push_back({ {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f} });
+			Vertex baseCenter;
+			baseCenter.position = { 0.0f, 0.0f, 0.0f };
+			baseCenter.normal = { 0.0f, -1.0f, 0.0f };
+			baseCenter.uv = { 0.5f, 0.5f };
+			vertices.push_back(baseCenter);
 
 			// Side triangles
 			for (uint32_t i = 0; i < slices_; ++i)
@@ -57,7 +70,19 @@ namespace mesh
 			for (uint32_t i = 0; i < slices_; ++i)
 			{
 				uint32_t next = (i + 1) % slices_;
-				indices.push_back({ baseCenterIndex, next + 1, i + 1 }); // base cap
+				Vertex& vi = vertices[i + 1];
+				Vertex& vj = vertices[next + 1];
+
+				// Dodaj UV dla podstawy (radykalne mapowanie)
+				float ui = 0.5f + (vi.position[0] / (2.0f * radius_));
+				float vi_uv = 0.5f + (vi.position[2] / (2.0f * radius_));
+				vi.uv = { ui, vi_uv };
+
+				float uj = 0.5f + (vj.position[0] / (2.0f * radius_));
+				float vj_uv = 0.5f + (vj.position[2] / (2.0f * radius_));
+				vj.uv = { uj, vj_uv };
+
+				indices.push_back({ baseCenterIndex, next + 1, i + 1 });
 			}
 
 			//vSize = vertices.size();
