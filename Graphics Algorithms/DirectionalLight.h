@@ -17,7 +17,7 @@ public:
     math::vec3 calculate(const Fragment& fragment, const math::vec3& eyePosition, bool useBlinn = true) const override
     {
         math::vec3 N = math::normalized(fragment.normal);
-        /*math::vec3 L = math::normalized(-direction);
+        math::vec3 L = math::normalized(direction);
 
 
         float diff =math::dot(L, N);
@@ -33,9 +33,9 @@ public:
         else
         {
             return ambient;
-        }*/
+        }
 
-        const auto dot_product = math::dot(direction, fragment.normal);
+       /* const auto dot_product = math::dot(direction, fragment.normal);
         if (dot_product > 0.0f)
         {
             const auto view_direction = math::normalized(eyePosition - fragment.position);
@@ -51,7 +51,7 @@ public:
         else
         {
             return ambient;
-        }
+        }*/
     }
 };
 

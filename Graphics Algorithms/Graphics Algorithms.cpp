@@ -31,16 +31,16 @@ int main()
 	vertexProcessor->eyePosition_ = camera.GetPosition();
 
 	// 2. Utwórz światło (DirectionalLight)
-	math::vec3 lightDirection = math::normalized(math::vec3(0.0f, 0.5f, 1.0f));
+	math::vec3 lightDirection = math::normalized(math::vec3(-2.0f, -1.0f, -3.0f));
 	math::vec3 ambientLight(0.0f, 0.3f, 0.0f);
 	math::vec3 diffuseLight(0.0f, 0.3f, 0.0f);
 	math::vec3 specularLight(0.5f, 0.3f, 0.0f);
-	float shininess = 4.0f;
-	float cutoffAngle = 50.0f;
-	float outerCutoffAngle = 70.0f;
+	float shininess = 16.0f;
+	float cutoffAngle = 20.0f;
+	float outerCutoffAngle = 30.0f;
 
 	auto dirLight = std::make_shared<DirectionalLight>(lightDirection, ambientLight, diffuseLight, specularLight, shininess);
-	auto pointLight = std::make_shared<PointLight>(math::vec3(0.0f, 0.0f, -2.0), ambientLight, diffuseLight, specularLight, shininess, 100);
+	auto pointLight = std::make_shared<PointLight>(math::vec3(0.0f, 0.0f, -2.0), ambientLight, diffuseLight, specularLight, shininess, 1.1f);
 	auto reflectorLight = std::make_shared<ReflectorLight>(math::vec3(0.0f, 0.0f, 0.0f), lightDirection,cutoffAngle, outerCutoffAngle, ambientLight, diffuseLight, specularLight, shininess);
 
 	vertexProcessor->modelMatrix_ = math::mat4x4(1.0f);
@@ -59,9 +59,9 @@ int main()
 
 	Rasterizer rasterizer(colorBuffer, vertexProcessor);
 	rasterizer.setEyePosition(camera.GetPosition());
-	rasterizer.addLight(dirLight);
+	//rasterizer.addLight(dirLight);
 	//rasterizer.addLight(pointLight);
-	//rasterizer.addLight(reflectorLight);
+	rasterizer.addLight(reflectorLight);
 
 
 	/*math::vec3 v0_1(0.0f, -0.5f, 1.0f);

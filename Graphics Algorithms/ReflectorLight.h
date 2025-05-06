@@ -33,7 +33,7 @@ public:
         math::vec3 N = math::normalized(fragment.normal);
         math::vec3 L = math::normalized(position - fragment.position);
 
-        float theta = math::dot(direction, L); 
+        float theta = math::dot(L, math::normalized(direction));
 
         if (theta > outerCutoff)
         {
@@ -45,8 +45,8 @@ public:
             float spec = 0.0f;
             if (diff > 0.0f)
             {
-                math::vec3 V = math::normalized(eyePosition - fragment.position);
-                math::vec3 H = math::normalized(L + V);
+            math::vec3 V = math::normalized(eyePosition - fragment.position);
+            math::vec3 H = math::normalized(L + V);
                 spec = std::pow(std::max(math::dot(N, H), 0.0f), shininess);
             }
 
@@ -56,8 +56,11 @@ public:
 
             return (ambientComp + diffuseComp + specularComp) * intensity;
         }
+        else
+        {
+            return ambient;
+        }
 
-        return ambient;  // poza zakresem sto¿ka
     }
 };
 #endif // !REFLECTORLIGHT_H

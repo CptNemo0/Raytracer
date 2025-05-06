@@ -12,8 +12,8 @@ public:
     float linearAttenuation;
     float quadraticAttenuation;
 
-    PointLight(const math::vec3& pos, const math::vec3& ambient, const math::vec3& diffuse, const math::vec3& specular, float shininess,
-        float constant = 1.0f, float linear = 0.09f, float quadratic = 0.0032f, float intensitivity = 1)
+    PointLight(const math::vec3& pos, const math::vec3& ambient, const math::vec3& diffuse, const math::vec3& specular, float shininess, float intensitivity = 1,
+        float constant = 1.0f, float linear = 0.09f, float quadratic = 0.032f)
         : Light(ambient, diffuse, specular, shininess, intensitivity), position(pos),
         constantAttenuation(constant), linearAttenuation(linear), quadraticAttenuation(quadratic)
     {
@@ -28,7 +28,7 @@ public:
         float distance = math::length(lightDir);
         float attenuation = 1.0f / std::max(constantAttenuation + linearAttenuation * distance + quadraticAttenuation * (distance * distance), 0.0001f);
 
-        float diff = std::max(math::dot(L, N), 0.0f);
+        float diff = math::dot(L, N);
 
         float spec = 0.0f;
         if (diff > 0.0f)
@@ -37,7 +37,7 @@ public:
             math::vec3 H = math::normalized(L + V);
 
             spec = pow(std::max(math::dot(N, H), 0.0f), shininess);
-			return ambient + (diffuse * diff + specular * spec) * attenuation *  intensitivity;
+			auto color = ambient + (diffuse * diff + specular * spec) * attenuation *  intensitivity;
         }
         else
         {

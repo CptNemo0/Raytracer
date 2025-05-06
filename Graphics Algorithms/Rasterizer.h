@@ -43,9 +43,9 @@ public:
        triangle.drawTriangle(buffer_, *vertexProcessor_);
    };
 
-   void rasterizePixelLight(Triangle& triangle, const std::vector<std::shared_ptr<Light>>& lights, const std::vector<math::vec3>& normal) 
+   void rasterizePixelLight(Triangle& triangle, const std::vector<std::shared_ptr<Light>>& lights, const std::vector<math::vec3>& pos, const std::vector<math::vec3>& normal)
    {
-	   triangle.drawTrianglePixelLight(buffer_, *vertexProcessor_, lights, normal);
+	   triangle.drawTrianglePixelLight(buffer_, *vertexProcessor_, lights, pos, normal);
    }
 
    void rasterizeMesh(const mesh::Mesh& mesh)  
@@ -69,8 +69,10 @@ public:
 
    void RasterizeMeshPixelLight(const mesh::Mesh& mesh)  
    {  
-      std::vector<math::vec3> vNormals;  
+      std::vector<math::vec3> vNormals;
+	  std::vector<math::vec3> vPositions;
       vNormals.reserve(mesh.vertices.size()); 
+	  vPositions.reserve(mesh.vertices.size());
 
 	  math::mat4x4 normalMatrix = math::transposed(math::inverse(vertexProcessor_->modelMatrix_));
 
@@ -81,6 +83,10 @@ public:
 		  math::vec4 normaled = math::transformed(normalMatrix, math::vec4(normal[0], normal[1], normal[2], 0.0f));
           normal = math::normalized(math::vec3(normaled[0], normaled[1], normaled[2]));
           vNormals.push_back(normal);  
+
+		  auto local = math::vec4(vertex.position[0], vertex.position[1], vertex.position[2], 1.0f);
+		  auto world = math::transformed(vertexProcessor_->modelMatrix_, local);
+		  vPositions.push_back(math::vec3(world[0], world[1], world[2]));
       }  
 
       for (int i = 0; i < mesh.indices.size(); i++)  
@@ -99,15 +105,20 @@ public:
               vNormals[mesh.indices[i][1]],  
               vNormals[mesh.indices[i][2]]  
           };  
+		  std::vector<math::vec3> trianglePositions = {
+			  vPositions[mesh.indices[i][0]],
+			  vPositions[mesh.indices[i][1]],
+			  vPositions[mesh.indices[i][2]]
+		  };
 
-          rasterizePixelLight(triangle, lights, triangleNormals);  
+          rasterizePixelLight(triangle, lights, trianglePositions, triangleNormals);
       }  
    }
 
    void RasterizeMeshVertexLight(const mesh::Mesh& mesh)  
      {  
         std::vector<math::vec3> vColors;  
-        vColors.reserve(mesh.indices.size());  
+        vColors.reserve(mesh.vertices.size());
 
         math::mat4x4 normalMatrix = math::transposed(math::inverse(vertexProcessor_->modelMatrix_));  
 
