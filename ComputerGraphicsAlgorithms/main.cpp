@@ -60,13 +60,15 @@ int main(int argc, char** argv)
     auto red_texture = std::make_unique<Texture>("red_texture.jpg");
     auto blue_texture = std::make_unique<Texture>("blue_texture.jpg");
 
-    mesh::Cone cone(2.25f, 2.0f, 33);
+    int precision = 15;
+
+    mesh::Cone cone(2.25f, 2.0f, precision);
     cone.GenerateMesh();
 
-    mesh::Torus torus(2.5f, 0.4f, 33, 33);
+    mesh::Torus torus(2.5f, 0.4f, precision, precision);
     torus.GenerateMesh();
 
-    mesh::Sphere sphere(2.0f, 33, 33);
+    mesh::Sphere sphere(2.0f, precision, precision);
     sphere.GenerateMesh();
 
     float time0 = 0;
