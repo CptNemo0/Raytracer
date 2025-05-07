@@ -6,6 +6,7 @@
 #include "VertexProcessor.h"
 #include "Mesh.h"
 #include "Light.h"
+#include "Texture.h"
 #include <memory>
 #include <algorithm>
 
@@ -45,7 +46,7 @@ public:
 
    void rasterizePixelLight(Triangle& triangle, const std::vector<std::shared_ptr<Light>>& lights, const std::vector<math::vec3>& pos, const std::vector<math::vec3>& normal)
    {
-	   triangle.drawTrianglePixelLight(buffer_, *vertexProcessor_, lights, pos, normal);
+	   triangle.drawTrianglePixelLight(buffer_, vertexProcessor_, lights, pos, normal);
    }
 
    void rasterizeMesh(const mesh::Mesh& mesh)  
@@ -66,6 +67,34 @@ public:
           rasterize(triangle);  
       }  
    };
+
+   void rasterizeTextured(Triangle& triangle)
+   {
+	   triangle.drawTriangleTextured(buffer_, vertexProcessor_);
+   };
+
+   void RasterizeMeshTextured(const mesh::Mesh& mesh)
+   {
+       if (mesh.texture != nullptr)
+       {
+		    vertexProcessor_->texture_ = mesh.texture;
+            for (int i = 0; i < mesh.indices.size(); i++) 
+            {
+                Vertex v0 = mesh.vertices[mesh.indices[i][0]];
+                Vertex v1 = mesh.vertices[mesh.indices[i][1]];
+                Vertex v2 = mesh.vertices[mesh.indices[i][2]];
+
+                Triangle triangle(v0, v1, v2);;
+          
+                triangle.drawTriangleTextured(buffer_, vertexProcessor_);
+            }
+       }
+       else
+       {
+		   std::cout << "No texture set for the mesh." << std::endl;
+       }
+      
+   }
 
    void RasterizeMeshPixelLight(const mesh::Mesh& mesh)  
    {  
@@ -91,11 +120,16 @@ public:
 
       for (int i = 0; i < mesh.indices.size(); i++)  
       {  
-          math::vec3 v0 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][0]].position);  
-          math::vec3 v1 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][1]].position);  
-          math::vec3 v2 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][2]].position);  
+          /*math::vec3 v0 = mesh.vertices[mesh.indices[i][0]].position;  
+          math::vec3 v1 = mesh.vertices[mesh.indices[i][1]].position;  
+          math::vec3 v2 = mesh.vertices[mesh.indices[i][2]].position;  
 
-          Triangle triangle(v0, v1, v2);  
+          Triangle triangle(v0, v1, v2); */ 
+          Vertex v0 = mesh.vertices[mesh.indices[i][0]];
+          Vertex v1 = mesh.vertices[mesh.indices[i][1]];
+          Vertex v2 = mesh.vertices[mesh.indices[i][2]];
+
+          Triangle triangle(v0, v1, v2);
           /*triangle.SetColors(Color4(255, 0, 0, 255),  
                              Color4(0, 255, 0, 255),  
                              Color4(0, 0, 255, 255));*/  
@@ -143,11 +177,18 @@ public:
         }  
 
         for (int i = 0; i < mesh.indices.size(); i++) {  
-            math::vec3 v0 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][0]].position);  
-            math::vec3 v1 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][1]].position);  
-            math::vec3 v2 = vertexProcessor_->LocalToWorld(mesh.vertices[mesh.indices[i][2]].position);  
+            /*math::vec3 v0 = mesh.vertices[mesh.indices[i][0]].position;  
+            math::vec3 v1 = mesh.vertices[mesh.indices[i][1]].position;  
+            math::vec3 v2 = mesh.vertices[mesh.indices[i][2]].position;  
 
-            Triangle triangle(v0, v1, v2);  
+            Triangle triangle(v0, v1, v2);  */
+
+			Vertex v0 = mesh.vertices[mesh.indices[i][0]];
+			Vertex v1 = mesh.vertices[mesh.indices[i][1]];
+			Vertex v2 = mesh.vertices[mesh.indices[i][2]];
+
+			Triangle triangle(v0, v1, v2);
+
             triangle.SetColorsf(  
                 vColors[mesh.indices[i][0]],  
                 vColors[mesh.indices[i][1]],  

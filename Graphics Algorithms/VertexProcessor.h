@@ -1,6 +1,7 @@
 #ifndef VERTEX_PROCESSOR_H
 #define VERTEX_PROCESSOR_H
 
+#include "Texture.h"
 #include "raytracer_math.h"
 
 
@@ -13,6 +14,7 @@ public:
 	math::mat4x4 projectionMatrix_;
 	math::mat4x4 invModelMatrix_;
 	math::vec3 eyePosition_;
+	std::shared_ptr<Texture> texture_ = nullptr;
 
 	VertexProcessor()
 	{

@@ -5,44 +5,70 @@
 #include <string>
 #include <vector>
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "third_party/stb_image_write.h"
+#ifndef STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 #include "third_party/stb_image.h"
 
 class Texture
 {
 public:
     int width = 0, height = 0, channels = 0;
-    std::vector<unsigned char> data;
+    std::vector<math::vec3> data;
+
+	Texture() = default;
+
+	Texture(std::string path)
+	{
+		if (!load(path)) {
+			std::cerr << "Failed to load texture: " << path << std::endl;
+		}
+	}
 
     bool load(const std::string& filename) {
         unsigned char* img = stbi_load(filename.c_str(), &width, &height, &channels, 0);
         if (!img) return false;
-        data.assign(img, img + (width * height * channels));
+
+        data.resize(width * height);
+
+        for (int i = 0; i < width * height; ++i) {
+            int offset = i * channels;
+            float r = img[offset] / 255.0f;
+            float g = img[offset + 1] / 255.0f;
+            float b = img[offset + 2] / 255.0f;
+            data[i] = math::vec3(r, g, b);
+        }
+
         stbi_image_free(img);
         return true;
     }
 
-    math::vec3 getColor(float u, float v) const {
-        if (width == 0 || height == 0) return { 1.0f, 0.0f, 1.0f }; 
+	math::vec3 Sample(const math::vec2& uv) const {
+        if (data.empty()) {
+            std::cerr << "[Texture] No texture data loaded.\n";
+            return math::vec3(0.0f, 0.0f, 0.0f);
+        }
 
-        // Wrap UV
-        u = fmod(fmod(u, 1.0f) + 1.0f, 1.0f);
-        v = fmod(fmod(v, 1.0f) + 1.0f, 1.0f);
+        // Upewnij siê, ¿e uv s¹ w zakresie [0, 1]
+        float u = std::clamp(uv[0], 0.0f, 1.0f);
+        float v = std::clamp(uv[1], 0.0f, 1.0f);
 
-        int x = static_cast<int>(u * width);
-        int y = static_cast<int>((1.0f - v) * height); // Y odwrócone (OpenGL style)
+        // Przekszta³cenie wspó³rzêdnych do zakresu tekstury
+        int x = static_cast<int>(u * static_cast<float>(width));
+        int y = static_cast<int>((1.0f - v) * static_cast<float>(height));  // flip V
 
-        int idx = (y * width + x) * channels;
-        float r = data[idx] / 255.0f;
-        float g = data[idx + 1] / 255.0f;
-        float b = data[idx + 2] / 255.0f;
-        return { r, g, b };
+        // Clamp do rozmiarów tekstury (na wszelki wypadek)
+        x = std::clamp(x, 0, width - 1);
+        y = std::clamp(y, 0, height - 1);
+
+        // Oblicz indeks w buforze
+        int index = y * width + x;
+
+        return data[index];
     }
 };
 
 #endif // !TEXTURE_H
-
+#endif // !STB_IMAGE_IMPLEMENTATION
 
 
 

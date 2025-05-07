@@ -28,6 +28,9 @@ namespace mesh
            size_t vertexIndex = 0;  
            size_t indexIndex = 0;  
 
+           auto subsetp_u = 1.0f / static_cast<float>(rings_);
+           auto subsetp_v = 1.0f / static_cast<float>(sectors_);
+
            for (uint32_t i = 0; i <= rings_; ++i)  
            {  
                float theta = i * math::pi / rings_;  
@@ -49,8 +52,8 @@ namespace mesh
                    math::vec3 normal = math::normalized(position);
 
                    math::vec2 uv(
-                       static_cast<float>(j) / sectors_,   // u: 0.0 - 1.0
-                       static_cast<float>(i) / rings_     // v: 0.0 - 1.0
+					   subsetp_u * static_cast<float>(j),
+					   subsetp_v * static_cast<float>(i)
                    );
 
                    Vertex& v = vertices[vertexIndex++];

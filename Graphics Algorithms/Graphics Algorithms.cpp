@@ -10,6 +10,7 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 #include "ReflectorLight.h"
+#include "Texture.h"
 #include "vec.h"
 #include "transformations.h"
 #include "raytracer_math.h"
@@ -32,7 +33,7 @@ int main()
 
 	// 2. Utwórz światło (DirectionalLight)
 	math::vec3 lightDirection = math::normalized(math::vec3(-2.0f, -1.0f, -3.0f));
-	math::vec3 ambientLight(0.0f, 0.3f, 0.0f);
+	math::vec3 ambientLight(0.0f, 0.3f, 0.8f);
 	math::vec3 diffuseLight(0.0f, 0.3f, 0.0f);
 	math::vec3 specularLight(0.5f, 0.3f, 0.0f);
 	float shininess = 16.0f;
@@ -134,44 +135,54 @@ int main()
 
 	rasterizer.rasterizeMesh(torus);*/
 
-	
-    mesh::Sphere sphere1 = mesh::Sphere(12, 12, 1.3f);
+	// Pixel Light
+    mesh::Sphere sphere1 = mesh::Sphere(12, 12, 1.0f);
     sphere1.SetMeshColors(colorT);
     math::mat4x4 translation1 = math::translation_matrix(-2.0f, -1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation1;
     rasterizer.RasterizeMeshPixelLight(sphere1);
 
-    mesh::Sphere sphere2 = mesh::Sphere(12, 12, 1.3f);
+    mesh::Sphere sphere2 = mesh::Sphere(12, 12, 1.0f);
     sphere2.SetMeshColors(colorB);
     math::mat4x4 translation2 = math::translation_matrix(0.0f, -1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation2;
     rasterizer.RasterizeMeshPixelLight(sphere2);
 
-    mesh::Sphere sphere3 = mesh::Sphere(12, 12, 1.3f);
+    mesh::Sphere sphere3 = mesh::Sphere(12, 12, 1.0f);
     sphere3.SetMeshColors(colorG);
     math::mat4x4 translation3 = math::translation_matrix(2.0f, -1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation3;
     rasterizer.RasterizeMeshPixelLight(sphere3);
 
 	///////
-
-    mesh::Sphere sphere4 = mesh::Sphere(12, 12, 1.3f);
+	// Vertex Light
+    mesh::Sphere sphere4 = mesh::Sphere(12, 12, 1.0f);
     sphere4.SetMeshColors(colorT);
     math::mat4x4 translation4 = math::translation_matrix(-2.0f, 1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation4;
     rasterizer.RasterizeMeshVertexLight(sphere4);
 
-    mesh::Sphere sphere5 = mesh::Sphere(12, 12, 1.3f);
+    mesh::Sphere sphere5 = mesh::Sphere(12, 12, 1.0f);
     sphere5.SetMeshColors(colorB);
     math::mat4x4 translation5 = math::translation_matrix(0.0f, 1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation5;
     rasterizer.RasterizeMeshVertexLight(sphere5);
 
-    mesh::Sphere sphere6 = mesh::Sphere(12, 12, 1.3f);
+    mesh::Sphere sphere6 = mesh::Sphere(12, 12, 1.0f);
     sphere6.SetMeshColors(colorG);
     math::mat4x4 translation6 = math::translation_matrix(2.0f, 1.0f, -3.0f);
     vertexProcessor->modelMatrix_ = translation6;
     rasterizer.RasterizeMeshVertexLight(sphere6);
+
+	//textured
+	auto texture1 = std::make_shared<Texture>("tex1.jpg");
+
+	auto sphere7 = mesh::Sphere(12, 12, 1.0f);
+	sphere7.SetTexture(texture1);
+	math::mat4x4 translation7 = math::translation_matrix(-2.0f, 3.0f, -3.0f);
+	vertexProcessor->modelMatrix_ = translation7;
+	rasterizer.RasterizeMeshTextured(sphere7);
+
 
 	colorBuffer.generateBMP("test.bmp");
 	return 0;

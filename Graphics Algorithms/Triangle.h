@@ -7,6 +7,7 @@
 #include "algorithm"
 #include "Vertex.h"
 #include "Light.h"
+#include "Texture.h"
 #include "vector"
 
 class Triangle
@@ -36,6 +37,13 @@ public:
 		color1_ = Color4(0, 255, 0, 255);
 		color2_ = Color4(0, 0, 255, 255);
     }
+
+	Triangle(const Vertex& v0, const Vertex& v1, const Vertex& v2)
+	{
+		vertices_[0] = v0;
+		vertices_[1] = v1;
+		vertices_[2] = v2;
+	}
 	
 
 	void ToScreenCoordinates(int screenWidth, int screenHeight)
@@ -55,6 +63,10 @@ public:
 		color0_ = color0;
 		color1_ = color1;
 		color2_ = color2;
+
+		vertices_[0].color = color0;
+		vertices_[1].color = color1;
+		vertices_[2].color = color2;
 	}
 
     void SetColorsf(const math::vec3& color0, const math::vec3& color1, const math::vec3& color2)  
@@ -73,6 +85,10 @@ public:
                         static_cast<unsigned char>(color2[1] * 255.0f),
                         static_cast<unsigned char>(color2[2] * 255.0f),
                         255);  
+
+	   vertices_[0].color = color0_;
+	   vertices_[1].color = color1_;
+	   vertices_[2].color = color2_;
     }
 	void SetColor0(const Color4& color) { color0_ = color; }
 	void SetColor1(const Color4& color) { color1_ = color; }
@@ -95,17 +111,17 @@ public:
 
 	bool isInsideTopLeft(const math::vec2& p) const
 	{
-		float w0 = (v1_[0] - v0_[0]) * (p[1] - v0_[1]) - (v1_[1] - v0_[1]) * (p[0] - v0_[0]);
-		float w1 = (v2_[0] - v1_[0]) * (p[1] - v1_[1]) - (v2_[1] - v1_[1]) * (p[0] - v1_[0]);
-		float w2 = (v0_[0] - v2_[0]) * (p[1] - v2_[1]) - (v0_[1] - v2_[1]) * (p[0] - v2_[0]);
+		float w0 = (vertices_[1].position[0] - vertices_[0].position[0]) * (p[1] - vertices_[0].position[1]) - (vertices_[1].position[1] - vertices_[0].position[1]) * (p[0] - vertices_[0].position[0]);
+		float w1 = (vertices_[2].position[0] - vertices_[1].position[0]) * (p[1] - vertices_[1].position[1]) - (vertices_[2].position[1] - vertices_[1].position[1]) * (p[0] - vertices_[1].position[0]);
+		float w2 = (vertices_[0].position[0] - vertices_[2].position[0]) * (p[1] - vertices_[2].position[1]) - (vertices_[0].position[1] - vertices_[2].position[1]) * (p[0] - vertices_[2].position[0]);
 
 		// top-left edges detection
-		int dx01 = (int)(v1_[0] - v0_[0]);
-		int dy01 = (int)(v1_[1] - v0_[1]);
-		int dx12 = (int)(v2_[0] - v1_[0]);
-		int dy12 = (int)(v2_[1] - v1_[1]);
-		int dx20 = (int)(v0_[0] - v2_[0]);
-		int dy20 = (int)(v0_[1] - v2_[1]);
+		int dx01 = (int)(vertices_[1].position[0] - vertices_[0].position[0]);
+		int dy01 = (int)(vertices_[1].position[1] - vertices_[0].position[1]);
+		int dx12 = (int)(vertices_[2].position[0] - vertices_[1].position[0]);
+		int dy12 = (int)(vertices_[2].position[1] - vertices_[1].position[1]);
+		int dx20 = (int)(vertices_[0].position[0] - vertices_[2].position[0]);
+		int dy20 = (int)(vertices_[0].position[1] - vertices_[2].position[1]);
 
 		bool t01 = (dy01 < 0 || (dy01 == 0 && dx01 > 0));
 		bool t12 = (dy12 < 0 || (dy12 == 0 && dx12 > 0));
@@ -117,27 +133,27 @@ public:
 			(w2 > 0 || (w2 == 0 && t20));
 	}
 
-	void ApplyProjection(const math::mat4x4& proj)
-	{
-		auto projectVertex = [&proj](math::vec3& v) {
-			math::vec4 v4 = { v[0], v[1], v[2], 1.0f };
-			math::vec4 transformed = math::transformed(proj, v4);
+	//void ApplyProjection(const math::mat4x4& proj)
+	//{
+	//	auto projectVertex = [&proj](math::vec3& v) {
+	//		math::vec4 v4 = { v[0], v[1], v[2], 1.0f };
+	//		math::vec4 transformed = math::transformed(proj, v4);
 
-			// perspective divide
-			if (transformed[3] != 0.0f)
-			{
-				transformed[0] /= transformed[3];
-				transformed[1] /= transformed[3];
-				transformed[2] /= transformed[3];
-			}
+	//		// perspective divide
+	//		if (transformed[3] != 0.0f)
+	//		{
+	//			transformed[0] /= transformed[3];
+	//			transformed[1] /= transformed[3];
+	//			transformed[2] /= transformed[3];
+	//		}
 
-			v = { transformed[0], transformed[1], transformed[2] };
-			};
+	//		v = { transformed[0], transformed[1], transformed[2] };
+	//		};
 
-		projectVertex(v0_);
-		projectVertex(v1_);
-		projectVertex(v2_);
-	}
+	//	projectVertex(v0_);
+	//	projectVertex(v1_);
+	//	projectVertex(v2_);
+	//}
 
 
 	void drawTriangle(buffer::ColorBuffer& buffer, VertexProcessor& processor)
@@ -154,32 +170,18 @@ public:
 
 		ToScreenCoordinates(buffer.width_, buffer.height_);*/
 
-		processor.TriangleLocalToScreen(v0_, v1_, v2_, buffer.width_, buffer.height_);
+		processor.TriangleLocalToScreen(vertices_[0].position, vertices_[1].position, vertices_[2].position, buffer.width_, buffer.height_);
 		
 
-		float minx = std::min({ v0_[0], v1_[0], v2_[0] });
-		float maxx = std::max({ v0_[0], v1_[0], v2_[0] });
-		float miny = std::min({ v0_[1], v1_[1], v2_[1] });
-		float maxy = std::max({ v0_[1], v1_[1], v2_[1] });
+		float minx = std::min({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float maxx = std::max({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float miny = std::min({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
+		float maxy = std::max({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
 
 		minx = std::fmaxf(minx, 0);
 		maxx = std::fminf(maxx, buffer.GetWidth() - 1);
 		miny = std::fmaxf(miny, 0);
 		maxy = std::fminf(maxy, buffer.GetHeight() - 1);
-
-		auto dx12 = (v1_[0] - v0_[0]);
-		auto dy12 = (v1_[1] - v0_[1]);
-		auto dx23 = (v2_[0] - v1_[0]);
-		auto dy23 = (v2_[1] - v1_[1]);
-		auto dx31 = (v0_[0] - v2_[0]);
-		auto dy31 = (v0_[1] - v2_[1]);
-
-		//Top-Left
-		bool t01 = (dy12 < 0 || (dy12 == 0 && dx12 > 0));
-		bool t12 = (dy23 < 0 || (dy23 == 0 && dx23 > 0));
-		bool t20 = (dy31 < 0 || (dy31 == 0 && dx31 > 0));
-
-
 
 		for (int i = minx; i <= maxx; i++) {
 
@@ -188,12 +190,12 @@ public:
 				math::vec2 p = { i + 0.5f, j + 0.5f};
 				if (isInsideTopLeft(p))
 				{
-					float denom = (v1_[1] - v2_[1]) * (v0_[0] - v2_[0]) + (v2_[0] - v1_[0]) * (v0_[1] - v2_[1]);
-					float lambda1 = ((v1_[1] - v2_[1]) * (p[0] - v2_[0]) + (v2_[0] - v1_[0]) * (p[1] - v2_[1])) / denom;
-					float lambda2 = ((v2_[1] - v0_[1]) * (p[0] - v2_[0]) + (v0_[0] - v2_[0]) * (p[1] - v2_[1])) / denom;
+					float denom = (vertices_[1].position[1] - vertices_[2].position[1]) * (vertices_[0].position[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (vertices_[0].position[1] - vertices_[2].position[1]);
+					float lambda1 = ((vertices_[1].position[1] - vertices_[2].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
+					float lambda2 = ((vertices_[2].position[1] - vertices_[0].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[0].position[0] - vertices_[2].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
 					float lambda3 = 1.0f - lambda1 - lambda2;
 
-					float z = lambda1 * v0_[2] + lambda2 * v1_[2] + lambda3 * v2_[2];
+					float z = lambda1 * vertices_[0].position[2] + lambda2 * vertices_[1].position[2] + lambda3 * vertices_[2].position[2];
 
 					if (z > buffer.GetColorDepth(i, j)) {
 						buffer.SetColorDepth(i, j, z);
@@ -211,14 +213,57 @@ public:
 		}
 	}
 
-	void drawTrianglePixelLight(buffer::ColorBuffer& buffer, VertexProcessor& processor, std::vector<std::shared_ptr<Light>> lights, std::vector<math::vec3> pos, std::vector<math::vec3> N)
+	void drawTriangleTextured(buffer::ColorBuffer& buffer, std::shared_ptr<VertexProcessor>& processor)
 	{
-		processor.TriangleLocalToScreen(v0_, v1_, v2_, buffer.width_, buffer.height_);
+		processor->TriangleLocalToScreen(vertices_[0].position, vertices_[1].position, vertices_[2].position, buffer.width_, buffer.height_);
 
-		float minx = std::min({ v0_[0], v1_[0], v2_[0] });
-		float maxx = std::max({ v0_[0], v1_[0], v2_[0] });
-		float miny = std::min({ v0_[1], v1_[1], v2_[1] });
-		float maxy = std::max({ v0_[1], v1_[1], v2_[1] });
+
+		float minx = std::min({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float maxx = std::max({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float miny = std::min({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
+		float maxy = std::max({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
+
+		minx = std::fmaxf(minx, 0);
+		maxx = std::fminf(maxx, buffer.GetWidth() - 1);
+		miny = std::fmaxf(miny, 0);
+		maxy = std::fminf(maxy, buffer.GetHeight() - 1);
+
+		for (int i = minx; i <= maxx; i++) {
+
+			for (int j = miny; j <= maxy; j++)
+			{
+				math::vec2 p = { i + 0.5f, j + 0.5f };
+				if (isInsideTopLeft(p))
+				{
+					float denom = (vertices_[1].position[1] - vertices_[2].position[1]) * (vertices_[0].position[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (vertices_[0].position[1] - vertices_[2].position[1]);
+					float lambda1 = ((vertices_[1].position[1] - vertices_[2].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
+					float lambda2 = ((vertices_[2].position[1] - vertices_[0].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[0].position[0] - vertices_[2].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
+					float lambda3 = 1.0f - lambda1 - lambda2;
+
+					float z = lambda1 * vertices_[0].position[2] + lambda2 * vertices_[1].position[2] + lambda3 * vertices_[2].position[2];
+
+					if (z > buffer.GetColorDepth(i, j)) {
+						buffer.SetColorDepth(i, j, z);
+
+						math::vec2 uv = vertices_[0].uv * lambda1 + vertices_[1].uv * lambda2 + vertices_[2].uv * lambda3;
+						math::vec3 color3 = processor->texture_->Sample(uv);
+
+						Color4 color = FloatToColor4(color3);
+						buffer.SetColor(i, j, color);
+					}
+				}
+			}
+		}
+	}
+
+	void drawTrianglePixelLight(buffer::ColorBuffer& buffer, std::shared_ptr<VertexProcessor>& processor, const std::vector<std::shared_ptr<Light>> lights, const std::vector<math::vec3>& pos, const std::vector<math::vec3>& N)
+	{
+		processor->TriangleLocalToScreen(vertices_[0].position, vertices_[1].position, vertices_[2].position, buffer.width_, buffer.height_);
+
+		float minx = std::min({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float maxx = std::max({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float miny = std::min({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
+		float maxy = std::max({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
 
 		minx = std::fmaxf(minx, 0);
 		maxx = std::fminf(maxx, buffer.GetWidth() - 1);
@@ -231,12 +276,12 @@ public:
 				math::vec2 p = { i + 0.5f, j + 0.5f };
 				if (isInsideTopLeft(p))
 				{
-					float denom = (v1_[1] - v2_[1]) * (v0_[0] - v2_[0]) + (v2_[0] - v1_[0]) * (v0_[1] - v2_[1]);
-					float lambda1 = ((v1_[1] - v2_[1]) * (p[0] - v2_[0]) + (v2_[0] - v1_[0]) * (p[1] - v2_[1])) / denom;
-					float lambda2 = ((v2_[1] - v0_[1]) * (p[0] - v2_[0]) + (v0_[0] - v2_[0]) * (p[1] - v2_[1])) / denom;
+					float denom = (vertices_[1].position[1] - vertices_[2].position[1]) * (vertices_[0].position[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (vertices_[0].position[1] - vertices_[2].position[1]);
+					float lambda1 = ((vertices_[1].position[1] - vertices_[2].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
+					float lambda2 = ((vertices_[2].position[1] - vertices_[0].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[0].position[0] - vertices_[2].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
 					float lambda3 = 1.0f - lambda1 - lambda2;
 
-					float z = lambda1 * v0_[2] + lambda2 * v1_[2] + lambda3 * v2_[2];
+					float z = lambda1 * vertices_[0].position[2] + lambda2 * vertices_[1].position[2] + lambda3 * vertices_[2].position[2];
 
 					if (z > buffer.GetColorDepth(i, j)) {
 						buffer.SetColorDepth(i, j, z);
@@ -250,7 +295,7 @@ public:
 						Fragment fragment(position, normal);
 						for (auto& light : lights)
 						{
-							color += light->calculate(fragment, processor.eyePosition_);
+							color += light->calculate(fragment, processor->eyePosition_);
 						}
 
 						color[0] = std::clamp(color[0], 0.0f, 255.0f);
