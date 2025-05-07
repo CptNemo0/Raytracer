@@ -200,11 +200,7 @@ public:
 					if (z > buffer.GetColorDepth(i, j)) {
 						buffer.SetColorDepth(i, j, z);
 
-						Color4 color;
-						color[0] = (lambda1 * color0_[0] + lambda2 * color1_[0] + lambda3 * color2_[0]);
-						color[1] = (lambda1 * color0_[1] + lambda2 * color1_[1] + lambda3 * color2_[1]);
-						color[2] = (lambda1 * color0_[2] + lambda2 * color1_[2] + lambda3 * color2_[2]);
-						color[3] = (lambda1 * color0_[3] + lambda2 * color1_[3] + lambda3 * color2_[3]);
+						Color4 color = vertices_[0].color * lambda1 + vertices_[1].color * lambda2 + vertices_[2].color * lambda3;
 
 						buffer.SetColor(i, j, color);
 					}
@@ -249,6 +245,51 @@ public:
 						math::vec3 color3 = processor->texture_->Sample(uv);
 
 						Color4 color = FloatToColor4(color3);
+						buffer.SetColor(i, j, color);
+					}
+				}
+			}
+		}
+	}
+
+	void drawTriangleVertexLightTextured(buffer::ColorBuffer& buffer, std::shared_ptr<VertexProcessor>& processor)
+	{
+		processor->TriangleLocalToScreen(vertices_[0].position, vertices_[1].position, vertices_[2].position, buffer.width_, buffer.height_);
+
+
+		float minx = std::min({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float maxx = std::max({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float miny = std::min({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
+		float maxy = std::max({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
+
+		minx = std::fmaxf(minx, 0);
+		maxx = std::fminf(maxx, buffer.GetWidth() - 1);
+		miny = std::fmaxf(miny, 0);
+		maxy = std::fminf(maxy, buffer.GetHeight() - 1);
+
+		for (int i = minx; i <= maxx; i++) {
+
+			for (int j = miny; j <= maxy; j++)
+			{
+				math::vec2 p = { i + 0.5f, j + 0.5f };
+				if (isInsideTopLeft(p))
+				{
+					float denom = (vertices_[1].position[1] - vertices_[2].position[1]) * (vertices_[0].position[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (vertices_[0].position[1] - vertices_[2].position[1]);
+					float lambda1 = ((vertices_[1].position[1] - vertices_[2].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
+					float lambda2 = ((vertices_[2].position[1] - vertices_[0].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[0].position[0] - vertices_[2].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
+					float lambda3 = 1.0f - lambda1 - lambda2;
+
+					float z = lambda1 * vertices_[0].position[2] + lambda2 * vertices_[1].position[2] + lambda3 * vertices_[2].position[2];
+
+					if (z > buffer.GetColorDepth(i, j)) {
+						buffer.SetColorDepth(i, j, z);
+
+						math::vec2 uv = vertices_[0].uv * lambda1 + vertices_[1].uv * lambda2 + vertices_[2].uv * lambda3;
+						math::vec3 colorTexture = processor->texture_->Sample(uv);
+
+						Color4 color = FloatToColor4(colorTexture);
+						Color4 finalColor = color * 0.5f + vertices_[0].color * lambda1 * 0.5f  + vertices_[1].color * lambda2 * 0.5f + vertices_[2].color * lambda3 * 0.5f;
+
 						buffer.SetColor(i, j, color);
 					}
 				}
@@ -305,6 +346,64 @@ public:
 						Color4 color4 = FloatToColor4(color);
 
 						buffer.SetColor(i, j, color4);
+					}
+				}
+			}
+		}
+	}
+
+	void drawTrianglePixelLightTextured(buffer::ColorBuffer& buffer, std::shared_ptr<VertexProcessor>& processor, const std::vector<std::shared_ptr<Light>> lights, const std::vector<math::vec3>& pos, const std::vector<math::vec3>& N)
+	{
+		processor->TriangleLocalToScreen(vertices_[0].position, vertices_[1].position, vertices_[2].position, buffer.width_, buffer.height_);
+
+		float minx = std::min({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float maxx = std::max({ vertices_[0].position[0], vertices_[1].position[0], vertices_[2].position[0] });
+		float miny = std::min({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
+		float maxy = std::max({ vertices_[0].position[1], vertices_[1].position[1], vertices_[2].position[1] });
+
+		minx = std::fmaxf(minx, 0);
+		maxx = std::fminf(maxx, buffer.GetWidth() - 1);
+		miny = std::fmaxf(miny, 0);
+		maxy = std::fminf(maxy, buffer.GetHeight() - 1);
+
+
+		for (int i = minx; i <= maxx; i++) {
+			for (int j = miny; j <= maxy; j++) {
+				math::vec2 p = { i + 0.5f, j + 0.5f };
+				if (isInsideTopLeft(p))
+				{
+					float denom = (vertices_[1].position[1] - vertices_[2].position[1]) * (vertices_[0].position[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (vertices_[0].position[1] - vertices_[2].position[1]);
+					float lambda1 = ((vertices_[1].position[1] - vertices_[2].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[2].position[0] - vertices_[1].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
+					float lambda2 = ((vertices_[2].position[1] - vertices_[0].position[1]) * (p[0] - vertices_[2].position[0]) + (vertices_[0].position[0] - vertices_[2].position[0]) * (p[1] - vertices_[2].position[1])) / denom;
+					float lambda3 = 1.0f - lambda1 - lambda2;
+
+					float z = lambda1 * vertices_[0].position[2] + lambda2 * vertices_[1].position[2] + lambda3 * vertices_[2].position[2];
+
+					if (z > buffer.GetColorDepth(i, j)) {
+						buffer.SetColorDepth(i, j, z);
+
+						math::vec3 position = pos[0] * lambda1 + pos[1] * lambda2 + pos[2] * lambda3;
+
+						math::vec3 normal = math::normalized(N[0] * lambda1 + N[1] * lambda2 + N[2] * lambda3);
+
+						math::vec3 color(0.0f, 0.0f, 0.0f);
+
+						Fragment fragment(position, normal);
+						for (auto& light : lights)
+						{
+							color += light->calculate(fragment, processor->eyePosition_);
+						}
+
+						math::vec2 uv = vertices_[0].uv * lambda1 + vertices_[1].uv * lambda2 + vertices_[2].uv * lambda3;
+						math::vec3 colorTexture = processor->texture_->Sample(uv);
+
+						color[0] = std::clamp(color[0], 0.0f, 255.0f);
+						color[1] = std::clamp(color[1], 0.0f, 255.0f);
+						color[2] = std::clamp(color[2], 0.0f, 255.0f);
+
+						Color4 finalColor = FloatToColor4(color * 0.5f + colorTexture * 0.5f);
+
+						buffer.SetColor(i, j, finalColor);
 					}
 				}
 			}

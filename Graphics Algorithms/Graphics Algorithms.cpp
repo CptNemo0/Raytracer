@@ -33,9 +33,9 @@ int main()
 
 	// 2. Utwórz światło (DirectionalLight)
 	math::vec3 lightDirection = math::normalized(math::vec3(-2.0f, -1.0f, -3.0f));
-	math::vec3 ambientLight(0.0f, 0.3f, 0.8f);
+	math::vec3 ambientLight(0.0f, 0.0f, 0.0f);
 	math::vec3 diffuseLight(0.0f, 0.3f, 0.0f);
-	math::vec3 specularLight(0.5f, 0.3f, 0.0f);
+	math::vec3 specularLight(0.9f, 0.9f, 0.9f);
 	float shininess = 16.0f;
 	float cutoffAngle = 20.0f;
 	float outerCutoffAngle = 30.0f;
@@ -134,54 +134,69 @@ int main()
 
 
 	rasterizer.rasterizeMesh(torus);*/
+	auto texture1 = std::make_shared<Texture>("tex1.jpg");
+	auto texture2 = std::make_shared<Texture>("tex2.jpg");
+	auto texture3 = std::make_shared<Texture>("tex3.jpg");
 
 	// Pixel Light
-    mesh::Sphere sphere1 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere1 = mesh::Sphere(12, 12, 1.2f);
     sphere1.SetMeshColors(colorT);
-    math::mat4x4 translation1 = math::translation_matrix(-2.0f, -1.0f, -3.0f);
+    math::mat4x4 translation1 = math::translation_matrix(-3.0f, -2.0f, -5.0f);
     vertexProcessor->modelMatrix_ = translation1;
     rasterizer.RasterizeMeshPixelLight(sphere1);
 
-    mesh::Sphere sphere2 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere2 = mesh::Sphere(12, 12, 1.2f);
     sphere2.SetMeshColors(colorB);
-    math::mat4x4 translation2 = math::translation_matrix(0.0f, -1.0f, -3.0f);
+    math::mat4x4 translation2 = math::translation_matrix(0.0f, -2.0f, -5.0f);
     vertexProcessor->modelMatrix_ = translation2;
     rasterizer.RasterizeMeshPixelLight(sphere2);
 
-    mesh::Sphere sphere3 = mesh::Sphere(12, 12, 1.0f);
+    /*mesh::Sphere sphere3 = mesh::Sphere(12, 12, 1.2f);
     sphere3.SetMeshColors(colorG);
-    math::mat4x4 translation3 = math::translation_matrix(2.0f, -1.0f, -3.0f);
+    math::mat4x4 translation3 = math::translation_matrix(3.0f, -2.0f, -5.0f);
     vertexProcessor->modelMatrix_ = translation3;
-    rasterizer.RasterizeMeshPixelLight(sphere3);
+    rasterizer.RasterizeMeshPixelLight(sphere3);*/
 
 	///////
 	// Vertex Light
-    mesh::Sphere sphere4 = mesh::Sphere(12, 12, 1.0f);
+    /*mesh::Sphere sphere4 = mesh::Sphere(12, 12, 1.2f);
     sphere4.SetMeshColors(colorT);
-    math::mat4x4 translation4 = math::translation_matrix(-2.0f, 1.0f, -3.0f);
+    math::mat4x4 translation4 = math::translation_matrix(-3.0f, 2.0f, -5.0f);
     vertexProcessor->modelMatrix_ = translation4;
-    rasterizer.RasterizeMeshVertexLight(sphere4);
+    rasterizer.RasterizeMeshVertexLight(sphere4);*/
 
-    mesh::Sphere sphere5 = mesh::Sphere(12, 12, 1.0f);
+    mesh::Sphere sphere5 = mesh::Sphere(12, 12, 1.2f);
     sphere5.SetMeshColors(colorB);
-    math::mat4x4 translation5 = math::translation_matrix(0.0f, 1.0f, -3.0f);
+    math::mat4x4 translation5 = math::translation_matrix(0.0f, 2.0f, -5.0f);
     vertexProcessor->modelMatrix_ = translation5;
     rasterizer.RasterizeMeshVertexLight(sphere5);
 
-    mesh::Sphere sphere6 = mesh::Sphere(12, 12, 1.0f);
+    /*mesh::Sphere sphere6 = mesh::Sphere(12, 12, 1.2f);
     sphere6.SetMeshColors(colorG);
-    math::mat4x4 translation6 = math::translation_matrix(2.0f, 1.0f, -3.0f);
+    math::mat4x4 translation6 = math::translation_matrix(3.0f, 2.0f, -5.0f);
     vertexProcessor->modelMatrix_ = translation6;
-    rasterizer.RasterizeMeshVertexLight(sphere6);
+    rasterizer.RasterizeMeshVertexLight(sphere6);*/
 
 	//textured
-	auto texture1 = std::make_shared<Texture>("tex1.jpg");
+	
 
-	auto sphere7 = mesh::Sphere(12, 12, 1.0f);
+	auto sphere7 = mesh::Sphere(12, 12, 1.2f);
 	sphere7.SetTexture(texture1);
-	math::mat4x4 translation7 = math::translation_matrix(-2.0f, 3.0f, -3.0f);
+	math::mat4x4 translation7 = math::translation_matrix(3.0f, -2.0f, -5.0f);
 	vertexProcessor->modelMatrix_ = translation7;
 	rasterizer.RasterizeMeshTextured(sphere7);
+
+	auto sphere8 = mesh::Sphere(12, 12, 1.2f);
+	sphere8.SetTexture(texture2);
+	math::mat4x4 translation8 = math::translation_matrix(3.0f, 2.0f, -5.0f);
+	vertexProcessor->modelMatrix_ = translation8;
+	rasterizer.RasterizeMeshPixelLightTextured(sphere8);
+
+	auto cone1 = mesh::Cone(15, 1.2f, 3.0f);
+	cone1.SetTexture(texture3);
+	math::mat4x4 translation9 = math::translation_matrix(-3.0f, 2.0f, -5.0f);
+	vertexProcessor->modelMatrix_ = translation9;
+	rasterizer.RasterizeMeshTextured(cone1);
 
 
 	colorBuffer.generateBMP("test.bmp");

@@ -38,7 +38,12 @@ public:
 
             spec = pow(std::max(math::dot(N, H), 0.0f), shininess);
 			auto color = ambient + (diffuse * diff + specular * spec) * attenuation *  intensitivity;
-        }
+
+			color[0] = std::clamp(color[0], 0.0f, 255.0f);
+			color[1] = std::clamp(color[1], 0.0f, 255.0f);
+			color[2] = std::clamp(color[2], 0.0f, 255.0f);
+			return color;
+		}
         else
         {
             return ambient;
