@@ -29,7 +29,7 @@
 using namespace rtr;
 
 int main(int argc, char** argv)
-{
+{  
     io_utility::InputOutput io;
     if (io.Init("Rasterizer", 1280, 720)) return -1;
 
@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     auto red_texture = std::make_unique<Texture>("red_texture.jpg");
     auto blue_texture = std::make_unique<Texture>("blue_texture.jpg");
 
-    int precision = 15;
+    int precision = 25;
 
     mesh::Cone cone(2.25f, 2.0f, precision);
     cone.GenerateMesh();
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
         rasterizer.DrawMeshLightVertex(cone);
 
-
+        
         preprocessor->model_matrix_ = math::matmul(math::translation_matrix(0.0f, -9.0f, 0.0f), rotation_matrix);
         preprocessor->ti_model_matrix = math::transposed(math::inverse(preprocessor->model_matrix_));
         preprocessor->texture_ = red_texture.get();

@@ -21,9 +21,6 @@ namespace rtr
 	{
 		auto channels = 0;
 		buffer_ = reinterpret_cast<color3*>(stbi_load(path.data(), &width_, &height_, &channels, 0));
-
-	
-		std::cout << "channels: " << channels << std::endl;
 	}
 
 	color3f Texture::Sample(const math::vec2 uv) const
